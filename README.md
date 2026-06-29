@@ -6,6 +6,10 @@
 
 ![AI Python Coach 系统架构图](docs/images/ai-python-coach-architecture-zh.png)
 
+## 仓库内 Skill
+
+- [`chapter-adaptive-questioning`](skills/chapter-adaptive-questioning/SKILL.md)：章节自适应出题 Skill，用于根据章节核心知识点、用户掌握度和错误图谱生成 10 题练习蓝图，并约束题目质量、难度梯度和学生可见内容边界。
+
 ## 本地环境
 
 项目基线为 Python 3.10.19、Node.js 20、PostgreSQL 16。

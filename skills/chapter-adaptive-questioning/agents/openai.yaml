@@ -1,0 +1,4 @@
+interface:
+  display_name: "Chapter Adaptive Questioning"
+  short_description: "Generate adaptive chapter question sets."
+  default_prompt: "Create a 10-question adaptive practice set for a chapter based on chapter concepts, learner level, and error patterns."
