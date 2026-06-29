@@ -1,0 +1,18 @@
+# PyCoach Lab backend and development dependencies.
+# Runtime baseline: Python 3.10.19
+#
+# Install from the repository root:
+#   python -m pip install -r requirements.txt
+
+alembic==1.16.5
+fastapi==0.115.12
+httpx==0.28.1
+psycopg[binary]==3.2.9
+pydantic==2.12.5
+SQLAlchemy==2.0.41
+uvicorn[standard]==0.34.3
+
+# Test and code-quality tools
+pytest==8.4.1
+pytest-asyncio==1.1.0
+ruff==0.12.9

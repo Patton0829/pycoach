@@ -1,0 +1,13 @@
+[
+  {"source_node_id":"python.list","target_node_id":"python.iterable","relation_type":"prerequisite_of","weight":1.0},
+  {"source_node_id":"python.iterable","target_node_id":"python.iterator","relation_type":"prerequisite_of","weight":1.0},
+  {"source_node_id":"python.iterator","target_node_id":"python.iterator.iter","relation_type":"contains","weight":1.0},
+  {"source_node_id":"python.iterator","target_node_id":"python.iterator.next","relation_type":"contains","weight":1.0},
+  {"source_node_id":"python.iterator.next","target_node_id":"python.iterator.exhaustion","relation_type":"prerequisite_of","weight":1.0},
+  {"source_node_id":"python.iterator.exhaustion","target_node_id":"python.stop_iteration","relation_type":"related_to","weight":1.0},
+  {"source_node_id":"python.iterable","target_node_id":"python.iterator","relation_type":"often_confused_with","weight":1.0},
+  {"source_node_id":"python.iterator.state","target_node_id":"python.iterator.exhaustion","relation_type":"prerequisite_of","weight":0.9},
+  {"source_node_id":"python.iterator","target_node_id":"python.for_loop.protocol","relation_type":"transfer_to","weight":0.8},
+  {"source_node_id":"python.iterator","target_node_id":"python.generator.intro","relation_type":"related_to","weight":0.7}
+]
+

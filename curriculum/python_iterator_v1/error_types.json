@@ -1,0 +1,12 @@
+[
+  {"id":"iterable_vs_iterator","name":"可迭代对象与迭代器混淆","description":"Treats iterable and iterator as identical.","related_knowledge_nodes":["python.iterable","python.iterator"],"remediation_strategy":"Contrast iter(list) with the list and test next support."},
+  {"id":"iterator_object_vs_element","name":"迭代器对象与元素混淆","description":"Confuses the iterator with the value it yields.","related_knowledge_nodes":["python.iterator","python.iterator.next"],"remediation_strategy":"Trace iterator, yielded element, and state separately."},
+  {"id":"iter_vs_next","name":"iter 与 next 混淆","description":"Uses iter() when next() is required or vice versa.","related_knowledge_nodes":["python.iterator.iter","python.iterator.next"],"remediation_strategy":"Use paired examples with different surface forms."},
+  {"id":"iter_advances_state","name":"误认为 iter 推进状态","description":"Believes iter() consumes an element.","related_knowledge_nodes":["python.iterator.iter","python.iterator.state"],"remediation_strategy":"Compare repeated iter() and next() calls."},
+  {"id":"next_argument_error","name":"next 参数错误","description":"Passes a non-iterator where an iterator is expected.","related_knowledge_nodes":["python.iterator.next"],"remediation_strategy":"Ask which object owns iteration state."},
+  {"id":"iterator_exhaustion","name":"迭代器耗尽理解错误","description":"Assumes an exhausted iterator restarts automatically.","related_knowledge_nodes":["python.iterator.exhaustion"],"remediation_strategy":"Trace all calls through exhaustion."},
+  {"id":"stop_iteration_unrecognized","name":"未识别 StopIteration","description":"Does not connect exhaustion with StopIteration.","related_knowledge_nodes":["python.stop_iteration"],"remediation_strategy":"Predict the exception after the final value."},
+  {"id":"for_loop_protocol_confusion","name":"for 循环协议混淆","description":"Does not relate for loops to iter and next.","related_knowledge_nodes":["python.for_loop.protocol"],"remediation_strategy":"Expand a small for loop into protocol steps."},
+  {"id":"generator_vs_iterator","name":"生成器与迭代器混淆","description":"Misstates the relationship between generators and iterators.","related_knowledge_nodes":["python.generator.intro","python.iterator"],"remediation_strategy":"Delay until iterator fundamentals are stable."}
+]
+

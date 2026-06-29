@@ -1,0 +1,8 @@
+.git
+.env
+apps/web/node_modules
+apps/web/dist
+apps/web/*.tsbuildinfo
+services/api/**/__pycache__
+services/api/.pytest_cache
+**/*.pyc

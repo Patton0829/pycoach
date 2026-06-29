@@ -1,0 +1,2 @@
+"""Questioner and Critic adapters."""
+

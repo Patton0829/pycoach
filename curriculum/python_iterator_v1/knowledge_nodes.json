@@ -1,0 +1,13 @@
+[
+  {"id":"python.list","name":"列表","description":"Python list basics.","difficulty":1,"learning_objective":"Recognize lists as iterable containers."},
+  {"id":"python.iterable","name":"可迭代对象","description":"Objects accepted by iter().","difficulty":1,"learning_objective":"Distinguish iterable objects from iterators."},
+  {"id":"python.iterator","name":"迭代器","description":"Stateful objects consumed with next().","difficulty":2,"learning_objective":"Explain iterator identity and state."},
+  {"id":"python.iterator.iter","name":"iter()","description":"Creates or returns an iterator.","difficulty":1,"learning_objective":"Use iter() with an iterable."},
+  {"id":"python.iterator.next","name":"next()","description":"Returns the next item and advances state.","difficulty":2,"learning_objective":"Use next() on an iterator."},
+  {"id":"python.iterator.state","name":"迭代状态","description":"An iterator remembers consumption state.","difficulty":2,"learning_objective":"Predict results across repeated next() calls."},
+  {"id":"python.iterator.exhaustion","name":"迭代器耗尽","description":"An iterator eventually has no next item.","difficulty":2,"learning_objective":"Recognize exhausted iterator behavior."},
+  {"id":"python.stop_iteration","name":"StopIteration","description":"Signal raised by next() after exhaustion.","difficulty":2,"learning_objective":"Identify when StopIteration occurs."},
+  {"id":"python.for_loop.protocol","name":"for 循环协议","description":"for uses iter() and next() internally.","difficulty":3,"learning_objective":"Connect for loops to the iterator protocol."},
+  {"id":"python.generator.intro","name":"生成器简介","description":"Generators produce iterator objects.","difficulty":3,"learning_objective":"Recognize a generator as an iterator source."}
+]
+
