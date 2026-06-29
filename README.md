@@ -2,6 +2,10 @@
 
 面向 Python 初学者的双 Agent AI 陪练 MVP。当前版本已跑通 Questioner 出题、Critic 审题与对话、候选题预生成、图谱更新、WebSocket 推送和 React 学习页面。
 
+## 系统架构
+
+![AI Python Coach 系统架构图](docs/images/ai-python-coach-architecture-zh.png)
+
 ## 本地环境
 
 项目基线为 Python 3.10.19、Node.js 20、PostgreSQL 16。
