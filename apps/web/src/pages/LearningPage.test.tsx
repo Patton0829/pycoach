@@ -35,8 +35,8 @@ const initialSession = {
   ],
   completed_question_count: 0,
   chapter_question_set: {
-    chapter_id: "python_iterator",
-    chapter_title: "Python 迭代器",
+    chapter_id: "python_tutorial_ch4",
+    chapter_title: "控制流章节测试",
     target_question_count: 10,
     current_question_slot: 1,
     learner_level: "novice",
@@ -103,12 +103,21 @@ class MockWebSocket {
   }
 }
 
-async function startIteratorTest() {
+async function openChapterSelector() {
   const button = await screen.findByRole("button", {
-    name: "开始 Python 迭代器章节测试",
+    name: /Python 章节测试/,
   });
   await waitFor(() => expect(button).not.toBeDisabled());
   fireEvent.click(button);
+}
+
+async function startControlFlowChapterTest() {
+  await openChapterSelector();
+  const chapterButton = await screen.findByRole("button", {
+    name: "开始 第 4 章：控制流",
+  });
+  await waitFor(() => expect(chapterButton).not.toBeDisabled());
+  fireEvent.click(chapterButton);
 }
 
 describe("LearningPage integration", () => {
@@ -165,6 +174,25 @@ describe("LearningPage integration", () => {
 
     expect(await screen.findByText("Python 综合能力诊断（3-9 章）")).toBeInTheDocument();
     expect(await screen.findByText(/第 1 \/ 35 题/)).toBeInTheDocument();
+  });
+
+  it("shows chapter choices on the right before starting a chapter test", async () => {
+    const fetchMock = vi.fn(async () => new Response("not found", { status: 404 }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+    await openChapterSelector();
+
+    expect(
+      await screen.findByRole("button", { name: "开始 第 3 章：Python 入门" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "开始 第 4 章：控制流" }))
+      .toBeInTheDocument();
+    expect(screen.queryByText("Python 迭代器章节测试")).not.toBeInTheDocument();
+    expect(fetchMock).not.toHaveBeenCalledWith(
+      expect.stringContaining("/api/sessions"),
+      expect.objectContaining({ method: "POST" }),
+    );
   });
 
   it("opens personal graph views from the left navigation", async () => {
@@ -243,10 +271,10 @@ describe("LearningPage integration", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     render(<LearningPage />);
-    await startIteratorTest();
+    await startControlFlowChapterTest();
 
     expect(await screen.findByText("请填写：")).toBeInTheDocument();
-    expect(screen.getByText("Python 迭代器")).toBeInTheDocument();
+    expect(screen.getByText("控制流章节测试")).toBeInTheDocument();
     expect(screen.getByText(/第 1 \/ 10 题/)).toBeInTheDocument();
     expect(screen.getByText("基础强化")).toBeInTheDocument();
     expect(screen.queryByText("绝不能显示")).not.toBeInTheDocument();
@@ -412,7 +440,7 @@ describe("LearningPage integration", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     render(<LearningPage />);
-    await startIteratorTest();
+    await startControlFlowChapterTest();
 
     const input = await screen.findByLabelText("学习输入");
     fireEvent.change(input, { target: { value: "下一题" } });
@@ -464,7 +492,7 @@ describe("LearningPage integration", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     render(<LearningPage />);
-    await startIteratorTest();
+    await startControlFlowChapterTest();
 
     expect(await screen.findByText("请填写：")).toBeInTheDocument();
     const socket = MockWebSocket.instances[0];
@@ -544,8 +572,8 @@ describe("LearningPage integration", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     render(<LearningPage />);
-    await startIteratorTest();
-    expect(await screen.findByText("Python 迭代器")).toBeInTheDocument();
+    await startControlFlowChapterTest();
+    expect(await screen.findByText("控制流章节测试")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "重新选择测试" }));
 
@@ -554,7 +582,7 @@ describe("LearningPage integration", () => {
         name: "开始 Python 综合能力测试",
       }),
     ).toBeInTheDocument();
-    expect(screen.queryByText("Python 迭代器")).not.toBeInTheDocument();
+    expect(screen.queryByText("控制流章节测试")).not.toBeInTheDocument();
     expect(window.localStorage.getItem("pycoach.session_id")).toBeNull();
   });
 
@@ -569,7 +597,7 @@ describe("LearningPage integration", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     render(<LearningPage />);
-    await startIteratorTest();
+    await startControlFlowChapterTest();
 
     const input = await screen.findByLabelText("学习输入");
     await waitFor(() => expect(MockWebSocket.instances).toHaveLength(1));
