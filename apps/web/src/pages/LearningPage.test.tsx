@@ -488,9 +488,20 @@ describe("LearningPage integration", () => {
     expect(screen.getByText("主动回忆")).toBeInTheDocument();
     expect(screen.getByText("Questioner")).toBeInTheDocument();
     expect(screen.getByText("Critic")).toBeInTheDocument();
+    expect(screen.getByText("第一步：完成综合能力测试")).toBeInTheDocument();
+    expect(screen.getByText(/完成 Python 综合能力测试/)).toBeInTheDocument();
+    expect(screen.getByText("第二步：单题闯关高反馈循环"))
+      .toBeInTheDocument();
+    expect(screen.getByText(/生成下一题，并把题目同时交给用户作答/))
+      .toBeInTheDocument();
+    expect(screen.getByText(/评估用户答案与本题出题水平/))
+      .toBeInTheDocument();
+    expect(screen.getByText(/Questioner 根据最新评估、出题质量反馈/))
+      .toBeInTheDocument();
     expect(screen.getAllByText("个人错误图谱").length).toBeGreaterThan(0);
     expect(screen.getByText(/我们从不强调Python多么重要/))
       .toBeInTheDocument();
+    expect(screen.getByText(/我们会乐此不疲/)).toBeInTheDocument();
     expect(screen.getByText("—AI Python Coach创始人")).toBeInTheDocument();
   });
 

@@ -380,35 +380,88 @@ function AboutCoach() {
 
       <div className="about-section">
         <h2>系统架构图</h2>
-        <div className="coach-diagram" aria-label="AI Python Coach 系统架构图">
-          <div className="diagram-node diagram-node--user">
-            <strong>用户</strong>
-            <span>选择测试、提交答案、提出疑问</span>
+        <div className="coach-diagram" aria-label="AI Python Coach 交互流程架构图">
+          <div className="diagram-phase diagram-phase--diagnostic">
+            <span className="diagram-phase__tag">第一步：完成综合能力测试</span>
+            <div className="diagram-node diagram-node--user">
+              <strong>用户</strong>
+              <span>完成 Python 综合能力测试，系统建立初始学习画像</span>
+            </div>
+            <div className="diagram-arrow">↓ 诊断结果沉淀为画像</div>
+            <div className="diagram-row diagram-row--graphs">
+              <div className="diagram-node diagram-node--knowledge">
+                <strong>个人知识图谱</strong>
+                <span>记录第 3-9 章各知识点的掌握度</span>
+              </div>
+              <div className="diagram-node diagram-node--error">
+                <strong>个人错误图谱</strong>
+                <span>记录常见误区、错误类型和薄弱推理链路</span>
+              </div>
+            </div>
           </div>
-          <div className="diagram-arrow diagram-arrow--down">学习输入</div>
-          <div className="diagram-row">
-            <div className="diagram-node diagram-node--questioner">
+
+          <div className="diagram-flow-arrow">↓ 进入 Python 单题闯关</div>
+
+          <div className="diagram-phase diagram-phase--challenge">
+            <span className="diagram-phase__tag">第二步：单题闯关高反馈循环</span>
+            <div className="diagram-input-grid">
+              <div className="diagram-node diagram-node--knowledge">
+                <strong>个人知识图谱</strong>
+                <span>告诉 Questioner 哪些知识点已掌握、哪些还需要检验</span>
+              </div>
+              <div className="diagram-node diagram-node--error">
+                <strong>个人错误图谱</strong>
+                <span>暴露用户最容易混淆的规则、概念和推理误区</span>
+              </div>
+              <div className="diagram-node diagram-node--methods">
+                <strong>学习方法引擎</strong>
+                <span>提供主动回忆、交错练习、适宜难度和及时反馈原则</span>
+              </div>
+              <div className="diagram-node diagram-node--signal">
+                <strong>上一题 Critic 评估</strong>
+                <span>包含用户答题表现和本题出题质量反馈</span>
+              </div>
+            </div>
+            <div className="diagram-arrow">↓ 汇入出题依据</div>
+            <div className="diagram-node diagram-node--questioner diagram-node--center">
               <strong>Questioner</strong>
-              <span>依据章节、水平和图谱生成题目</span>
+              <span>生成下一题，并把题目同时交给用户作答、交给 Critic 评估出题水平</span>
             </div>
-            <div className="diagram-node diagram-node--methods">
-              <strong>学习方法引擎</strong>
-              <span>主动回忆、交错练习、适宜难度、及时反馈</span>
+            <div className="diagram-split-line">
+              <span>↙ 题目给用户作答</span>
+              <span>↘ 题目给 Critic 评估出题水平</span>
             </div>
-            <div className="diagram-node diagram-node--critic">
-              <strong>Critic</strong>
-              <span>评价答案、解释错因、沉淀证据</span>
+            <div className="diagram-row diagram-row--interaction">
+              <div className="diagram-node diagram-node--user">
+                <strong>用户</strong>
+                <span>提交答案、提出疑问或表达不确定</span>
+              </div>
+              <div className="diagram-node diagram-node--critic">
+                <strong>Critic</strong>
+                <span>评估用户答案与本题出题水平，解释错因并沉淀证据</span>
+              </div>
             </div>
-          </div>
-          <div className="diagram-arrow diagram-arrow--split">题目与反馈形成高反馈循环</div>
-          <div className="diagram-row diagram-row--graphs">
-            <div className="diagram-node diagram-node--knowledge">
-              <strong>个人知识图谱</strong>
-              <span>记录知识点掌握度</span>
+            <div className="diagram-arrow">↓ Critic 输出四路反馈</div>
+            <div className="diagram-feedback-grid">
+              <div className="diagram-node diagram-node--feedback">
+                <strong>反馈给用户浏览</strong>
+                <span>答对时强化信心，答错时直接讲清错误原因</span>
+              </div>
+              <div className="diagram-node diagram-node--feedback">
+                <strong>反馈给 Questioner</strong>
+                <span>作为下一题选点、难度和题型调整依据</span>
+              </div>
+              <div className="diagram-node diagram-node--knowledge">
+                <strong>更新个人知识图谱</strong>
+                <span>提升或降低相关知识点掌握度</span>
+              </div>
+              <div className="diagram-node diagram-node--error">
+                <strong>更新个人错误图谱</strong>
+                <span>记录本次暴露出的误区和错误类型</span>
+              </div>
             </div>
-            <div className="diagram-node diagram-node--error">
-              <strong>个人错误图谱</strong>
-              <span>记录误区和错误类型</span>
+            <div className="diagram-loopback">
+              ↺ Questioner 根据最新评估、出题质量反馈、知识图谱和错误图谱酝酿下一题，进入下一轮
             </div>
           </div>
         </div>
@@ -416,7 +469,7 @@ function AboutCoach() {
 
       <blockquote className="founder-note">
         <p>
-          在AI Python Coach，我们从不强调Python多么重要，就像我们的高中数学老师总是强调得数学者得天下一样，那样会增长功利心，也就没法享受学习Python的乐趣，而做我们喜欢的事情，就不会觉得累，他们会乐此不疲，我们希望通过引入高反馈机制、好的学习方法、适宜的难度、大模型能力来做这样更懂用户的多智能体系统，帮助用户在学习Python的道路上略尽绵薄之力。
+          在AI Python Coach，我们从不强调Python多么重要，就像我们的高中数学老师总是强调得数学者得天下一样，那样会增长功利心，也就没法享受学习Python的乐趣，而做我们喜欢的事情，就不会觉得累，我们会乐此不疲，我们希望通过引入高反馈机制、好的学习方法、适宜的难度、大模型能力来做这样更懂用户的多智能体系统，帮助用户在学习Python的道路上略尽绵薄之力。
         </p>
         <footer>—AI Python Coach创始人</footer>
       </blockquote>
