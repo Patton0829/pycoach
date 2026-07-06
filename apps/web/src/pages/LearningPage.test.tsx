@@ -847,6 +847,37 @@ describe("LearningPage integration", () => {
     );
   });
 
+  it("does not restore a stored foundation diagnostic question on refresh", async () => {
+    window.localStorage.setItem("pycoach.session_id", initialSession.session_id);
+    const foundationSession = {
+      ...initialSession,
+      chapter_question_set: {
+        ...initialSession.chapter_question_set,
+        chapter_id: "python_foundation_diagnostic",
+        chapter_title: "Python 综合能力诊断（3-9 章）",
+        target_question_count: 35,
+      },
+    };
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes(`/api/sessions/${initialSession.session_id}`)) {
+        return new Response(JSON.stringify(foundationSession), { status: 200 });
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+
+    expect(
+      await screen.findByRole("button", {
+        name: "查看 Python 综合能力测试介绍",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("请填写：")).not.toBeInTheDocument();
+    expect(window.localStorage.getItem("pycoach.session_id")).toBeNull();
+  });
+
   it("returns to the left navigation when a stored legacy session has no module", async () => {
     window.localStorage.setItem("pycoach.session_id", initialSession.session_id);
     const legacySession = {

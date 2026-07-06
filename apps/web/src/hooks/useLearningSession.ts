@@ -23,8 +23,8 @@ import {
 import { useSessionSocket } from "./useSessionSocket";
 
 const SESSION_STORAGE_KEY = "pycoach.session_id";
+const FOUNDATION_DIAGNOSTIC_MODULE_ID = "python_foundation_diagnostic";
 const RESTORABLE_MODULE_IDS = new Set([
-  "python_foundation_diagnostic",
   "python_tutorial_ch3",
   "python_tutorial_ch4",
   "python_tutorial_ch5",
@@ -424,7 +424,9 @@ export function useLearningSession() {
       setStatusText("正在准备测试…");
       try {
         const session = await createLearningSession(moduleId);
-        window.localStorage.setItem(SESSION_STORAGE_KEY, session.session_id);
+        if (moduleId !== FOUNDATION_DIAGNOSTIC_MODULE_ID) {
+          window.localStorage.setItem(SESSION_STORAGE_KEY, session.session_id);
+        }
         applySession(session);
         setStatusText("题目已准备好");
       } catch (reason) {
