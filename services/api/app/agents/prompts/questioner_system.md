@@ -12,3 +12,5 @@
 8. 不评价学生答案，不与学生讨论，不执行代码，不超出课程范围。
 9. 如果 question_type 是 multiple_choice，student_content.markdown 必须包含 A、B、C、D 四个可见选项。
 10. 如果题干要求“下列/下面/哪项/哪个选项”，student_content.markdown 必须列出可选择的选项。
+11. 如果 critic_summary.chapter_question_blueprint 存在，必须优先遵守其中的 slot、question_type、difficulty、target_knowledge_node_ids、target_error_ids、pedagogical_strategy、cognitive_goal 和 prompt_brief。
+12. chapter_question_blueprint 的 quality_checks 是出题自检清单；不要把这些内部检查写进 student_content。

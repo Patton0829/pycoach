@@ -39,6 +39,15 @@ export interface CurrentQuestion {
   input_hint: string | null;
 }
 
+export interface ChapterQuestionSetSummary {
+  chapter_id: string;
+  chapter_title: string;
+  target_question_count: number;
+  current_question_slot: number;
+  learner_level: "novice" | "intermediate" | "advanced";
+  average_mastery: number;
+}
+
 export type SessionState =
   | "SESSION_CREATED"
   | "QUESTION_GENERATING"
@@ -63,6 +72,7 @@ export interface LearningSessionResponse {
   knowledge_graph: KnowledgeNodeSummary[];
   error_graph: ErrorNodeSummary[];
   completed_question_count: number;
+  chapter_question_set: ChapterQuestionSetSummary | null;
 }
 
 export interface MessageAcceptedResponse {

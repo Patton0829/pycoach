@@ -123,6 +123,36 @@ class SessionOrchestratorTests(unittest.TestCase):
             )
             await settle(self.orchestrator)
             first_question_id = str(created.current_question_id)
+            with self.factory() as database:
+                first_question = database.get(Question, first_question_id)
+                first_node_id = first_question.knowledge_node_ids[0]
+                first_error_id = (
+                    first_question.target_error_ids[0]
+                    if first_question.target_error_ids
+                    else None
+                )
+                first_node_before = database.scalar(
+                    select(LearnerKnowledgeNode).where(
+                        LearnerKnowledgeNode.learner_id == "demo_user",
+                        LearnerKnowledgeNode.knowledge_node_id == first_node_id,
+                    )
+                )
+                first_mastery_before = (
+                    first_node_before.mastery if first_node_before else 0.0
+                )
+                first_error_before = (
+                    database.scalar(
+                        select(LearnerErrorNode).where(
+                            LearnerErrorNode.learner_id == "demo_user",
+                            LearnerErrorNode.error_type_id == first_error_id,
+                        )
+                    )
+                    if first_error_id
+                    else None
+                )
+                first_severity_before = (
+                    first_error_before.severity if first_error_before else 0.0
+                )
 
             accepted = self.orchestrator.accept_message(
                 str(created.session_id),
@@ -147,14 +177,16 @@ class SessionOrchestratorTests(unittest.TestCase):
                 provisional_mastery = database.scalar(
                     select(LearnerKnowledgeNode).where(
                         LearnerKnowledgeNode.learner_id == "demo_user",
-                        LearnerKnowledgeNode.knowledge_node_id
-                        == "python.iterator.next",
+                        LearnerKnowledgeNode.knowledge_node_id == first_node_id,
                     )
                 )
                 provisional_events = database.scalars(
                     select(GraphUpdateEvent)
                 ).all()
-                self.assertAlmostEqual(provisional_mastery.mastery, 0.42)
+                self.assertAlmostEqual(
+                    provisional_mastery.mastery,
+                    first_mastery_before,
+                )
                 self.assertEqual(provisional_events, [])
                 candidates = database.scalars(
                     select(Question).where(
@@ -201,20 +233,25 @@ class SessionOrchestratorTests(unittest.TestCase):
                 mastery = database.scalar(
                     select(LearnerKnowledgeNode).where(
                         LearnerKnowledgeNode.learner_id == "demo_user",
-                        LearnerKnowledgeNode.knowledge_node_id
-                        == "python.iterator.next",
+                        LearnerKnowledgeNode.knowledge_node_id == first_node_id,
                     )
                 )
-                error = database.scalar(
-                    select(LearnerErrorNode).where(
-                        LearnerErrorNode.learner_id == "demo_user",
-                        LearnerErrorNode.error_type_id == "iter_vs_next",
+                self.assertLess(mastery.mastery, first_mastery_before)
+                if first_error_id:
+                    error = database.scalar(
+                        select(LearnerErrorNode).where(
+                            LearnerErrorNode.learner_id == "demo_user",
+                            LearnerErrorNode.error_type_id == first_error_id,
+                        )
                     )
-                )
+                    self.assertGreater(error.severity, first_severity_before)
+                expected_event_count = 1 + (1 if first_error_id else 0)
                 events = database.scalars(select(GraphUpdateEvent)).all()
-                self.assertAlmostEqual(mastery.mastery, 0.34)
-                self.assertAlmostEqual(error.severity, 0.546)
-                self.assertEqual(len(events), 2)
+                self.assertEqual(len(events), expected_event_count)
+                self.assertEqual(
+                    {event.node_id for event in events},
+                    {first_node_id, *([first_error_id] if first_error_id else [])},
+                )
 
             event_types = [event["type"] for event in self.websocket.events]
             self.assertIn("critic_reply_ready", event_types)

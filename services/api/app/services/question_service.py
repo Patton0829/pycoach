@@ -200,6 +200,7 @@ class QuestionService:
                 )
 
         fallback = self.select_seed_fallback(prepared_context.candidate_constraints)
+        fallback = fallback.model_copy(update={"question_id": uuid4()}, deep=True)
         logger.error(
             "Questioner output failed validation twice; using seed fallback %s",
             fallback.question_id,
@@ -336,6 +337,12 @@ class QuestionService:
                 )
             )
         ]
+        if not eligible:
+            eligible = [
+                question
+                for question in self.seed_questions
+                if question.question_type in constraints.allowed_question_types
+            ]
         if not eligible:
             raise RuntimeError("No seed question satisfies the candidate constraints")
 

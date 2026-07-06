@@ -5,6 +5,12 @@ import { ErrorGraph } from "../components/ErrorGraph";
 import { PersonalKnowledgeGraph } from "../components/PersonalKnowledgeGraph";
 import { useLearningSession } from "../hooks/useLearningSession";
 
+const learnerLevelLabels = {
+  novice: "基础强化",
+  intermediate: "进阶巩固",
+  advanced: "综合提升",
+};
+
 export function LearningPage() {
   const conversationRef = useRef<HTMLDivElement>(null);
   const {
@@ -12,6 +18,7 @@ export function LearningPage() {
     knowledgeNodes,
     errorNodes,
     completedQuestionCount,
+    chapterQuestionSet,
     isLoading,
     isConnected,
     statusText,
@@ -39,6 +46,18 @@ export function LearningPage() {
       <div className="workspace">
         <aside className="sidebar">
           <div className="progress">本次已完成 {completedQuestionCount} 题</div>
+          {chapterQuestionSet && (
+            <div className="chapter-plan">
+              <span>{chapterQuestionSet.chapter_title}</span>
+              <strong>
+                第 {chapterQuestionSet.current_question_slot} /{" "}
+                {chapterQuestionSet.target_question_count} 题
+              </strong>
+              <small>
+                {learnerLevelLabels[chapterQuestionSet.learner_level]}
+              </small>
+            </div>
+          )}
           <PersonalKnowledgeGraph nodes={knowledgeNodes} />
           <ErrorGraph nodes={errorNodes} />
         </aside>

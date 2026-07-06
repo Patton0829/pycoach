@@ -34,6 +34,14 @@ const initialSession = {
     },
   ],
   completed_question_count: 0,
+  chapter_question_set: {
+    chapter_id: "python_iterator",
+    chapter_title: "Python 迭代器",
+    target_question_count: 10,
+    current_question_slot: 1,
+    learner_level: "novice",
+    average_mastery: 0.28,
+  },
   critic_content: {
     reference_answer: "绝不能显示",
   },
@@ -67,6 +75,10 @@ const refreshedSession = {
   ],
   error_graph: [],
   completed_question_count: 1,
+  chapter_question_set: {
+    ...initialSession.chapter_question_set,
+    current_question_slot: 2,
+  },
 };
 
 class MockWebSocket {
@@ -140,6 +152,9 @@ describe("LearningPage integration", () => {
     render(<LearningPage />);
 
     expect(await screen.findByText("请填写：")).toBeInTheDocument();
+    expect(screen.getByText("Python 迭代器")).toBeInTheDocument();
+    expect(screen.getByText(/第 1 \/ 10 题/)).toBeInTheDocument();
+    expect(screen.getByText("基础强化")).toBeInTheDocument();
     expect(screen.getByText("next()")).toBeInTheDocument();
     expect(screen.getByText("正在学习")).toBeInTheDocument();
     expect(screen.queryByText("绝不能显示")).not.toBeInTheDocument();
@@ -243,6 +258,7 @@ describe("LearningPage integration", () => {
     });
 
     expect(await screen.findByText("本次已完成 1 题")).toBeInTheDocument();
+    expect(await screen.findByText(/第 2 \/ 10 题/)).toBeInTheDocument();
     expect(await screen.findByText("基本掌握")).toBeInTheDocument();
     expect(screen.queryByText("需要巩固")).not.toBeInTheDocument();
 

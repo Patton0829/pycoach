@@ -6,6 +6,7 @@ import {
 } from "../api/client";
 import type {
   GraphNode,
+  ChapterQuestionSetSummary,
   LearningSessionResponse,
   SessionSocketEvent,
   SessionState,
@@ -81,6 +82,8 @@ export function useLearningSession() {
   const [knowledgeNodes, setKnowledgeNodes] = useState<GraphNode[]>([]);
   const [errorNodes, setErrorNodes] = useState<GraphNode[]>([]);
   const [completedQuestionCount, setCompletedQuestionCount] = useState(0);
+  const [chapterQuestionSet, setChapterQuestionSet] =
+    useState<ChapterQuestionSetSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
@@ -99,6 +102,7 @@ export function useLearningSession() {
     setKnowledgeNodes(session.knowledge_graph.map(toKnowledgeGraphNode));
     setErrorNodes(session.error_graph.map(toErrorGraphNode));
     setCompletedQuestionCount(session.completed_question_count);
+    setChapterQuestionSet(session.chapter_question_set ?? null);
   }, []);
 
   const refreshProgress = useCallback(
@@ -109,6 +113,7 @@ export function useLearningSession() {
       setKnowledgeNodes(session.knowledge_graph.map(toKnowledgeGraphNode));
       setErrorNodes(session.error_graph.map(toErrorGraphNode));
       setCompletedQuestionCount(session.completed_question_count);
+      setChapterQuestionSet(session.chapter_question_set ?? null);
     },
     [sessionId],
   );
@@ -377,6 +382,7 @@ export function useLearningSession() {
     knowledgeNodes,
     errorNodes,
     completedQuestionCount,
+    chapterQuestionSet,
     isLoading,
     isSubmitting,
     isConnected,

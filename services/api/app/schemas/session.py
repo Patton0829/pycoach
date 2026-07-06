@@ -5,6 +5,7 @@ from uuid import UUID
 from pydantic import Field
 
 from app.schemas.base import StrictModel
+from app.schemas.chapter_plan import ChapterQuestionSetSummary
 from app.schemas.graph import ErrorNodeSummary, KnowledgeNodeSummary
 
 
@@ -46,3 +47,4 @@ class SessionResponse(StrictModel):
     knowledge_graph: List[KnowledgeNodeSummary] = Field(default_factory=list)
     error_graph: List[ErrorNodeSummary] = Field(default_factory=list)
     completed_question_count: int = 0
+    chapter_question_set: Optional[ChapterQuestionSetSummary] = None

@@ -91,6 +91,21 @@ class LearningSession(Base):
     ended_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
 
 
+class ChapterQuestionSet(Base):
+    __tablename__ = "chapter_question_sets"
+    __table_args__ = (UniqueConstraint("session_id"),)
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid_string)
+    session_id: Mapped[str] = mapped_column(ForeignKey("learning_sessions.id"))
+    learner_id: Mapped[str] = mapped_column(ForeignKey("learners.id"))
+    chapter_id: Mapped[str] = mapped_column(String(120))
+    chapter_title: Mapped[str] = mapped_column(String(200))
+    target_question_count: Mapped[int] = mapped_column(Integer, default=10)
+    learner_level: Mapped[str] = mapped_column(String(30))
+    average_mastery: Mapped[float] = mapped_column(Float, default=0.0)
+    blueprint_json: Mapped[dict] = mapped_column(JSON)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+
+
 class LearningRound(Base):
     __tablename__ = "learning_rounds"
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid_string)
@@ -164,4 +179,3 @@ class GraphUpdateEvent(Base):
     after_value: Mapped[float] = mapped_column(Float)
     reason: Mapped[str] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
-

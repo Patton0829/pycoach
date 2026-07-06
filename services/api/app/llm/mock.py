@@ -51,68 +51,49 @@ class DemoMockLLMProvider(LLMProvider):
 
     def _question_packet(self, context: dict) -> dict:
         constraints = context["candidate_constraints"]
-        question_type = constraints.get("preferred_question_type") or "multiple_choice"
-        recent_count = len(context.get("recent_questions", []))
-        allowed_nodes = constraints.get("allowed_knowledge_node_ids", [])
-        allowed_errors = constraints.get("allowed_error_ids", [])
-
-        node_id = (
-            "python.iterator.next"
-            if "python.iterator.next" in allowed_nodes
-            else allowed_nodes[0]
+        blueprint = context.get("critic_summary", {}).get(
+            "chapter_question_blueprint",
+            {},
         )
-        error_id = "iter_vs_next" if "iter_vs_next" in allowed_errors else None
-        variants = {
-            "multiple_choice": {
-                "markdown": (
-                    f"第 {recent_count + 1} 题：下面哪个表达式会从迭代器中取出"
-                    "下一个元素？\n\nA. `iter(iterator)`\n\n"
-                    "B. `next(iterator)`\n\nC. `iterator[0]`\n\nD. `list(iterator)`"
-                ),
-                "answer": "B",
-                "acceptable": ["B", "b", "next(iterator)"],
-            },
-            "code_blank": {
-                "markdown": (
-                    f"第 {recent_count + 1} 题：填写缺失内容。\n\n"
-                    "```python\nvalues = [4, 8]\nit = iter(values)\n"
-                    "first = ________\nprint(first)\n```"
-                ),
-                "answer": "next(it)",
-                "acceptable": ["next(it)"],
-            },
-            "output_prediction": {
-                "markdown": (
-                    f"第 {recent_count + 1} 题：预测输出。\n\n"
-                    "```python\nvalues = [3, 6]\nit = iter(values)\n"
-                    "print(next(it))\nprint(next(it))\n```"
-                ),
-                "answer": "3 then 6",
-                "acceptable": ["3\\n6", "3 then 6"],
-            },
-            "short_explanation": {
-                "markdown": (
-                    f"第 {recent_count + 1} 题：为什么连续调用 `next(it)` "
-                    "会得到不同元素？请简短说明。"
-                ),
-                "answer": "The iterator stores and advances its state.",
-                "acceptable": ["迭代器会保存并推进状态。"],
-            },
-        }
+        question_type = (
+            blueprint.get("question_type")
+            or constraints.get("preferred_question_type")
+            or "multiple_choice"
+        )
+        target_nodes = (
+            blueprint.get("target_knowledge_node_ids")
+            or constraints.get("allowed_knowledge_node_ids", [])
+        )
+        target_errors = (
+            blueprint.get("target_error_ids")
+            or constraints.get("allowed_error_ids", [])
+        )
+        node_id = target_nodes[0] if target_nodes else "python.iterator.next"
+        error_id = target_errors[0] if target_errors else None
+        slot = blueprint.get("slot") or len(context.get("recent_questions", [])) + 1
+        goal = blueprint.get("cognitive_goal") or "retrieve"
+        prompt_brief = blueprint.get(
+            "prompt_brief",
+            "检验学生能否使用 Python 迭代器协议。",
+        )
+        variants = self._question_variants(slot, goal)
         selected = variants[question_type]
         return {
             "question_id": str(uuid4()),
             "question_type": question_type,
-            "difficulty": 2,
+            "difficulty": blueprint.get("difficulty", 2),
             "knowledge_node_ids": [node_id],
             "target_error_ids": [error_id] if error_id else [],
-            "pedagogical_strategy": "retrieval_practice",
+            "pedagogical_strategy": blueprint.get(
+                "pedagogical_strategy",
+                "retrieval_practice",
+            ),
             "student_content": {
                 "markdown": selected["markdown"],
                 "input_hint": "直接输入答案，也可以提出疑问。",
             },
             "critic_content": {
-                "learning_objective": "Use next() and explain iterator state.",
+                "learning_objective": prompt_brief,
                 "reference_answer": selected["answer"],
                 "acceptable_answers": selected["acceptable"],
                 "grading_rubric": {
@@ -122,6 +103,125 @@ class DemoMockLLMProvider(LLMProvider):
                 },
                 "expected_reasoning": "next() returns one item and advances state.",
                 "ambiguity_notes": None,
+            },
+        }
+
+    def _question_variants(self, slot: int, goal: str) -> dict:
+        multiple_choice = {
+            "recognize": (
+                "关于可迭代对象和迭代器，下面哪项正确？\n\n"
+                "A. 列表本身会记住 `next()` 的当前位置\n\n"
+                "B. `iter([1, 2])` 会创建一个可传给 `next()` 的迭代器\n\n"
+                "C. `next([1, 2])` 可以直接取出列表第一个元素\n\n"
+                "D. 每次 `next(it)` 都会从开头重新取值"
+            ),
+            "construct": (
+                "要从元组 `source` 创建一个迭代器，下面哪项最合适？\n\n"
+                "A. `next(source)`\n\nB. `iter(source)`\n\n"
+                "C. `source[0]`\n\nD. `list(source)`"
+            ),
+            "contrast_operations": (
+                "关于 `iter(data)` 和 `next(it)`，下面哪项正确？\n\n"
+                "A. 二者都会把同一个迭代器向前推进\n\n"
+                "B. `iter(data)` 创建迭代器，`next(it)` 取值并推进状态\n\n"
+                "C. `next(it)` 会自动创建一个全新的迭代器\n\n"
+                "D. 二者都只适用于列表"
+            ),
+        }
+        code_blank = {
+            "construct": (
+                f"第 {slot} 题：填写缺失内容，创建迭代器并输出 `10`：\n\n"
+                "```python\nsource = (10, 20, 30)\nit = ________\nprint(next(it))\n```"
+            ),
+            "retrieve": (
+                f"第 {slot} 题：填写缺失内容，使程序输出 `10`：\n\n"
+                "```python\nnumbers = [10, 20, 30]\niterator = iter(numbers)\n"
+                "first = ________\nprint(first)\n```"
+            ),
+            "contrast_operations": (
+                f"第 {slot} 题：填写缺失内容，取出当前迭代器的下一个元素：\n\n"
+                "```python\ndata = [3, 6, 9]\nit = iter(data)\nnext(it)\nsecond = ________\n```"
+            ),
+            "transfer": (
+                f"第 {slot} 题：生成器已经是迭代器，填写缺失内容取出第一个值：\n\n"
+                "```python\ndef values():\n    yield 4\ngen = values()\nfirst = ________\n```"
+            ),
+        }
+        output_prediction = {
+            "trace_state": (
+                f"第 {slot} 题：预测输出。\n\n"
+                "```python\nitems = ['A', 'B', 'C']\nit = iter(items)\n"
+                "print(next(it))\nprint(next(it))\nprint(next(it))\n```"
+            ),
+            "predict_output": (
+                f"第 {slot} 题：预测所有 print 输出，每行一个。\n\n"
+                "```python\nnums = [1, 2]\nit = iter(nums)\nprint(next(it))\n"
+                "print(next(it))\ntry:\n    print(next(it))\n"
+                "except StopIteration:\n    print('End')\n```"
+            ),
+            "diagnose_exhaustion": (
+                f"第 {slot} 题：预测输出。\n\n"
+                "```python\nit = iter(['x'])\nprint(next(it))\n"
+                "try:\n    print(next(it))\nexcept StopIteration:\n    print('Done')\n```"
+            ),
+        }
+        short_explanation = {
+            "explain_protocol": (
+                f"第 {slot} 题：简要说明 `for item in data` 背后如何使用 "
+                "`iter()`、`next()` 和 `StopIteration`。"
+            ),
+            "diagnose_exhaustion": (
+                f"第 {slot} 题：一个迭代器已经被取完，再调用 `next(it)` "
+                "会发生什么？为什么？"
+            ),
+            "synthesize": (
+                f"第 {slot} 题：为什么同一个迭代器连续调用 `next()` 会得到"
+                "不同结果，而重新 `iter(data)` 又会从头开始？"
+            ),
+            "transfer": (
+                f"第 {slot} 题：生成器和普通迭代器在 `next()` 取值行为上"
+                "有什么共同点？"
+            ),
+        }
+        if goal == "construct":
+            blank_answer = "iter(source)"
+        elif goal == "retrieve":
+            blank_answer = "next(iterator)"
+        elif goal == "transfer":
+            blank_answer = "next(gen)"
+        else:
+            blank_answer = "next(it)"
+
+        if goal == "trace_state":
+            output_answer = "A\nB\nC"
+            output_acceptable = ["A\nB\nC", "A B C"]
+        elif goal == "diagnose_exhaustion":
+            output_answer = "x\nDone"
+            output_acceptable = ["x\nDone", "x Done"]
+        else:
+            output_answer = "1\n2\nEnd"
+            output_acceptable = ["1\n2\nEnd", "1 2 End"]
+
+        return {
+            "multiple_choice": {
+                "markdown": f"第 {slot} 题：{multiple_choice.get(goal, multiple_choice['recognize'])}",
+                "answer": "B",
+                "acceptable": ["B", "b"],
+            },
+            "code_blank": {
+                "markdown": code_blank.get(goal, code_blank["retrieve"]),
+                "answer": blank_answer,
+                "acceptable": [blank_answer],
+            },
+            "output_prediction": {
+                "markdown": output_prediction.get(goal, output_prediction["predict_output"]),
+                "answer": output_answer,
+                "acceptable": output_acceptable,
+            },
+            "short_explanation": {
+                "markdown": short_explanation.get(goal, short_explanation["synthesize"]),
+                "answer": "迭代器保存当前位置，next() 取值并推进；耗尽时抛出 StopIteration。",
+                "acceptable": ["迭代器保存状态", "next会推进状态", "StopIteration"],
             },
         }
 

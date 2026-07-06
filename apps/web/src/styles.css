@@ -81,6 +81,26 @@ textarea {
   font-size: 14px;
 }
 
+.chapter-plan {
+  display: grid;
+  gap: 4px;
+  margin-top: 12px;
+  padding: 10px;
+  border: 1px solid #dbe3ec;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.chapter-plan span,
+.chapter-plan small {
+  color: #52606d;
+  font-size: 12px;
+}
+
+.chapter-plan strong {
+  font-size: 15px;
+}
+
 .graph-list {
   display: grid;
   gap: 8px;

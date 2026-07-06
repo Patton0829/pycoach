@@ -1,4 +1,5 @@
 from typing import Any, Dict, Optional
+from uuid import uuid4
 
 from sqlalchemy.orm import Session
 
@@ -7,7 +8,7 @@ from app.models.entities import LearningRound, LearningSession, Question
 from app.repositories.question_review_repository import QuestionReviewRepository
 from app.repositories.session_repository import SessionRepository
 from app.schemas.critic import QuestionReview, QuestionReviewContext
-from app.schemas.question import QuestionGenerationResult, QuestionPacket
+from app.schemas.question import CandidateConstraints, QuestionGenerationResult, QuestionPacket
 from app.schemas.question import RecentQuestion
 from app.services.critic_service import CriticQuestionReviewService
 from app.services.question_service import QuestionContextBuilder, QuestionService
@@ -23,6 +24,7 @@ class CandidateQuestionService:
         session: LearningSession,
         learning_round: LearningRound,
         critic_summary: Dict[str, Any],
+        candidate_constraints: CandidateConstraints | None = None,
     ) -> Optional[Question]:
         repository = SessionRepository(database)
         recent_records = repository.list_recent_formal_questions(session.id)
@@ -39,6 +41,7 @@ class CandidateQuestionService:
             learner_id=session.learner_id,
             recent_questions=recent_questions,
             critic_summary=critic_summary,
+            candidate_constraints=candidate_constraints,
         )
         question_service = QuestionService(self.provider)
         result = await question_service.generate_next_question(context)
@@ -55,6 +58,10 @@ class CandidateQuestionService:
         prepared_context = question_service.prepare_context(context)
         fallback_packet = question_service.select_seed_fallback(
             prepared_context.candidate_constraints
+        )
+        fallback_packet = fallback_packet.model_copy(
+            update={"question_id": uuid4()},
+            deep=True,
         )
         return self._create_trusted_seed_candidate(
             database,

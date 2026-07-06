@@ -1,4 +1,5 @@
 from app.models.entities import (
+    ChapterQuestionSet,
     ConversationMessage,
     CriticTurnResultRecord,
     ErrorType,
@@ -15,6 +16,7 @@ from app.models.entities import (
 )
 
 __all__ = [
+    "ChapterQuestionSet",
     "ConversationMessage",
     "CriticTurnResultRecord",
     "ErrorType",
@@ -29,4 +31,3 @@ __all__ = [
     "Question",
     "QuestionReviewRecord",
 ]
-

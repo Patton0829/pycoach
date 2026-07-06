@@ -4,6 +4,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.models.entities import (
+    ChapterQuestionSet,
     ConversationMessage,
     CriticTurnResultRecord,
     Learner,
@@ -47,6 +48,15 @@ class SessionRepository:
         if not session.current_question_id:
             return None
         return self.get_question(session.current_question_id)
+
+    def get_chapter_question_set(
+        self,
+        session_id: str,
+    ) -> Optional[ChapterQuestionSet]:
+        statement = select(ChapterQuestionSet).where(
+            ChapterQuestionSet.session_id == session_id
+        )
+        return self.database.scalar(statement)
 
     def list_messages(
         self,
