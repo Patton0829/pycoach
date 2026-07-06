@@ -23,6 +23,16 @@ import {
 import { useSessionSocket } from "./useSessionSocket";
 
 const SESSION_STORAGE_KEY = "pycoach.session_id";
+const RESTORABLE_MODULE_IDS = new Set([
+  "python_foundation_diagnostic",
+  "python_tutorial_ch3",
+  "python_tutorial_ch4",
+  "python_tutorial_ch5",
+  "python_tutorial_ch6",
+  "python_tutorial_ch7",
+  "python_tutorial_ch8",
+  "python_tutorial_ch9",
+]);
 const streamMessageId = (streamId: string) => `stream-${streamId}`;
 const SUBMITTING_STATES: SessionState[] = [
   "USER_MESSAGE_RECEIVED",
@@ -31,12 +41,14 @@ const SUBMITTING_STATES: SessionState[] = [
 ];
 
 function shouldReuseStoredSession(session: LearningSessionResponse): boolean {
+  const chapterQuestionSet = session.chapter_question_set;
   const hasStudentOrCriticMessage = session.messages.some(
     (message) => message.role === "student" || message.role === "critic",
   );
   return (
     session.state === "QUESTION_ACTIVE" &&
-    session.chapter_question_set != null &&
+    chapterQuestionSet != null &&
+    RESTORABLE_MODULE_IDS.has(chapterQuestionSet.chapter_id) &&
     session.completed_question_count === 0 &&
     !hasStudentOrCriticMessage
   );

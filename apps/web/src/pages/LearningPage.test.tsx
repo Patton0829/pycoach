@@ -172,7 +172,7 @@ describe("LearningPage integration", () => {
     await waitFor(() => expect(button).not.toBeDisabled());
     fireEvent.click(button);
 
-    expect(await screen.findByText("Python 综合能力诊断（3-9 章）")).toBeInTheDocument();
+    expect(await screen.findByText(/Python 综合能力诊断/)).toBeInTheDocument();
     expect(await screen.findByText(/第 1 \/ 35 题/)).toBeInTheDocument();
   });
 
@@ -274,7 +274,7 @@ describe("LearningPage integration", () => {
     await startControlFlowChapterTest();
 
     expect(await screen.findByText("请填写：")).toBeInTheDocument();
-    expect(screen.getByText("控制流章节测试")).toBeInTheDocument();
+    expect(screen.getByText(/控制流章节测试/)).toBeInTheDocument();
     expect(screen.getByText(/第 1 \/ 10 题/)).toBeInTheDocument();
     expect(screen.getByText("基础强化")).toBeInTheDocument();
     expect(screen.queryByText("绝不能显示")).not.toBeInTheDocument();
@@ -573,7 +573,7 @@ describe("LearningPage integration", () => {
 
     render(<LearningPage />);
     await startControlFlowChapterTest();
-    expect(await screen.findByText("控制流章节测试")).toBeInTheDocument();
+    expect(await screen.findByText(/控制流章节测试/)).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "重新选择测试" }));
 
@@ -583,6 +583,37 @@ describe("LearningPage integration", () => {
       }),
     ).toBeInTheDocument();
     expect(screen.queryByText("控制流章节测试")).not.toBeInTheDocument();
+    expect(window.localStorage.getItem("pycoach.session_id")).toBeNull();
+  });
+
+  it("does not restore a stored iterator session removed from the test navigation", async () => {
+    window.localStorage.setItem("pycoach.session_id", initialSession.session_id);
+    const iteratorSession = {
+      ...initialSession,
+      chapter_question_set: {
+        ...initialSession.chapter_question_set,
+        chapter_id: "python_iterator",
+        chapter_title: "Python 迭代器",
+      },
+    };
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes(`/api/sessions/${initialSession.session_id}`)) {
+        return new Response(JSON.stringify(iteratorSession), { status: 200 });
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+
+    expect(
+      await screen.findByRole("button", {
+        name: "开始 Python 综合能力测试",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Python 迭代器")).not.toBeInTheDocument();
+    expect(screen.queryByText("请选择左侧测试开始")).not.toBeInTheDocument();
     expect(window.localStorage.getItem("pycoach.session_id")).toBeNull();
   });
 

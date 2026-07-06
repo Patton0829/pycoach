@@ -188,18 +188,15 @@ export function LearningPage() {
             </div>
           )}
           {activeView === "learning" && chapterQuestionSet && (
-            <div className="learning-summary">
-              <div className="progress">本次已完成 {completedQuestionCount} 题</div>
-              <div className="chapter-plan">
-                <span>{chapterQuestionSet.chapter_title}</span>
-                <strong>
-                  第 {chapterQuestionSet.current_question_slot} /{" "}
-                  {chapterQuestionSet.target_question_count} 题
-                </strong>
-                <small>
-                  {learnerLevelLabels[chapterQuestionSet.learner_level]}
-                </small>
-              </div>
+            <div className="learning-summary" aria-label="当前测试进度">
+              <span>本次已完成 {completedQuestionCount} 题</span>
+              <strong>
+                第 {chapterQuestionSet.current_question_slot} /{" "}
+                {chapterQuestionSet.target_question_count} 题
+              </strong>
+              <small>
+                {learnerLevelLabels[chapterQuestionSet.learner_level]}
+              </small>
             </div>
           )}
 
@@ -242,11 +239,7 @@ export function LearningPage() {
                 disabled={composerDisabled}
               />
             </div>
-          ) : (
-            <section className="start-panel">
-              <strong>请选择左侧测试开始</strong>
-            </section>
-          )}
+          ) : null}
         </div>
       </div>
     </main>

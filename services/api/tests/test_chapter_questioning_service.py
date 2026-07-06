@@ -96,6 +96,45 @@ class ChapterQuestioningServiceTests(unittest.TestCase):
         self.assertIn("python.ch9.inheritance", plan.questions[-1].target_knowledge_node_ids)
         self.assertEqual(plan.learner_level, "novice")
 
+    def test_rotates_python_foundation_diagnostic_start_node_across_attempts(self) -> None:
+        with self.factory() as database:
+            service = ChapterQuestioningService(database)
+            first_session = LearningSession(
+                learner_id="demo_user",
+                status=SessionState.QUESTION_GENERATING.value,
+            )
+            second_session = LearningSession(
+                learner_id="demo_user",
+                status=SessionState.QUESTION_GENERATING.value,
+            )
+            database.add_all([first_session, second_session])
+            database.flush()
+
+            first_record = service.create_question_set_for_session(
+                first_session,
+                "python_foundation_diagnostic",
+            )
+            second_record = service.create_question_set_for_session(
+                second_session,
+                "python_foundation_diagnostic",
+            )
+
+            first_plan = service.plan_from_record(first_record)
+            second_plan = service.plan_from_record(second_record)
+
+        self.assertIn(
+            "python.ch3.numbers",
+            first_plan.questions[0].target_knowledge_node_ids,
+        )
+        self.assertIn(
+            "python.ch3.text",
+            second_plan.questions[0].target_knowledge_node_ids,
+        )
+        self.assertNotEqual(
+            first_plan.questions[0].target_knowledge_node_ids,
+            second_plan.questions[0].target_knowledge_node_ids,
+        )
+
     def test_generates_selected_python_chapter_plan(self) -> None:
         with self.factory() as database:
             plan = ChapterQuestioningService(database).generate_plan(

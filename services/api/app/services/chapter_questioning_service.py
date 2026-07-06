@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Sequence
 
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.models.entities import ChapterQuestionSet, ErrorType, LearningSession, Question
@@ -235,7 +236,6 @@ for module_id, (title, node_ids, principles) in PYTHON_TUTORIAL_CHAPTER_NODES.it
 
 ASSESSMENT_DISPLAY_ORDER = (
     "python_foundation_diagnostic",
-    "python_iterator",
     "python_tutorial_ch3",
     "python_tutorial_ch4",
     "python_tutorial_ch5",
@@ -462,6 +462,13 @@ class ChapterQuestioningService:
         target_nodes = [node_by_id[node_id] for node_id in spec.node_ids if node_id in node_by_id]
         if not target_nodes:
             raise ValueError(f"Assessment has no seeded knowledge nodes: {assessment_id}")
+        if spec.mode == "foundation":
+            rotation = self._foundation_rotation_offset(
+                learner_id,
+                spec.module_id,
+                len(target_nodes),
+            )
+            target_nodes = [*target_nodes[rotation:], *target_nodes[:rotation]]
 
         error_types = list(self.question_repository.list_error_types())
         learner_nodes = self.question_repository.list_personal_knowledge(learner_id)
@@ -636,6 +643,24 @@ class ChapterQuestioningService:
             return 14
         return 20
 
+    def _foundation_rotation_offset(
+        self,
+        learner_id: str,
+        module_id: str,
+        node_count: int,
+    ) -> int:
+        if node_count <= 1:
+            return 0
+        existing_count = self.database.scalar(
+            select(func.count())
+            .select_from(ChapterQuestionSet)
+            .where(
+                ChapterQuestionSet.learner_id == learner_id,
+                ChapterQuestionSet.chapter_id == module_id,
+            )
+        )
+        return int(existing_count or 0) % node_count
+
     def _iterator_items(
         self,
         spec: AssessmentSpec,
@@ -686,7 +711,7 @@ class ChapterQuestioningService:
         level: LearnerLevel,
     ) -> list[ChapterQuestionBlueprintItem]:
         node_by_id = {node.id: node for node in nodes}
-        ordered_node_ids = [node_id for node_id in spec.node_ids if node_id in node_by_id]
+        ordered_node_ids = [node.id for node in nodes]
         question_types = GENERIC_TYPE_SEQUENCES[level]
         items: list[ChapterQuestionBlueprintItem] = []
 
