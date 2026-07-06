@@ -14,9 +14,7 @@ from app.seed import seed_database
 from app.services.session_orchestrator import LearningSessionOrchestrator
 from app.services.websocket_manager import session_websocket_manager
 
-CURRICULUM_DIR = (
-    Path(__file__).resolve().parents[3] / "curriculum" / "python_iterator_v1"
-)
+CURRICULUM_DIR = Path(__file__).resolve().parents[3] / "curriculum" / "python_iterator_v1"
 FOUNDATION_CURRICULUM_DIR = (
     Path(__file__).resolve().parents[3] / "curriculum" / "python_foundation_v1"
 )
@@ -43,9 +41,7 @@ class SessionApiIntegrationTests(unittest.TestCase):
             session_websocket_manager,
             session_factory=self.factory,
         )
-        app.dependency_overrides[get_session_orchestrator] = (
-            lambda: self.orchestrator
-        )
+        app.dependency_overrides[get_session_orchestrator] = lambda: self.orchestrator
 
     def tearDown(self) -> None:
         app.dependency_overrides.clear()
@@ -75,9 +71,7 @@ class SessionApiIntegrationTests(unittest.TestCase):
             session_id = created.json()["session_id"]
             self.assertEqual(created.json()["state"], "QUESTION_ACTIVE")
 
-            with client.websocket_connect(
-                f"/ws/sessions/{session_id}"
-            ) as websocket:
+            with client.websocket_connect(f"/ws/sessions/{session_id}") as websocket:
                 ready = websocket.receive_json()
                 self.assertEqual(ready["type"], "connection_ready")
 
@@ -146,6 +140,10 @@ class SessionApiIntegrationTests(unittest.TestCase):
             self.assertEqual(modules.status_code, 200)
             self.assertIn(
                 "python_foundation_diagnostic",
+                [item["module_id"] for item in modules.json()],
+            )
+            self.assertIn(
+                "python_challenge_ch5",
                 [item["module_id"] for item in modules.json()],
             )
 

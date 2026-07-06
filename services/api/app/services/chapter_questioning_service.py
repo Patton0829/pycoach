@@ -22,6 +22,8 @@ ITERATOR_TITLE = "Python 迭代器"
 ITERATOR_TARGET_QUESTION_COUNT = 10
 FOUNDATION_TARGET_QUESTION_COUNT = 35
 CHAPTER_TARGET_QUESTION_COUNT = 10
+SINGLE_CHALLENGE_TARGET_QUESTION_COUNT = 50
+SINGLE_CHALLENGE_MASTERY_THRESHOLD = 0.8
 
 
 @dataclass(frozen=True)
@@ -145,9 +147,7 @@ PYTHON_TUTORIAL_CHAPTER_NODES: dict[str, tuple[str, tuple[str, ...], tuple[str, 
 }
 
 FOUNDATION_NODE_IDS = tuple(
-    node_id
-    for _, node_ids, _ in PYTHON_TUTORIAL_CHAPTER_NODES.values()
-    for node_id in node_ids
+    node_id for _, node_ids, _ in PYTHON_TUTORIAL_CHAPTER_NODES.values() for node_id in node_ids
 )
 
 ITERATOR_NODE_IDS = (
@@ -223,6 +223,8 @@ ASSESSMENT_SPECS: dict[str, AssessmentSpec] = {
 }
 
 for module_id, (title, node_ids, principles) in PYTHON_TUTORIAL_CHAPTER_NODES.items():
+    chapter_number = module_id.removeprefix("python_tutorial_ch")
+    display_title = f"第 {chapter_number} 章：{title.removesuffix('章节测试')}"
     ASSESSMENT_SPECS[module_id] = AssessmentSpec(
         module_id=module_id,
         title=title,
@@ -232,6 +234,21 @@ for module_id, (title, node_ids, principles) in PYTHON_TUTORIAL_CHAPTER_NODES.it
         set_level_quality_checks=CHAPTER_SET_QUALITY_CHECKS,
         source_skill="chapter-adaptive-questioning",
         mode="chapter",
+    )
+    challenge_module_id = module_id.replace("python_tutorial_", "python_challenge_")
+    ASSESSMENT_SPECS[challenge_module_id] = AssessmentSpec(
+        module_id=challenge_module_id,
+        title=f"{display_title}单题闯关",
+        target_question_count=SINGLE_CHALLENGE_TARGET_QUESTION_COUNT,
+        node_ids=node_ids,
+        core_principles=principles,
+        set_level_quality_checks=(
+            "单题闯关每次只生成一道题，优先选择该章尚未掌握的知识节点。",
+            "题目必须限定在所选章节范围内，并根据个人图谱动态调整难度。",
+            "当本章全部知识点达到掌握阈值后，前端展示完成激励，不再要求固定题数。",
+        ),
+        source_skill="chapter-adaptive-questioning",
+        mode="single_challenge",
     )
 
 ASSESSMENT_DISPLAY_ORDER = (
@@ -243,6 +260,13 @@ ASSESSMENT_DISPLAY_ORDER = (
     "python_tutorial_ch7",
     "python_tutorial_ch8",
     "python_tutorial_ch9",
+    "python_challenge_ch3",
+    "python_challenge_ch4",
+    "python_challenge_ch5",
+    "python_challenge_ch6",
+    "python_challenge_ch7",
+    "python_challenge_ch8",
+    "python_challenge_ch9",
 )
 
 ITERATOR_TYPE_SEQUENCES: dict[LearnerLevel, list[QuestionType]] = {
@@ -544,9 +568,37 @@ class ChapterQuestioningService:
             assessment_id or DEFAULT_ASSESSMENT_ID,
         )
         plan = self.plan_from_record(record)
+        spec = assessment_spec(plan.chapter_id)
+        if spec.mode == "single_challenge":
+            item = self._single_challenge_item(
+                spec,
+                session.learner_id,
+                slot,
+                recent_questions,
+            )
+            if item is None:
+                return self._default_inputs_after_planned_set(plan, recent_questions)
+            return self._inputs_for_item(plan, item, recent_questions)
         if slot > plan.question_count:
             return self._default_inputs_after_planned_set(plan, recent_questions)
         item = self._blueprint_item_for_slot(plan, slot)
+        return self._inputs_for_item(plan, item, recent_questions)
+
+    def is_single_challenge_complete(self, session_id: str) -> bool:
+        record = self.get_question_set_for_session(session_id)
+        if record is None:
+            return False
+        spec = assessment_spec(record.chapter_id)
+        if spec.mode != "single_challenge":
+            return False
+        return self._all_nodes_mastered(record.learner_id, spec.node_ids)
+
+    def _inputs_for_item(
+        self,
+        plan: ChapterQuestionSetPlan,
+        item: ChapterQuestionBlueprintItem,
+        recent_questions: Sequence[Question],
+    ) -> tuple[dict, CandidateConstraints]:
         recent_ids = [question.id for question in recent_questions]
         recent_markdown = [
             question.student_content_json["markdown"]
@@ -633,6 +685,88 @@ class ChapterQuestioningService:
                 avoid_question_ids=recent_ids,
                 avoid_markdown=recent_markdown,
             ),
+        )
+
+    def _single_challenge_item(
+        self,
+        spec: AssessmentSpec,
+        learner_id: str,
+        slot: int,
+        recent_questions: Sequence[Question],
+    ) -> ChapterQuestionBlueprintItem | None:
+        nodes = list(self.question_repository.list_knowledge_nodes())
+        node_by_id = {node.id: node for node in nodes}
+        target_nodes = [node_by_id[node_id] for node_id in spec.node_ids if node_id in node_by_id]
+        if not target_nodes:
+            return None
+
+        learner_nodes = self.question_repository.list_personal_knowledge(learner_id)
+        mastery_by_node = {item.knowledge_node_id: item.mastery for item in learner_nodes}
+        if self._all_nodes_mastered(learner_id, spec.node_ids):
+            return None
+
+        recent_target_ids = {
+            node_id for question in recent_questions[:4] for node_id in question.knowledge_node_ids
+        }
+        unmastered_nodes = [
+            node
+            for node in target_nodes
+            if mastery_by_node.get(node.id, 0.0) < SINGLE_CHALLENGE_MASTERY_THRESHOLD
+        ]
+        candidate_nodes = [
+            node for node in unmastered_nodes if node.id not in recent_target_ids
+        ] or unmastered_nodes
+        target_node = min(
+            candidate_nodes,
+            key=lambda node: (mastery_by_node.get(node.id, 0.0), node.difficulty, node.id),
+        )
+        average_mastery = self._average_mastery(target_nodes, mastery_by_node)
+        level = self._infer_level(average_mastery)
+        goal = GENERIC_COGNITIVE_GOALS[(slot - 1) % len(GENERIC_COGNITIVE_GOALS)]
+        question_types = GENERIC_TYPE_SEQUENCES[level]
+        question_type = question_types[(slot - 1) % len(question_types)]
+        error_types = list(self.question_repository.list_error_types())
+        learner_errors = self.question_repository.list_personal_errors(learner_id)
+        active_errors = self._active_errors_for_spec(
+            spec,
+            error_types,
+            learner_errors,
+        )
+        target_errors = self._choose_errors_for_nodes(
+            [target_node.id],
+            error_types,
+            active_errors,
+        )
+        safe_slot = min(max(slot, 1), 50)
+        return ChapterQuestionBlueprintItem(
+            slot=safe_slot,
+            question_type=question_type,
+            difficulty=self._generic_difficulty(target_node.difficulty, level, slot - 1),
+            cognitive_goal=goal,
+            target_knowledge_node_ids=[target_node.id],
+            target_error_ids=target_errors,
+            pedagogical_strategy=GENERIC_PEDAGOGICAL_STRATEGIES[goal],
+            prompt_brief=(
+                f"围绕《{spec.title}》中的“{target_node.name}”出一道单题闯关题："
+                f"{target_node.learning_objective}"
+            ),
+            quality_checks=[
+                *QUESTION_QUALITY_CHECKS,
+                f"题目必须限定在 {spec.title} 的知识点范围。",
+                "本题只服务一个尚未掌握的知识点，不要做综合套题。",
+            ],
+        )
+
+    def _all_nodes_mastered(
+        self,
+        learner_id: str,
+        node_ids: Sequence[str],
+    ) -> bool:
+        learner_nodes = self.question_repository.list_personal_knowledge(learner_id)
+        mastery_by_node = {item.knowledge_node_id: item.mastery for item in learner_nodes}
+        return all(
+            mastery_by_node.get(node_id, 0.0) >= SINGLE_CHALLENGE_MASTERY_THRESHOLD
+            for node_id in node_ids
         )
 
     @staticmethod
@@ -735,8 +869,7 @@ class ChapterQuestioningService:
                     target_error_ids=target_errors,
                     pedagogical_strategy=GENERIC_PEDAGOGICAL_STRATEGIES[goal],
                     prompt_brief=(
-                        f"围绕《{spec.title}》中的“{node.name}”出题："
-                        f"{node.learning_objective}"
+                        f"围绕《{spec.title}》中的“{node.name}”出题：{node.learning_objective}"
                     ),
                     quality_checks=[
                         *QUESTION_QUALITY_CHECKS,
@@ -808,9 +941,7 @@ class ChapterQuestioningService:
             if item.status in {"new", "active", "improving", "relapsed"}
             and item.severity > 0
             and error_type_by_id.get(item.error_type_id) is not None
-            and node_ids.intersection(
-                error_type_by_id[item.error_type_id].related_knowledge_nodes
-            )
+            and node_ids.intersection(error_type_by_id[item.error_type_id].related_knowledge_nodes)
         ]
         active_errors.sort(key=lambda item: item.severity, reverse=True)
         return active_errors

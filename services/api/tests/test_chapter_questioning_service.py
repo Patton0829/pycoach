@@ -6,14 +6,12 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from app.models.base import Base
-from app.models.entities import ChapterQuestionSet, LearningSession
+from app.models.entities import ChapterQuestionSet, LearnerKnowledgeNode, LearningSession
 from app.schemas.session import SessionState
 from app.seed import seed_database
 from app.services.chapter_questioning_service import ChapterQuestioningService
 
-CURRICULUM_DIR = (
-    Path(__file__).resolve().parents[3] / "curriculum" / "python_iterator_v1"
-)
+CURRICULUM_DIR = Path(__file__).resolve().parents[3] / "curriculum" / "python_iterator_v1"
 FOUNDATION_CURRICULUM_DIR = (
     Path(__file__).resolve().parents[3] / "curriculum" / "python_foundation_v1"
 )
@@ -150,6 +148,58 @@ class ChapterQuestioningServiceTests(unittest.TestCase):
                 for item in plan.questions
                 for node_id in item.target_knowledge_node_ids
             )
+        )
+
+    def test_generates_single_challenge_plan_for_selected_chapter(self) -> None:
+        with self.factory() as database:
+            plan = ChapterQuestioningService(database).generate_plan(
+                "demo_user",
+                "python_challenge_ch5",
+            )
+
+        self.assertEqual(plan.chapter_id, "python_challenge_ch5")
+        self.assertEqual(plan.chapter_title, "第 5 章：数据结构单题闯关")
+        self.assertEqual(plan.question_count, 50)
+        self.assertTrue(
+            all(
+                node_id.startswith("python.ch5")
+                for item in plan.questions
+                for node_id in item.target_knowledge_node_ids
+            )
+        )
+
+    def test_single_challenge_targets_unmastered_chapter_nodes(self) -> None:
+        with self.factory() as database:
+            for node_id in (
+                "python.ch5.list_methods",
+                "python.ch5.comprehensions",
+                "python.ch5.tuples_sequences",
+                "python.ch5.sets_dicts",
+            ):
+                database.add(
+                    LearnerKnowledgeNode(
+                        learner_id="demo_user",
+                        knowledge_node_id=node_id,
+                        mastery=0.85,
+                        status="mastered",
+                    )
+                )
+            session = LearningSession(
+                learner_id="demo_user",
+                status=SessionState.QUESTION_GENERATING.value,
+            )
+            database.add(session)
+            database.flush()
+
+            _, constraints = ChapterQuestioningService(database).generation_inputs_for_slot(
+                session,
+                slot=1,
+                assessment_id="python_challenge_ch5",
+            )
+
+        self.assertEqual(
+            constraints.allowed_knowledge_node_ids,
+            ["python.ch5.looping_conditions"],
         )
 
     def test_slots_after_planned_set_fall_back_to_default_constraints(self) -> None:

@@ -14,26 +14,30 @@ const learnerLevelLabels = {
 type AssessmentOption = {
   moduleId: string;
   title: string;
+  displayTitle: string;
   meta: string;
-  kind: "foundation" | "chapter";
+  kind: "foundation" | "chapter" | "challenge";
   loadingLead: string;
   loadingTokens: string[];
   visualSteps: string[];
 };
 
-const assessmentOptions = [
-  {
-    moduleId: "python_foundation_diagnostic",
-    title: "Python 综合能力测试",
-    meta: "35 题 / 第 3-9 章",
-    kind: "foundation",
-    loadingLead: "正在从第 3-9 章抽取知识点，组装一套能看出你真实水平的诊断题。",
-    loadingTokens: ["I", "love", "Python", "list", "dict", "class"],
-    visualSteps: ["read()", "think()", "practice()"],
-  },
+const foundationOption = {
+  moduleId: "python_foundation_diagnostic",
+  title: "Python 综合能力测试",
+  displayTitle: "Python 综合能力测试",
+  meta: "35 题 / 第 3-9 章",
+  kind: "foundation",
+  loadingLead: "正在从第 3-9 章抽取知识点，组装一套能看出你真实水平的诊断题。",
+  loadingTokens: ["I", "love", "Python", "list", "dict", "class"],
+  visualSteps: ["read()", "think()", "practice()"],
+} satisfies AssessmentOption;
+
+const chapterTestOptions = [
   {
     moduleId: "python_tutorial_ch3",
     title: "第 3 章：Python 入门",
+    displayTitle: "第 3 章：Python 入门",
     meta: "10 题 / 章节测试",
     kind: "chapter",
     loadingLead: "围绕数字、文本、列表、索引切片和可变性准备题目。",
@@ -43,6 +47,7 @@ const assessmentOptions = [
   {
     moduleId: "python_tutorial_ch4",
     title: "第 4 章：控制流",
+    displayTitle: "第 4 章：控制流",
     meta: "10 题 / 章节测试",
     kind: "chapter",
     loadingLead: "围绕 if、for、range、break/continue 和函数参数准备题目。",
@@ -52,6 +57,7 @@ const assessmentOptions = [
   {
     moduleId: "python_tutorial_ch5",
     title: "第 5 章：数据结构",
+    displayTitle: "第 5 章：数据结构",
     meta: "10 题 / 章节测试",
     kind: "chapter",
     loadingLead: "围绕列表方法、推导式、元组、集合、字典和循环技巧准备题目。",
@@ -61,6 +67,7 @@ const assessmentOptions = [
   {
     moduleId: "python_tutorial_ch6",
     title: "第 6 章：模块",
+    displayTitle: "第 6 章：模块",
     meta: "10 题 / 章节测试",
     kind: "chapter",
     loadingLead: "围绕 import、模块执行、搜索路径、dir() 和包准备题目。",
@@ -70,6 +77,7 @@ const assessmentOptions = [
   {
     moduleId: "python_tutorial_ch7",
     title: "第 7 章：输入输出",
+    displayTitle: "第 7 章：输入输出",
     meta: "10 题 / 章节测试",
     kind: "chapter",
     loadingLead: "围绕格式化输出、str/repr、文件模式、with 和 JSON 准备题目。",
@@ -79,6 +87,7 @@ const assessmentOptions = [
   {
     moduleId: "python_tutorial_ch8",
     title: "第 8 章：错误与异常",
+    displayTitle: "第 8 章：错误与异常",
     meta: "10 题 / 章节测试",
     kind: "chapter",
     loadingLead: "围绕语法错误、异常捕获、raise、finally 和自定义异常准备题目。",
@@ -88,6 +97,7 @@ const assessmentOptions = [
   {
     moduleId: "python_tutorial_ch9",
     title: "第 9 章：类",
+    displayTitle: "第 9 章：类",
     meta: "10 题 / 章节测试",
     kind: "chapter",
     loadingLead: "围绕命名空间、类定义、self、类变量、实例变量和继承准备题目。",
@@ -96,7 +106,77 @@ const assessmentOptions = [
   },
 ] satisfies AssessmentOption[];
 
-type ActiveView = "learning" | "chapters" | "knowledge" | "errors";
+const challengeOptions = chapterTestOptions.map((option) => ({
+  ...option,
+  moduleId: option.moduleId.replace("python_tutorial_", "python_challenge_"),
+  meta: "单题闯关 / 掌握为止",
+  kind: "challenge" as const,
+  loadingLead: `${option.displayTitle}单题闯关正在准备。系统会优先挑选你还没完全掌握的知识点，一次只出一道题。`,
+}));
+
+const assessmentOptions = [
+  foundationOption,
+  ...chapterTestOptions,
+  ...challengeOptions,
+] satisfies AssessmentOption[];
+
+const optionByModuleId = new Map(
+  assessmentOptions.map((option) => [option.moduleId, option]),
+);
+
+const chapterKnowledgeNodeIds: Record<string, string[]> = {
+  ch3: [
+    "python.ch3.numbers",
+    "python.ch3.text",
+    "python.ch3.sequence_indexing",
+    "python.ch3.lists",
+    "python.ch3.assignment_mutability",
+  ],
+  ch4: [
+    "python.ch4.if",
+    "python.ch4.for_range",
+    "python.ch4.loop_control",
+    "python.ch4.functions",
+    "python.ch4.arguments",
+  ],
+  ch5: [
+    "python.ch5.list_methods",
+    "python.ch5.comprehensions",
+    "python.ch5.tuples_sequences",
+    "python.ch5.sets_dicts",
+    "python.ch5.looping_conditions",
+  ],
+  ch6: [
+    "python.ch6.imports",
+    "python.ch6.module_execution",
+    "python.ch6.search_path",
+    "python.ch6.dir",
+    "python.ch6.packages",
+  ],
+  ch7: [
+    "python.ch7.fstrings_format",
+    "python.ch7.str_repr",
+    "python.ch7.open_modes",
+    "python.ch7.with_files",
+    "python.ch7.json",
+  ],
+  ch8: [
+    "python.ch8.syntax_vs_exception",
+    "python.ch8.try_except",
+    "python.ch8.raise",
+    "python.ch8.finally_cleanup",
+    "python.ch8.custom_exceptions",
+  ],
+  ch9: [
+    "python.ch9.namespaces_scopes",
+    "python.ch9.class_definition",
+    "python.ch9.instance_methods",
+    "python.ch9.class_instance_variables",
+    "python.ch9.inheritance",
+  ],
+};
+
+type ActiveView = "learning" | "chapters" | "challenge" | "knowledge" | "errors";
 
 function navButtonClass(isActive: boolean): string {
   return `nav-button${isActive ? " nav-button--active" : ""}`;
@@ -149,6 +229,47 @@ function PreparingAssessment({ option }: { option: AssessmentOption }) {
   );
 }
 
+function challengeChapterKey(moduleId: string | undefined): string | null {
+  if (!moduleId?.startsWith("python_challenge_")) return null;
+  return moduleId.replace("python_challenge_", "");
+}
+
+function isChallengeChapterMastered(
+  moduleId: string | undefined,
+  knowledgeNodes: { id: string; displayStatus: string }[],
+): boolean {
+  const chapterKey = challengeChapterKey(moduleId);
+  if (!chapterKey) return false;
+  const targetNodeIds = chapterKnowledgeNodeIds[chapterKey] ?? [];
+  if (targetNodeIds.length === 0) return false;
+  const statusById = new Map(
+    knowledgeNodes.map((node) => [node.id, node.displayStatus]),
+  );
+  return targetNodeIds.every(
+    (nodeId) => statusById.get(nodeId) === "基本掌握",
+  );
+}
+
+function ChallengeComplete({ title }: { title: string }) {
+  return (
+    <section className="challenge-complete" role="status" aria-live="polite">
+      <div className="challenge-complete__visual" aria-hidden="true">
+        <span>pass</span>
+        <span>master</span>
+        <span>Python</span>
+      </div>
+      <div className="challenge-complete__copy">
+        <span>{title}</span>
+        <strong>恭喜您，完成了{title}全部的知识点测试</strong>
+        <p>
+          在学习 Python 的道路上，您是我见过的最具天赋的种子型选手，您努力学习
+          Python 的样子，我觉得十分美好。
+        </p>
+      </div>
+    </section>
+  );
+}
+
 export function LearningPage() {
   const conversationRef = useRef<HTMLDivElement>(null);
   const [activeView, setActiveView] = useState<ActiveView>("learning");
@@ -167,15 +288,23 @@ export function LearningPage() {
     placeholder,
     composerDisabled,
     startSession,
-    restartSession,
     sendStudentMessage,
   } = useLearningSession();
 
-  const foundationOption = assessmentOptions[0];
-  const chapterOptions = assessmentOptions.slice(1);
   const preparingOption =
     assessmentOptions.find((option) => option.moduleId === preparingModuleId) ??
     null;
+  const activeSessionOption = chapterQuestionSet
+    ? optionByModuleId.get(chapterQuestionSet.chapter_id)
+    : null;
+  const activeSessionTitle =
+    activeSessionOption?.displayTitle ?? chapterQuestionSet?.chapter_title;
+  const challengeComplete =
+    activeView === "learning" &&
+    chapterQuestionSet != null &&
+    isChallengeChapterMastered(chapterQuestionSet.chapter_id, knowledgeNodes);
+  const isActiveChallengeSession =
+    chapterQuestionSet?.chapter_id.startsWith("python_challenge_") ?? false;
 
   useEffect(() => {
     const conversation = conversationRef.current;
@@ -185,15 +314,19 @@ export function LearningPage() {
   }, [messages]);
 
   const currentTitle =
-    preparingOption != null
-      ? preparingOption.title
-      : activeView === "knowledge"
+    activeView === "knowledge"
       ? "个人知识图谱"
       : activeView === "errors"
         ? "个人错误图谱"
-        : activeView === "chapters"
-          ? "Python 章节测试"
-          : chapterQuestionSet?.chapter_title ?? "请选择测试";
+        : preparingOption != null
+          ? preparingOption.displayTitle
+          : activeView === "chapters"
+            ? "Python 章节测试"
+            : activeView === "challenge"
+              ? "Python 单题闯关"
+              : activeSessionTitle != null
+                ? activeSessionTitle
+                : "请选择测试";
 
   async function handleStart(moduleId: string) {
     setPreparingModuleId(moduleId);
@@ -205,12 +338,6 @@ export function LearningPage() {
     }
   }
 
-  async function handleRestart() {
-    setPreparingModuleId(null);
-    setActiveView("learning");
-    await restartSession();
-  }
-
   const isPreparingAssessment =
     activeView === "learning" &&
     isLoading &&
@@ -218,9 +345,16 @@ export function LearningPage() {
     preparingOption != null;
   const isChapterAssessmentActive =
     activeView === "chapters" ||
-    chapterOptions.some((option) => option.moduleId === preparingModuleId) ||
+    chapterTestOptions.some((option) => option.moduleId === preparingModuleId) ||
     (activeView === "learning" &&
-      chapterOptions.some(
+      chapterTestOptions.some(
+        (option) => option.moduleId === chapterQuestionSet?.chapter_id,
+      ));
+  const isChallengeActive =
+    activeView === "challenge" ||
+    challengeOptions.some((option) => option.moduleId === preparingModuleId) ||
+    (activeView === "learning" &&
+      challengeOptions.some(
         (option) => option.moduleId === chapterQuestionSet?.chapter_id,
       ));
 
@@ -230,11 +364,6 @@ export function LearningPage() {
         <strong>PyCoach Lab</strong>
         <div className="topbar__actions">
           <span>当前模块：{currentTitle}</span>
-          {sessionId && (
-            <button type="button" onClick={() => void handleRestart()}>
-              重新选择测试
-            </button>
-          )}
         </div>
       </header>
       <div className="workspace">
@@ -261,6 +390,14 @@ export function LearningPage() {
             >
               <span>Python 章节测试</span>
               <small>第 3-9 章</small>
+            </button>
+            <button
+              type="button"
+              className={navButtonClass(isChallengeActive)}
+              onClick={() => setActiveView("challenge")}
+            >
+              <span>Python 单题闯关</span>
+              <small>第 3-9 章 / 掌握为止</small>
             </button>
             <button
               type="button"
@@ -296,15 +433,21 @@ export function LearningPage() {
               {error}
             </div>
           )}
-          {activeView === "learning" && chapterQuestionSet && (
+          {activeView === "learning" && chapterQuestionSet && !challengeComplete && (
             <div className="learning-summary" aria-label="当前测试进度">
               <span>本次已完成 {completedQuestionCount} 题</span>
-              <strong>
-                第 {chapterQuestionSet.current_question_slot} /{" "}
-                {chapterQuestionSet.target_question_count} 题
-              </strong>
+              {isActiveChallengeSession ? (
+                <strong>第 {completedQuestionCount + 1} 题</strong>
+              ) : (
+                <strong>
+                  第 {chapterQuestionSet.current_question_slot} /{" "}
+                  {chapterQuestionSet.target_question_count} 题
+                </strong>
+              )}
               <small>
-                {learnerLevelLabels[chapterQuestionSet.learner_level]}
+                {isActiveChallengeSession
+                  ? "单题闯关，掌握为止"
+                  : learnerLevelLabels[chapterQuestionSet.learner_level]}
               </small>
             </div>
           )}
@@ -316,7 +459,7 @@ export function LearningPage() {
                 <span>选择一个章节后，右侧会直接开始该章节的 10 道自适应题。</span>
               </div>
               <div className="chapter-grid">
-                {chapterOptions.map((option) => (
+                {chapterTestOptions.map((option) => (
                   <button
                     type="button"
                     className="chapter-card"
@@ -324,6 +467,30 @@ export function LearningPage() {
                     onClick={() => void handleStart(option.moduleId)}
                     disabled={isLoading}
                     aria-label={`开始 ${option.title}`}
+                  >
+                    <span>{option.title}</span>
+                    <small>{option.meta}</small>
+                  </button>
+                ))}
+              </div>
+            </section>
+          ) : activeView === "challenge" ? (
+            <section className="chapter-selector">
+              <div className="view-header">
+                <strong>Python 单题闯关</strong>
+                <span>
+                  选择章节后，每次只推进一道题；系统会围绕该章尚未完全掌握的知识点持续出题。
+                </span>
+              </div>
+              <div className="chapter-grid">
+                {challengeOptions.map((option) => (
+                  <button
+                    type="button"
+                    className="chapter-card"
+                    key={option.moduleId}
+                    onClick={() => void handleStart(option.moduleId)}
+                    disabled={isLoading}
+                    aria-label={`开始 ${option.title}单题闯关`}
                   >
                     <span>{option.title}</span>
                     <small>{option.meta}</small>
@@ -341,6 +508,8 @@ export function LearningPage() {
             </div>
           ) : isPreparingAssessment ? (
             <PreparingAssessment option={preparingOption} />
+          ) : challengeComplete ? (
+            <ChallengeComplete title={activeSessionTitle ?? "本章"} />
           ) : sessionId ? (
             <div className="conversation-scroll" ref={conversationRef}>
               <ConversationTimeline messages={messages} />

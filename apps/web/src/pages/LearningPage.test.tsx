@@ -180,7 +180,8 @@ describe("LearningPage integration", () => {
     await waitFor(() => expect(button).not.toBeDisabled());
     fireEvent.click(button);
 
-    expect(await screen.findByText(/Python 综合能力诊断/)).toBeInTheDocument();
+    expect(await screen.findByText("当前模块：Python 综合能力测试"))
+      .toBeInTheDocument();
     expect(await screen.findByText(/第 1 \/ 35 题/)).toBeInTheDocument();
   });
 
@@ -221,7 +222,8 @@ describe("LearningPage integration", () => {
       );
     });
 
-    expect(await screen.findByText(/Python 综合能力诊断/)).toBeInTheDocument();
+    expect(await screen.findByText("当前模块：Python 综合能力测试"))
+      .toBeInTheDocument();
     expect(screen.queryByText("正在生成综合能力诊断")).not.toBeInTheDocument();
   });
 
@@ -275,6 +277,125 @@ describe("LearningPage integration", () => {
       expect.stringContaining("/api/sessions"),
       expect.objectContaining({ method: "POST" }),
     );
+  });
+
+  it("shows single-question challenge chapter choices on the right", async () => {
+    const fetchMock = vi.fn(async () => new Response("not found", { status: 404 }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+    const challengeButton = await screen.findByRole("button", {
+      name: /Python 单题闯关/,
+    });
+    fireEvent.click(challengeButton);
+
+    expect((await screen.findAllByText("Python 单题闯关")).length)
+      .toBeGreaterThan(0);
+    expect(
+      screen.getByRole("button", { name: "开始 第 5 章：数据结构单题闯关" }),
+    ).toBeInTheDocument();
+    expect(fetchMock).not.toHaveBeenCalledWith(
+      expect.stringContaining("/api/sessions"),
+      expect.objectContaining({ method: "POST" }),
+    );
+  });
+
+  it("starts a single-question challenge and keeps the topbar on the chapter title", async () => {
+    const challengeSession = {
+      ...initialSession,
+      chapter_question_set: {
+        ...initialSession.chapter_question_set,
+        chapter_id: "python_challenge_ch5",
+        chapter_title: "第 5 章：数据结构单题闯关",
+        target_question_count: 50,
+      },
+    };
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith("/api/sessions") && init?.method === "POST") {
+        expect(JSON.parse(String(init.body))).toMatchObject({
+          module: "python_challenge_ch5",
+        });
+        return new Response(JSON.stringify(challengeSession), { status: 200 });
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+    fireEvent.click(await screen.findByRole("button", { name: /Python 单题闯关/ }));
+    fireEvent.click(
+      await screen.findByRole("button", {
+        name: "开始 第 5 章：数据结构单题闯关",
+      }),
+    );
+
+    expect(await screen.findByText("当前模块：第 5 章：数据结构"))
+      .toBeInTheDocument();
+    expect(await screen.findByText("第 1 题")).toBeInTheDocument();
+    expect(screen.queryByText(/重新选择测试/)).not.toBeInTheDocument();
+  });
+
+  it("shows the challenge completion animation when all chapter nodes are mastered", async () => {
+    const masteredSession = {
+      ...initialSession,
+      chapter_question_set: {
+        ...initialSession.chapter_question_set,
+        chapter_id: "python_challenge_ch5",
+        chapter_title: "第 5 章：数据结构单题闯关",
+        target_question_count: 50,
+      },
+      knowledge_graph: [
+        {
+          node_id: "python.ch5.list_methods",
+          name: "列表方法",
+          display_status: "基本掌握",
+        },
+        {
+          node_id: "python.ch5.comprehensions",
+          name: "列表推导式",
+          display_status: "基本掌握",
+        },
+        {
+          node_id: "python.ch5.tuples_sequences",
+          name: "元组与序列",
+          display_status: "基本掌握",
+        },
+        {
+          node_id: "python.ch5.sets_dicts",
+          name: "集合与字典",
+          display_status: "基本掌握",
+        },
+        {
+          node_id: "python.ch5.looping_conditions",
+          name: "循环技巧与条件",
+          display_status: "基本掌握",
+        },
+      ],
+    };
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith("/api/sessions") && init?.method === "POST") {
+        return new Response(JSON.stringify(masteredSession), { status: 200 });
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+    fireEvent.click(await screen.findByRole("button", { name: /Python 单题闯关/ }));
+    fireEvent.click(
+      await screen.findByRole("button", {
+        name: "开始 第 5 章：数据结构单题闯关",
+      }),
+    );
+
+    expect(await screen.findByText("恭喜您，完成了第 5 章：数据结构全部的知识点测试"))
+      .toBeInTheDocument();
+    expect(
+      screen.getByText(/您是我见过的最具天赋的种子型选手/),
+    ).toBeInTheDocument();
+    expect(screen.queryByLabelText("学习输入")).not.toBeInTheDocument();
   });
 
   it("opens personal graph views from the left navigation", async () => {
@@ -356,7 +477,7 @@ describe("LearningPage integration", () => {
     await startControlFlowChapterTest();
 
     expect(await screen.findByText("请填写：")).toBeInTheDocument();
-    expect(screen.getByText(/控制流章节测试/)).toBeInTheDocument();
+    expect(screen.getByText("当前模块：第 4 章：控制流")).toBeInTheDocument();
     expect(screen.getByText(/第 1 \/ 10 题/)).toBeInTheDocument();
     expect(screen.getByText("基础强化")).toBeInTheDocument();
     expect(screen.queryByText("绝不能显示")).not.toBeInTheDocument();
@@ -679,7 +800,7 @@ describe("LearningPage integration", () => {
     expect(window.localStorage.getItem("pycoach.session_id")).toBeNull();
   });
 
-  it("lets the learner clear an active session from the topbar", async () => {
+  it("returns to chapter choices when the learner clicks chapter test again", async () => {
     const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
       if (url.endsWith("/api/sessions") && init?.method === "POST") {
@@ -691,17 +812,18 @@ describe("LearningPage integration", () => {
 
     render(<LearningPage />);
     await startControlFlowChapterTest();
-    expect(await screen.findByText(/控制流章节测试/)).toBeInTheDocument();
+    expect(await screen.findByText("当前模块：第 4 章：控制流"))
+      .toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "重新选择测试" }));
+    fireEvent.click(screen.getByRole("button", { name: /Python 章节测试/ }));
 
     expect(
-      await screen.findByRole("button", {
-        name: "开始 Python 综合能力测试",
-      }),
+      await screen.findByRole("button", { name: "开始 第 5 章：数据结构" }),
     ).toBeInTheDocument();
-    expect(screen.queryByText("控制流章节测试")).not.toBeInTheDocument();
-    expect(window.localStorage.getItem("pycoach.session_id")).toBeNull();
+    expect(screen.queryByText(/重新选择测试/)).not.toBeInTheDocument();
+    expect(window.localStorage.getItem("pycoach.session_id")).toBe(
+      initialSession.session_id,
+    );
   });
 
   it("does not restore a stored iterator session removed from the test navigation", async () => {

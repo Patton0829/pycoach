@@ -32,6 +32,13 @@ const RESTORABLE_MODULE_IDS = new Set([
   "python_tutorial_ch7",
   "python_tutorial_ch8",
   "python_tutorial_ch9",
+  "python_challenge_ch3",
+  "python_challenge_ch4",
+  "python_challenge_ch5",
+  "python_challenge_ch6",
+  "python_challenge_ch7",
+  "python_challenge_ch8",
+  "python_challenge_ch9",
 ]);
 const streamMessageId = (streamId: string) => `stream-${streamId}`;
 const SUBMITTING_STATES: SessionState[] = [

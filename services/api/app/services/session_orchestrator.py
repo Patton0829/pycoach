@@ -201,21 +201,17 @@ class LearningSessionOrchestrator:
             database.flush()
 
             chapter_service = ChapterQuestioningService(database)
-            critic_summary, candidate_constraints = (
-                chapter_service.generation_inputs_for_slot(
-                    session,
-                    slot=ChapterQuestioningService.current_slot(0),
-                    assessment_id=request.module,
-                )
+            critic_summary, candidate_constraints = chapter_service.generation_inputs_for_slot(
+                session,
+                slot=ChapterQuestioningService.current_slot(0),
+                assessment_id=request.module,
             )
             context = QuestionContextBuilder(database).build(
                 request.learner_id,
                 critic_summary=critic_summary,
                 candidate_constraints=candidate_constraints,
             )
-            generation = await QuestionService(self.provider).generate_next_question(
-                context
-            )
+            generation = await QuestionService(self.provider).generate_next_question(context)
             question = create_question_record(
                 generation.packet,
                 session.id,
@@ -469,9 +465,7 @@ class LearningSessionOrchestrator:
             ]
             previous_record = repository.get_latest_turn_result(learning_round.id)
             previous_result = (
-                repository.turn_result_from_record(previous_record)
-                if previous_record
-                else None
+                repository.turn_result_from_record(previous_record) if previous_record else None
             )
             candidate = repository.get_candidate_question(
                 session.id,
@@ -641,14 +635,10 @@ class LearningSessionOrchestrator:
                 target_slot = ChapterQuestioningService.next_slot(
                     repository.count_completed_rounds(session.id)
                 )
-                plan_summary, candidate_constraints = (
-                    chapter_service.generation_inputs_for_slot(
-                        session,
-                        slot=target_slot,
-                        recent_questions=repository.list_recent_formal_questions(
-                            session.id
-                        ),
-                    )
+                plan_summary, candidate_constraints = chapter_service.generation_inputs_for_slot(
+                    session,
+                    slot=target_slot,
+                    recent_questions=repository.list_recent_formal_questions(session.id),
                 )
                 generation_summary = {
                     **critic_summary,
@@ -705,10 +695,7 @@ class LearningSessionOrchestrator:
     async def finalize_round(self, session_id: str) -> None:
         import asyncio
 
-        deadline = (
-            asyncio.get_running_loop().time()
-            + NEXT_QUESTION_WAIT_TIMEOUT_SECONDS
-        )
+        deadline = asyncio.get_running_loop().time() + NEXT_QUESTION_WAIT_TIMEOUT_SECONDS
         published = None
         while published is None:
             published = await self._publish_prepared_question(session_id)
@@ -766,14 +753,10 @@ class LearningSessionOrchestrator:
                 target_slot = ChapterQuestioningService.next_slot(
                     repository.count_completed_rounds(session.id)
                 )
-                critic_summary, candidate_constraints = (
-                    chapter_service.generation_inputs_for_slot(
-                        session,
-                        slot=target_slot,
-                        recent_questions=repository.list_recent_formal_questions(
-                            session.id
-                        ),
-                    )
+                critic_summary, candidate_constraints = chapter_service.generation_inputs_for_slot(
+                    session,
+                    slot=target_slot,
+                    recent_questions=repository.list_recent_formal_questions(session.id),
                 )
                 candidate = await CandidateQuestionService(self.provider).generate(
                     database,
@@ -897,9 +880,7 @@ class LearningSessionOrchestrator:
         latest_message = messages[-1]
         created_at = latest_message.created_at
         if created_at is not None:
-            age_seconds = (
-                datetime.utcnow() - created_at.replace(tzinfo=None)
-            ).total_seconds()
+            age_seconds = (datetime.utcnow() - created_at.replace(tzinfo=None)).total_seconds()
             if age_seconds < STALE_NEXT_QUESTION_SECONDS:
                 return
         self._recover_processing_failure_in_database(
@@ -930,8 +911,7 @@ class LearningSessionOrchestrator:
         existing_recovery = [
             message
             for message in reversed(messages)
-            if message.role == "critic"
-            and "下一题暂时没有准备好" in message.content_markdown
+            if message.role == "critic" and "下一题暂时没有准备好" in message.content_markdown
         ]
         if existing_recovery:
             transition_session(session, SessionState.FEEDBACK_DISCUSSION)
@@ -988,18 +968,14 @@ class LearningSessionOrchestrator:
                 session.id,
                 next_round_id,
             )
-            summary_execution = await CriticConversationService(
-                self.provider
-            ).summarize_discussion(
+            summary_execution = await CriticConversationService(self.provider).summarize_discussion(
                 DiscussionSummaryContext(
                     question_packet=packet,
                     question_review=review,
                     conversation_history=history,
                     turn_results=turn_results,
                     provisional_candidate_question=(
-                        repository.packet_from_question(candidate)
-                        if candidate
-                        else None
+                        repository.packet_from_question(candidate) if candidate else None
                     ),
                 )
             )
@@ -1036,6 +1012,9 @@ class LearningSessionOrchestrator:
                     logger.exception("Graph update transaction rolled back")
                     graphs_changed = False
 
+            challenge_complete = ChapterQuestioningService(database).is_single_challenge_complete(
+                session.id
+            )
             learning_round.final_verdict = summary.final_verdict
             learning_round.discussion_summary_json = summary.model_dump(mode="json")
             if learning_round.finalized_at is None:
@@ -1054,6 +1033,8 @@ class LearningSessionOrchestrator:
                 ),
             ),
         )
+        if challenge_complete:
+            return
         await self.prepare_candidate(
             session_id,
             critic_summary=summary.model_dump(mode="json"),
@@ -1094,9 +1075,7 @@ class LearningSessionOrchestrator:
             QuestionInvalidEvent(
                 session_id=UUID(session_id),
                 payload=QuestionInvalidPayload(
-                    student_visible_reason_markdown=(
-                        "这道题存在问题，不会影响你的学习记录。"
-                    )
+                    student_visible_reason_markdown=("这道题存在问题，不会影响你的学习记录。")
                 ),
             ),
         )
@@ -1127,14 +1106,12 @@ class LearningSessionOrchestrator:
                 for record in records_to_avoid
             ]
             chapter_service = ChapterQuestioningService(database)
-            critic_summary, candidate_constraints = (
-                chapter_service.generation_inputs_for_slot(
-                    session,
-                    slot=ChapterQuestioningService.current_slot(
-                        repository.count_completed_rounds(session.id)
-                    ),
-                    recent_questions=records_to_avoid,
-                )
+            critic_summary, candidate_constraints = chapter_service.generation_inputs_for_slot(
+                session,
+                slot=ChapterQuestioningService.current_slot(
+                    repository.count_completed_rounds(session.id)
+                ),
+                recent_questions=records_to_avoid,
             )
             context = QuestionContextBuilder(database).build(
                 session.learner_id,
