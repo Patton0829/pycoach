@@ -150,6 +150,24 @@ describe("LearningPage integration", () => {
     vi.unstubAllGlobals();
   });
 
+  it("shows the AI Python Coach introduction by default after refresh", async () => {
+    const fetchMock = vi.fn(async () => new Response("not found", { status: 404 }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+
+    expect(
+      await screen.findByRole("heading", { name: "关于 AI Python Coach" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("当前模块：关于 AI Python Coach"))
+      .toBeInTheDocument();
+    expect(screen.getByText(/高反馈学习为核心/)).toBeInTheDocument();
+    expect(fetchMock).not.toHaveBeenCalledWith(
+      expect.stringContaining("/api/sessions"),
+      expect.objectContaining({ method: "POST" }),
+    );
+  });
+
   it("shows the Python foundation diagnostic intro before starting", async () => {
     const diagnosticSession = {
       ...initialSession,
@@ -840,6 +858,9 @@ describe("LearningPage integration", () => {
         name: "查看 Python 综合能力测试介绍",
       }),
     ).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", { name: "关于 AI Python Coach" }),
+    ).toBeInTheDocument();
     expect(window.localStorage.getItem("pycoach.session_id")).toBeNull();
     expect(fetchMock).not.toHaveBeenCalledWith(
       expect.stringContaining("/api/sessions"),
@@ -874,6 +895,9 @@ describe("LearningPage integration", () => {
         name: "查看 Python 综合能力测试介绍",
       }),
     ).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", { name: "关于 AI Python Coach" }),
+    ).toBeInTheDocument();
     expect(screen.queryByText("请填写：")).not.toBeInTheDocument();
     expect(window.localStorage.getItem("pycoach.session_id")).toBeNull();
   });
@@ -899,6 +923,9 @@ describe("LearningPage integration", () => {
       await screen.findByRole("button", {
         name: "查看 Python 综合能力测试介绍",
       }),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", { name: "关于 AI Python Coach" }),
     ).toBeInTheDocument();
     expect(screen.queryByText("请填写：")).not.toBeInTheDocument();
     expect(window.localStorage.getItem("pycoach.session_id")).toBeNull();
@@ -955,6 +982,9 @@ describe("LearningPage integration", () => {
       await screen.findByRole("button", {
         name: "查看 Python 综合能力测试介绍",
       }),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", { name: "关于 AI Python Coach" }),
     ).toBeInTheDocument();
     expect(screen.queryByText("Python 迭代器")).not.toBeInTheDocument();
     expect(screen.queryByText("请选择左侧测试开始")).not.toBeInTheDocument();
