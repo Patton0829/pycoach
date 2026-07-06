@@ -176,7 +176,13 @@ const chapterKnowledgeNodeIds: Record<string, string[]> = {
   ],
 };
 
-type ActiveView = "learning" | "chapters" | "challenge" | "knowledge" | "errors";
+type ActiveView =
+  | "learning"
+  | "chapters"
+  | "challenge"
+  | "knowledge"
+  | "errors"
+  | "about";
 
 function navButtonClass(isActive: boolean): string {
   return `nav-button${isActive ? " nav-button--active" : ""}`;
@@ -270,6 +276,154 @@ function ChallengeComplete({ title }: { title: string }) {
   );
 }
 
+function AboutCoach() {
+  const learningPrinciples = [
+    {
+      title: "主动回忆",
+      body: "真正的学习不是把答案看懂，而是在没有答案时把规则、步骤和判断依据从脑子里取出来。",
+    },
+    {
+      title: "适宜难度",
+      body: "题目不能一直太简单，也不能一上来就过载。AI Python Coach 会根据当前掌握度调整题目难度。",
+    },
+    {
+      title: "及时反馈",
+      body: "每次回答都会得到 Critic 的即时评价。答对时强化有效策略，答错时直接指出规则、误区和推理路径。",
+    },
+    {
+      title: "交错练习",
+      body: "知识点不会永远按固定顺序出现。系统会把相关概念交错出现，帮助你建立可迁移的 Python 理解。",
+    },
+    {
+      title: "元认知",
+      body: "学习不仅是做题，还要知道自己哪里会、哪里不会、为什么错、下一步应该练什么。",
+    },
+    {
+      title: "高反馈循环",
+      body: "一次答题会同时更新题目、评价、知识图谱和错误图谱，让学习路径越来越贴近你本人。",
+    },
+  ];
+
+  return (
+    <section className="about-page" aria-labelledby="about-title">
+      <div className="about-hero">
+        <span>About AI Python Coach</span>
+        <h1 id="about-title">关于 AI Python Coach</h1>
+        <p>
+          AI Python Coach 是一个以高反馈学习为核心的 Python 多智能体学习系统。
+          它不只给你题目和答案，而是把每一次作答、追问、错误和进步沉淀成个人学习画像，
+          再用这个画像决定下一道题应该考什么、怎么考、考到什么难度。
+        </p>
+      </div>
+
+      <div className="about-section">
+        <h2>核心学习理念</h2>
+        <p>
+          这个系统借鉴《认知天性》《学习之道》《我的天才学习方法》等学习方法论中的通用原则：
+          主动回忆、间隔复习、交错练习、及时反馈、适宜难度和元认知。它们共同指向一件事：
+          学习不是被动接收信息，而是在不断尝试、犯错、修正和迁移中形成稳定能力。
+        </p>
+        <div className="principle-grid">
+          {learningPrinciples.map((principle) => (
+            <article className="principle-card" key={principle.title}>
+              <strong>{principle.title}</strong>
+              <p>{principle.body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <div className="about-section">
+        <h2>Questioner 依据什么出题</h2>
+        <div className="about-two-column">
+          <p>
+            Questioner 不是随机出题。它会读取当前测试类型、章节核心知识点、你的个人知识图谱、
+            近期答题记录和高频错误类型，然后生成一道对当前学习最有价值的问题。
+          </p>
+          <ul>
+            <li>章节测试关注该章核心概念，保证覆盖识别、补全、推理、解释和迁移。</li>
+            <li>综合测试覆盖 Python 第 3-9 章，用来建立整体水平画像。</li>
+            <li>单题闯关优先挑选你还没有完全掌握的知识点，一次只推进一道题。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="about-section">
+        <h2>Critic 如何评估</h2>
+        <div className="about-two-column">
+          <p>
+            Critic 会结合题目、参考答案、可接受答案、学生回答和历史对话判断意图。
+            它不执行学生代码，而是直接理解 Python 语义并给出评价。
+          </p>
+          <ul>
+            <li>答对时，先明确肯定，再解释关键依据，强化正确思路。</li>
+            <li>答错时，不做空泛安慰，直接分析错因、规则和推理路径。</li>
+            <li>回合结束后，Critic 会把可靠证据写入个人知识图谱和个人错误图谱。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="about-section">
+        <h2>图谱如何帮助学习</h2>
+        <div className="about-two-column">
+          <p>
+            个人知识图谱记录你对知识点的掌握状态，个人错误图谱记录你反复出现的误区。
+            它们不是展示用的装饰，而是下一轮出题和难度调整的依据。
+          </p>
+          <ul>
+            <li>知识图谱回答：哪些知识点已经掌握，哪些还需要巩固。</li>
+            <li>错误图谱回答：你经常在哪些规则、概念或推理环节出错。</li>
+            <li>两个图谱共同决定：下一题应该练什么，以及应该用什么方式检验。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="about-section">
+        <h2>系统架构图</h2>
+        <div className="coach-diagram" aria-label="AI Python Coach 系统架构图">
+          <div className="diagram-node diagram-node--user">
+            <strong>用户</strong>
+            <span>选择测试、提交答案、提出疑问</span>
+          </div>
+          <div className="diagram-arrow diagram-arrow--down">学习输入</div>
+          <div className="diagram-row">
+            <div className="diagram-node diagram-node--questioner">
+              <strong>Questioner</strong>
+              <span>依据章节、水平和图谱生成题目</span>
+            </div>
+            <div className="diagram-node diagram-node--methods">
+              <strong>学习方法引擎</strong>
+              <span>主动回忆、交错练习、适宜难度、及时反馈</span>
+            </div>
+            <div className="diagram-node diagram-node--critic">
+              <strong>Critic</strong>
+              <span>评价答案、解释错因、沉淀证据</span>
+            </div>
+          </div>
+          <div className="diagram-arrow diagram-arrow--split">题目与反馈形成高反馈循环</div>
+          <div className="diagram-row diagram-row--graphs">
+            <div className="diagram-node diagram-node--knowledge">
+              <strong>个人知识图谱</strong>
+              <span>记录知识点掌握度</span>
+            </div>
+            <div className="diagram-node diagram-node--error">
+              <strong>个人错误图谱</strong>
+              <span>记录误区和错误类型</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <blockquote className="founder-note">
+        <p>
+          在AI Python Coach，我们从不强调Python多么重要，就像我们的高中数学老师总是强调得数学者得天下一样，那样会增长功利心，也就没法享受学习Python的乐趣，而做我们喜欢的事情，就不会觉得累，他们会乐此不疲，我们希望通过引入高反馈机制、好的学习方法、适宜的难度、大模型能力来做这样更懂用户的多智能体系统，帮助用户在学习Python的道路上略尽绵薄之力。
+        </p>
+        <footer>—AI Python Coach创始人</footer>
+      </blockquote>
+    </section>
+  );
+}
+
 export function LearningPage() {
   const conversationRef = useRef<HTMLDivElement>(null);
   const [activeView, setActiveView] = useState<ActiveView>("learning");
@@ -318,15 +472,17 @@ export function LearningPage() {
       ? "个人知识图谱"
       : activeView === "errors"
         ? "个人错误图谱"
-        : preparingOption != null
-          ? preparingOption.displayTitle
-          : activeView === "chapters"
-            ? "Python 章节测试"
-            : activeView === "challenge"
-              ? "Python 单题闯关"
-              : activeSessionTitle != null
-                ? activeSessionTitle
-                : "请选择测试";
+        : activeView === "about"
+          ? "关于 AI Python Coach"
+          : preparingOption != null
+            ? preparingOption.displayTitle
+            : activeView === "chapters"
+              ? "Python 章节测试"
+              : activeView === "challenge"
+                ? "Python 单题闯关"
+                : activeSessionTitle != null
+                  ? activeSessionTitle
+                  : "请选择测试";
 
   async function handleStart(moduleId: string) {
     setPreparingModuleId(moduleId);
@@ -414,6 +570,14 @@ export function LearningPage() {
             >
               <span>个人错误图谱</span>
               <small>{errorNodes.length} 个错误类型</small>
+            </button>
+            <button
+              type="button"
+              className={navButtonClass(activeView === "about")}
+              onClick={() => setActiveView("about")}
+            >
+              <span>关于 AI Python Coach</span>
+              <small>理念 / 架构 / 学习方法</small>
             </button>
           </nav>
         </aside>
@@ -506,6 +670,8 @@ export function LearningPage() {
             <div className="graph-detail">
               <ErrorGraph nodes={errorNodes} />
             </div>
+          ) : activeView === "about" ? (
+            <AboutCoach />
           ) : isPreparingAssessment ? (
             <PreparingAssessment option={preparingOption} />
           ) : challengeComplete ? (

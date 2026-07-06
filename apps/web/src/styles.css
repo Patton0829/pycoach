@@ -747,6 +747,231 @@ textarea {
   font-size: 13px;
 }
 
+.about-page {
+  flex: 1;
+  min-height: 0;
+  max-width: 1080px;
+  overflow-y: auto;
+  padding: 16px 2px 56px;
+  scrollbar-width: none;
+}
+
+.about-page::-webkit-scrollbar {
+  display: none;
+}
+
+.about-hero {
+  display: grid;
+  gap: 10px;
+  max-width: 860px;
+  margin-bottom: 26px;
+}
+
+.about-hero > span {
+  width: fit-content;
+  padding: 5px 9px;
+  border: 1px solid #2764ad;
+  border-radius: 8px;
+  color: #2764ad;
+  background: #e9f2ff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.about-hero h1 {
+  margin: 0;
+  color: #172b4d;
+  font-size: 30px;
+  line-height: 1.25;
+}
+
+.about-hero p,
+.about-section > p,
+.about-two-column p,
+.about-two-column li,
+.founder-note p {
+  color: #445163;
+  line-height: 1.8;
+}
+
+.about-hero p,
+.about-section > p {
+  margin: 0;
+}
+
+.about-section {
+  display: grid;
+  gap: 14px;
+  margin-top: 26px;
+}
+
+.about-section h2 {
+  margin: 0;
+  color: #18202a;
+  font-size: 20px;
+}
+
+.principle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.principle-card {
+  display: grid;
+  gap: 8px;
+  padding: 15px;
+  border: 1px solid #dbe3ec;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 4px 14px rgb(23 43 77 / 5%);
+}
+
+.principle-card strong {
+  color: #172b4d;
+}
+
+.principle-card p {
+  margin: 0;
+  color: #52606d;
+  line-height: 1.65;
+}
+
+.about-two-column {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.95fr) minmax(280px, 1.05fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.about-two-column p {
+  margin: 0;
+}
+
+.about-two-column ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.coach-diagram {
+  display: grid;
+  gap: 14px;
+  max-width: 940px;
+  padding: 20px;
+  border: 1px solid #dbe3ec;
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, rgb(39 100 173 / 7%) 1px, transparent 1px),
+    linear-gradient(rgb(39 100 173 / 7%) 1px, transparent 1px),
+    white;
+  background-size: 32px 32px;
+  box-shadow: 0 8px 24px rgb(23 43 77 / 7%);
+}
+
+.diagram-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.diagram-row--graphs {
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  max-width: 620px;
+  justify-self: center;
+}
+
+.diagram-node {
+  display: grid;
+  gap: 6px;
+  min-height: 96px;
+  padding: 14px;
+  border: 1px solid #dbe3ec;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 4px 14px rgb(23 43 77 / 6%);
+}
+
+.diagram-node strong {
+  color: #172b4d;
+}
+
+.diagram-node span {
+  color: #52606d;
+  line-height: 1.55;
+}
+
+.diagram-node--user {
+  max-width: 360px;
+  justify-self: center;
+  border-color: #2764ad;
+  background: #f6faff;
+}
+
+.diagram-node--questioner {
+  border-color: #1f7a5a;
+  background: #f3fbf7;
+}
+
+.diagram-node--methods {
+  border-color: #f2b84b;
+  background: #fffaf0;
+}
+
+.diagram-node--critic {
+  border-color: #7a2e83;
+  background: #fdf6ff;
+}
+
+.diagram-node--knowledge {
+  border-color: #12b76a;
+  background: #f3fbf7;
+}
+
+.diagram-node--error {
+  border-color: #b42318;
+  background: #fff7f5;
+}
+
+.diagram-arrow {
+  justify-self: center;
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: #445163;
+  background: rgb(241 245 249 / 88%);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.diagram-arrow--down::before,
+.diagram-arrow--split::before {
+  content: "↓ ";
+  color: #2764ad;
+}
+
+.founder-note {
+  margin: 30px 0 0;
+  padding: 20px;
+  border: 1px solid #dbe3ec;
+  border-left: 4px solid #2764ad;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 4px 14px rgb(23 43 77 / 5%);
+}
+
+.founder-note p {
+  margin: 0;
+}
+
+.founder-note footer {
+  margin-top: 12px;
+  color: #172b4d;
+  font-weight: 700;
+  text-align: right;
+}
+
 .challenge-complete {
   flex: 1;
   min-height: 0;
@@ -882,6 +1107,12 @@ textarea {
     grid-template-columns: 1fr;
     align-content: start;
     padding-top: 12px;
+  }
+
+  .about-two-column,
+  .diagram-row,
+  .diagram-row--graphs {
+    grid-template-columns: 1fr;
   }
 
   .preparing-visual {

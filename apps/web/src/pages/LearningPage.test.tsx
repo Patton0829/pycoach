@@ -450,6 +450,50 @@ describe("LearningPage integration", () => {
     expect(await screen.findByText("名称绑定混淆")).toBeInTheDocument();
   });
 
+  it("opens the fixed AI Python Coach introduction page", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.endsWith("/knowledge-graph")) {
+        return new Response(
+          JSON.stringify({
+            learner_id: "demo_user",
+            nodes: [],
+          }),
+          { status: 200 },
+        );
+      }
+      if (url.endsWith("/error-graph")) {
+        return new Response(
+          JSON.stringify({
+            learner_id: "demo_user",
+            nodes: [],
+          }),
+          { status: 200 },
+        );
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+
+    fireEvent.click(
+      await screen.findByRole("button", { name: /关于 AI Python Coach/ }),
+    );
+
+    expect(
+      await screen.findByRole("heading", { name: "关于 AI Python Coach" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("当前模块：关于 AI Python Coach")).toBeInTheDocument();
+    expect(screen.getByText("主动回忆")).toBeInTheDocument();
+    expect(screen.getByText("Questioner")).toBeInTheDocument();
+    expect(screen.getByText("Critic")).toBeInTheDocument();
+    expect(screen.getAllByText("个人错误图谱").length).toBeGreaterThan(0);
+    expect(screen.getByText(/我们从不强调Python多么重要/))
+      .toBeInTheDocument();
+    expect(screen.getByText("—AI Python Coach创始人")).toBeInTheDocument();
+  });
+
   it("connects REST and WebSocket without exposing internal JSON", async () => {
     const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
