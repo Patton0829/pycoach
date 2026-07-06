@@ -241,7 +241,7 @@ export function useLearningSession() {
       switch (event.type) {
         case "connection_ready":
           setStatusText((current) =>
-            current.includes("Questioner") ? current : "实时连接已建立",
+            current.includes("Questioner") ? current : "学习服务已就绪",
           );
           break;
         case "message_stream_started": {
@@ -298,15 +298,10 @@ export function useLearningSession() {
           setStatusText("Critic 已回复");
           break;
         case "candidate_question_ready":
-          setStatusText("下一题已准备");
-          window.setTimeout(() => {
-            void synchronizeSession(event.session_id).catch(() => {
-              setStatusText("会话同步失败，可刷新页面重试");
-            });
-          }, 500);
+          setStatusText("下一题已在后台准备好，输入“下一题”继续");
           break;
         case "candidate_question_stale":
-          setStatusText("诊断已变化，正在重新准备下一题");
+          setStatusText("学习诊断已更新，正在重新准备后续题目");
           break;
         case "question_invalid":
           setMessages((current) =>
@@ -342,13 +337,32 @@ export function useLearningSession() {
           break;
       }
     },
-    [refreshProgress, synchronizeSession],
+    [refreshProgress],
   );
 
-  const handleConnectionChange = useCallback((connected: boolean) => {
-    setIsConnected(connected);
-    if (!connected) setStatusText("实时连接已断开，正在等待恢复");
-  }, []);
+  const handleConnectionChange = useCallback(
+    (connected: boolean) => {
+      setIsConnected(connected);
+      if (connected) {
+        setStatusText((current) =>
+          current.includes("Questioner") ? current : "学习服务已就绪",
+        );
+        return;
+      }
+      setStatusText((current) => {
+        if (!sessionId) return current;
+        if (
+          current === "Critic 正在思考…" ||
+          current === "Critic 正在输出…" ||
+          current.includes("正在生成")
+        ) {
+          return current;
+        }
+        return "学习服务正在同步";
+      });
+    },
+    [sessionId],
+  );
 
   useSessionSocket(sessionId, handleSocketEvent, handleConnectionChange);
 

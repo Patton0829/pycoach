@@ -154,6 +154,7 @@ class SessionOrchestratorTests(unittest.TestCase):
                     first_error_before.severity if first_error_before else 0.0
                 )
 
+            self.websocket.events.clear()
             accepted = self.orchestrator.accept_message(
                 str(created.session_id),
                 "iter(iterator)",
@@ -195,6 +196,12 @@ class SessionOrchestratorTests(unittest.TestCase):
                     )
                 ).all()
                 self.assertEqual(len(candidates), 1)
+
+            event_types_after_answer = [
+                event["type"] for event in self.websocket.events
+            ]
+            self.assertIn("critic_reply_ready", event_types_after_answer)
+            self.assertNotIn("question_ready", event_types_after_answer)
 
             self.orchestrator.accept_message(
                 str(created.session_id),
@@ -255,7 +262,6 @@ class SessionOrchestratorTests(unittest.TestCase):
 
             event_types = [event["type"] for event in self.websocket.events]
             self.assertIn("critic_reply_ready", event_types)
-            self.assertIn("candidate_question_ready", event_types)
             self.assertIn("session_summary_ready", event_types)
             self.assertIn("question_ready", event_types)
 

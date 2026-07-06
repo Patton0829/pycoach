@@ -274,6 +274,9 @@ class CriticConversationTests(unittest.TestCase):
         self.assertIn("JSON Schema", system_prompt)
         self.assertIn('"intent"', system_prompt)
         self.assertIn('"provisional_knowledge_updates"', system_prompt)
+        self.assertIn("只有学生明确表达 next_question 意图时", system_prompt)
+        self.assertIn("verdict=correct 时", system_prompt)
+        self.assertIn("verdict=incorrect 或 partially_correct 时", system_prompt)
 
     def test_answer_and_question_is_evaluated_before_continuing_discussion(self) -> None:
         provider = MockLLMProvider(

@@ -170,6 +170,8 @@ class CriticTurnResult(StrictModel):
                 )
         if self.intent == "next_question" and self.round_action != "finalize_round":
             raise ValueError("next_question intent must finalize the round")
+        if self.round_action == "finalize_round" and self.intent != "next_question":
+            raise ValueError("only next_question intent can finalize the round")
         if self.intent == "end_session" and self.round_action != "end_session":
             raise ValueError("end_session intent must end the session")
         return self

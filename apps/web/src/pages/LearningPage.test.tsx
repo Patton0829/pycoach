@@ -445,7 +445,7 @@ describe("LearningPage integration", () => {
       });
     });
     expect(
-      await screen.findByText("诊断已变化，正在重新准备下一题"),
+      await screen.findByText("学习诊断已更新，正在重新准备后续题目"),
     ).toBeInTheDocument();
 
     act(() => {
@@ -479,26 +479,7 @@ describe("LearningPage integration", () => {
     expect(screen.queryByText("回答正确。")).not.toBeInTheDocument();
   });
 
-  it("re-enables the composer when a missed question_ready is recovered by REST sync", async () => {
-    const nextQuestionSession = {
-      ...initialSession,
-      state: "QUESTION_ACTIVE",
-      messages: [
-        {
-          id: "81111111-1111-4111-8111-111111111111",
-          role: "questioner",
-          content_markdown: "REST 同步出来的新题",
-          created_at: "2026-06-24T00:03:00Z",
-        },
-      ],
-      current_question_id: "81111111-1111-4111-8111-111111111111",
-      current_question: {
-        question_id: "81111111-1111-4111-8111-111111111111",
-        markdown: "REST 同步出来的新题",
-        input_hint: null,
-      },
-      completed_question_count: 1,
-    };
+  it("does not advance when only a candidate next question is ready", async () => {
     const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
       if (url.endsWith("/api/sessions") && init?.method === "POST") {
@@ -514,9 +495,6 @@ describe("LearningPage integration", () => {
           { status: 202 },
         );
       }
-      if (url.includes("/api/sessions/") && !init?.method) {
-        return new Response(JSON.stringify(nextQuestionSession), { status: 200 });
-      }
       return new Response("not found", { status: 404 });
     });
     vi.stubGlobal("fetch", fetchMock);
@@ -525,11 +503,26 @@ describe("LearningPage integration", () => {
     await startControlFlowChapterTest();
 
     const input = await screen.findByLabelText("学习输入");
-    fireEvent.change(input, { target: { value: "下一题" } });
+    fireEvent.change(input, { target: { value: "next(iterator)" } });
     fireEvent.keyDown(input, { key: "Enter", shiftKey: false });
 
-    expect(input).toBeDisabled();
     const socket = MockWebSocket.instances[0];
+    act(() => {
+      socket.emit({
+        type: "critic_reply_ready",
+        session_id: initialSession.session_id,
+        payload: {
+          message: {
+            id: "51111111-1111-4111-8111-111111111111",
+            role: "critic",
+            content_markdown: "答对了，这个判断很稳。",
+            created_at: "2026-06-24T00:01:01Z",
+          },
+          session_state: "FEEDBACK_DISCUSSION",
+        },
+      });
+    });
+
     act(() => {
       socket.emit({
         type: "candidate_question_ready",
@@ -537,37 +530,53 @@ describe("LearningPage integration", () => {
       });
     });
 
-    expect(await screen.findByText("REST 同步出来的新题")).toBeInTheDocument();
+    expect(
+      await screen.findByText("下一题已在后台准备好，输入“下一题”继续"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("请填写：")).toBeInTheDocument();
+    expect(screen.getByText("答对了，这个判断很稳。")).toBeInTheDocument();
+    expect(screen.queryByText("候选题事件同步出的新题")).not.toBeInTheDocument();
     await waitFor(() => expect(screen.getByLabelText("学习输入")).not.toBeDisabled());
   });
 
-  it("recovers a prepared next question even if the local state is stale", async () => {
-    const nextQuestionSession = {
-      ...initialSession,
-      state: "QUESTION_ACTIVE",
-      messages: [
-        {
-          id: "81111111-1111-4111-8111-111111111111",
-          role: "questioner",
-          content_markdown: "候选题事件同步出的新题",
-          created_at: "2026-06-24T00:03:00Z",
-        },
-      ],
-      current_question_id: "81111111-1111-4111-8111-111111111111",
-      current_question: {
-        question_id: "81111111-1111-4111-8111-111111111111",
-        markdown: "候选题事件同步出的新题",
-        input_hint: null,
-      },
-      completed_question_count: 1,
-    };
+  it("uses non-alarming wording when the socket is resynchronizing", async () => {
     const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
       if (url.endsWith("/api/sessions") && init?.method === "POST") {
         return new Response(JSON.stringify(initialSession), { status: 200 });
       }
-      if (url.includes("/api/sessions/") && !init?.method) {
-        return new Response(JSON.stringify(nextQuestionSession), { status: 200 });
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+    await startControlFlowChapterTest();
+    await waitFor(() => expect(MockWebSocket.instances).toHaveLength(1));
+
+    const socket = MockWebSocket.instances[0];
+    act(() => {
+      socket.close();
+    });
+
+    expect(await screen.findByText("学习服务正在同步")).toBeInTheDocument();
+    expect(screen.queryByText(/实时连接已断开/)).not.toBeInTheDocument();
+  });
+
+  it("advances only after the official question_ready event", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith("/api/sessions") && init?.method === "POST") {
+        return new Response(JSON.stringify(initialSession), { status: 200 });
+      }
+      if (url.includes("/messages") && init?.method === "POST") {
+        return new Response(
+          JSON.stringify({
+            message_id: "61111111-1111-4111-8111-111111111111",
+            status: "processing",
+            session_state: "CRITIC_PROCESSING",
+          }),
+          { status: 202 },
+        );
       }
       return new Response("not found", { status: 404 });
     });
@@ -578,14 +587,41 @@ describe("LearningPage integration", () => {
 
     expect(await screen.findByText("请填写：")).toBeInTheDocument();
     const socket = MockWebSocket.instances[0];
+
     act(() => {
       socket.emit({
-        type: "candidate_question_ready",
+        type: "critic_reply_ready",
         session_id: initialSession.session_id,
+        payload: {
+          message: {
+            id: "51111111-1111-4111-8111-111111111111",
+            role: "critic",
+            content_markdown: "答对了，这个判断很稳。",
+            created_at: "2026-06-24T00:01:01Z",
+          },
+          session_state: "FEEDBACK_DISCUSSION",
+        },
       });
     });
 
-    expect(await screen.findByText("候选题事件同步出的新题")).toBeInTheDocument();
+    const input = await screen.findByLabelText("学习输入");
+    fireEvent.change(input, { target: { value: "下一题" } });
+    fireEvent.keyDown(input, { key: "Enter", shiftKey: false });
+
+    act(() => {
+      socket.emit({
+        type: "question_ready",
+        session_id: initialSession.session_id,
+        payload: {
+          question_id: "81111111-1111-4111-8111-111111111111",
+          markdown: "正式发布的新题",
+          input_hint: null,
+        },
+      });
+    });
+
+    expect(await screen.findByText("正式发布的新题")).toBeInTheDocument();
+    expect(screen.queryByText("答对了，这个判断很稳。")).not.toBeInTheDocument();
   });
 
   it("returns to the left navigation on refresh when the stored session has progressed", async () => {

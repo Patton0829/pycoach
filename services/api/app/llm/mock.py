@@ -492,7 +492,7 @@ class DemoMockLLMProvider(LLMProvider):
         elif "不确定" in message or message == "不会":
             intent, verdict = "student_uncertain", "student_uncertain"
             action = "show_feedback" if state == "QUESTION_ACTIVE" else "continue_discussion"
-            reply = f"没关系。关键点是：{question['critic_content']['expected_reasoning']}"
+            reply = f"关键点是：{question['critic_content']['expected_reasoning']}"
             prepare = state == "QUESTION_ACTIVE"
         elif "有问题" in message or "重新检查" in message:
             intent = "challenge_evaluation"
@@ -521,7 +521,10 @@ class DemoMockLLMProvider(LLMProvider):
                 intent = "answer_and_question"
                 verdict = "correct"
                 action = "show_feedback" if state == "QUESTION_ACTIVE" else "continue_discussion"
-                reply = "回答正确。你的答案符合本题考查的 Python 规则。"
+                reply = (
+                    "答对了，而且你抓住了这题的关键规则。"
+                    f"{question['critic_content']['expected_reasoning']}"
+                )
                 prepare = state == "QUESTION_ACTIVE"
             else:
                 intent = "clarification_question"
@@ -541,7 +544,10 @@ class DemoMockLLMProvider(LLMProvider):
             )
             if is_correct:
                 verdict = "correct"
-                reply = "回答正确。你的答案符合本题考查的 Python 规则。"
+                reply = (
+                    "答对了，这个判断很稳。"
+                    f"{question['critic_content']['expected_reasoning']}"
+                )
                 knowledge_updates = [
                     {
                         "node_id": node_id,
@@ -562,7 +568,7 @@ class DemoMockLLMProvider(LLMProvider):
             else:
                 verdict = "incorrect"
                 reply = (
-                    "这次回答不正确。关键点是："
+                    "问题出在这里："
                     f"{question['critic_content']['expected_reasoning']}"
                 )
                 knowledge_updates = [
