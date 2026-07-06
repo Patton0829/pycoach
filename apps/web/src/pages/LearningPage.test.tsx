@@ -103,6 +103,14 @@ class MockWebSocket {
   }
 }
 
+function deferredResponse() {
+  let resolve: (response: Response) => void = () => {};
+  const promise = new Promise<Response>((resolvePromise) => {
+    resolve = resolvePromise;
+  });
+  return { promise, resolve };
+}
+
 async function openChapterSelector() {
   const button = await screen.findByRole("button", {
     name: /Python 章节测试/,
@@ -174,6 +182,80 @@ describe("LearningPage integration", () => {
 
     expect(await screen.findByText(/Python 综合能力诊断/)).toBeInTheDocument();
     expect(await screen.findByText(/第 1 \/ 35 题/)).toBeInTheDocument();
+  });
+
+  it("shows a Python-themed preparing state while foundation diagnostic is generated", async () => {
+    const diagnosticSession = {
+      ...initialSession,
+      chapter_question_set: {
+        ...initialSession.chapter_question_set,
+        chapter_id: "python_foundation_diagnostic",
+        chapter_title: "Python 综合能力诊断（3-9 章）",
+        target_question_count: 35,
+      },
+    };
+    const pendingCreateSession = deferredResponse();
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith("/api/sessions") && init?.method === "POST") {
+        return pendingCreateSession.promise;
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+    const button = await screen.findByRole("button", {
+      name: "开始 Python 综合能力测试",
+    });
+    await waitFor(() => expect(button).not.toBeDisabled());
+    fireEvent.click(button);
+
+    expect(await screen.findByText("正在生成综合能力诊断")).toBeInTheDocument();
+    expect(screen.getByText("我爱 Python")).toBeInTheDocument();
+    expect(screen.getByText('print("I love Python")')).toBeInTheDocument();
+
+    await act(async () => {
+      pendingCreateSession.resolve(
+        new Response(JSON.stringify(diagnosticSession), { status: 200 }),
+      );
+    });
+
+    expect(await screen.findByText(/Python 综合能力诊断/)).toBeInTheDocument();
+    expect(screen.queryByText("正在生成综合能力诊断")).not.toBeInTheDocument();
+  });
+
+  it("shows a chapter-specific preparing state while a chapter test is generated", async () => {
+    const pendingCreateSession = deferredResponse();
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith("/api/sessions") && init?.method === "POST") {
+        expect(JSON.parse(String(init.body))).toMatchObject({
+          module: "python_tutorial_ch4",
+        });
+        return pendingCreateSession.promise;
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+    await openChapterSelector();
+    fireEvent.click(screen.getByRole("button", { name: "开始 第 4 章：控制流" }));
+
+    expect(await screen.findByText("正在生成第 4 章：控制流题目")).toBeInTheDocument();
+    expect(screen.getAllByText("range()").length).toBeGreaterThan(0);
+    expect(screen.getByText("围绕 if、for、range、break/continue 和函数参数准备题目。"))
+      .toBeInTheDocument();
+
+    await act(async () => {
+      pendingCreateSession.resolve(
+        new Response(JSON.stringify(initialSession), { status: 200 }),
+      );
+    });
+
+    expect(await screen.findByText("请填写：")).toBeInTheDocument();
+    expect(screen.queryByText("正在生成第 4 章：控制流题目")).not.toBeInTheDocument();
   });
 
   it("shows chapter choices on the right before starting a chapter test", async () => {
