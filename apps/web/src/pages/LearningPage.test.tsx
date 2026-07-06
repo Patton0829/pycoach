@@ -133,7 +133,7 @@ describe("LearningPage integration", () => {
     vi.unstubAllGlobals();
   });
 
-  it("starts the Python foundation diagnostic from the selector", async () => {
+  it("starts the Python foundation diagnostic from the left navigation", async () => {
     const diagnosticSession = {
       ...initialSession,
       chapter_question_set: {
@@ -158,13 +158,65 @@ describe("LearningPage integration", () => {
 
     render(<LearningPage />);
     const button = await screen.findByRole("button", {
-      name: "开始 Python 综合能力诊断",
+      name: "开始 Python 综合能力测试",
     });
     await waitFor(() => expect(button).not.toBeDisabled());
     fireEvent.click(button);
 
     expect(await screen.findByText("Python 综合能力诊断（3-9 章）")).toBeInTheDocument();
     expect(await screen.findByText(/第 1 \/ 35 题/)).toBeInTheDocument();
+  });
+
+  it("opens personal graph views from the left navigation", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.endsWith("/knowledge-graph")) {
+        return new Response(
+          JSON.stringify({
+            learner_id: "demo_user",
+            nodes: [
+              {
+                node_id: "python.ch3.lists",
+                name: "列表基础",
+                display_status: "尚未学习",
+              },
+            ],
+          }),
+          { status: 200 },
+        );
+      }
+      if (url.endsWith("/error-graph")) {
+        return new Response(
+          JSON.stringify({
+            learner_id: "demo_user",
+            nodes: [
+              {
+                error_id: "python.name_binding_confusion",
+                name: "名称绑定混淆",
+                display_status: "需要巩固",
+              },
+            ],
+          }),
+          { status: 200 },
+        );
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+
+    fireEvent.click(await screen.findByRole("button", { name: /个人知识图谱/ }));
+    expect(
+      await screen.findByRole("heading", { name: "个人知识图谱" }),
+    ).toBeInTheDocument();
+    expect(await screen.findByText("列表基础")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /个人错误图谱/ }));
+    expect(
+      await screen.findByRole("heading", { name: "错误图谱" }),
+    ).toBeInTheDocument();
+    expect(await screen.findByText("名称绑定混淆")).toBeInTheDocument();
   });
 
   it("connects REST and WebSocket without exposing internal JSON", async () => {
@@ -197,8 +249,6 @@ describe("LearningPage integration", () => {
     expect(screen.getByText("Python 迭代器")).toBeInTheDocument();
     expect(screen.getByText(/第 1 \/ 10 题/)).toBeInTheDocument();
     expect(screen.getByText("基础强化")).toBeInTheDocument();
-    expect(screen.getByText("next()")).toBeInTheDocument();
-    expect(screen.getByText("正在学习")).toBeInTheDocument();
     expect(screen.queryByText("绝不能显示")).not.toBeInTheDocument();
     expect(screen.queryByText(/reference_answer/)).not.toBeInTheDocument();
     expect(screen.queryByText("QUESTION_ACTIVE")).not.toBeInTheDocument();
@@ -301,8 +351,6 @@ describe("LearningPage integration", () => {
 
     expect(await screen.findByText("本次已完成 1 题")).toBeInTheDocument();
     expect(await screen.findByText(/第 2 \/ 10 题/)).toBeInTheDocument();
-    expect(await screen.findByText("基本掌握")).toBeInTheDocument();
-    expect(screen.queryByText("需要巩固")).not.toBeInTheDocument();
 
     act(() => {
       socket.emit({
@@ -430,7 +478,7 @@ describe("LearningPage integration", () => {
     expect(await screen.findByText("候选题事件同步出的新题")).toBeInTheDocument();
   });
 
-  it("returns to the assessment selector on refresh when the stored session has progressed", async () => {
+  it("returns to the left navigation on refresh when the stored session has progressed", async () => {
     window.localStorage.setItem("pycoach.session_id", initialSession.session_id);
     const progressedSession = {
       ...refreshedSession,
@@ -449,7 +497,7 @@ describe("LearningPage integration", () => {
 
     expect(
       await screen.findByRole("button", {
-        name: "开始 Python 综合能力诊断",
+        name: "开始 Python 综合能力测试",
       }),
     ).toBeInTheDocument();
     expect(window.localStorage.getItem("pycoach.session_id")).toBeNull();
@@ -459,7 +507,7 @@ describe("LearningPage integration", () => {
     );
   });
 
-  it("returns to the assessment selector when a stored legacy session has no module", async () => {
+  it("returns to the left navigation when a stored legacy session has no module", async () => {
     window.localStorage.setItem("pycoach.session_id", initialSession.session_id);
     const legacySession = {
       ...initialSession,
@@ -478,14 +526,14 @@ describe("LearningPage integration", () => {
 
     expect(
       await screen.findByRole("button", {
-        name: "开始 Python 综合能力诊断",
+        name: "开始 Python 综合能力测试",
       }),
     ).toBeInTheDocument();
     expect(screen.queryByText("请填写：")).not.toBeInTheDocument();
     expect(window.localStorage.getItem("pycoach.session_id")).toBeNull();
   });
 
-  it("lets the learner return to the assessment selector from an active session", async () => {
+  it("lets the learner clear an active session from the topbar", async () => {
     const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
       if (url.endsWith("/api/sessions") && init?.method === "POST") {
@@ -503,7 +551,7 @@ describe("LearningPage integration", () => {
 
     expect(
       await screen.findByRole("button", {
-        name: "开始 Python 综合能力诊断",
+        name: "开始 Python 综合能力测试",
       }),
     ).toBeInTheDocument();
     expect(screen.queryByText("Python 迭代器")).not.toBeInTheDocument();

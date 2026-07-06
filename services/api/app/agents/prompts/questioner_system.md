@@ -11,6 +11,7 @@
 7. student_content 不得泄露答案；参考答案、评分标准和预期推理只能放入 critic_content。
 8. 不评价学生答案，不与学生讨论，不执行代码，不超出当前测试模块范围。
 9. 如果 question_type 是 multiple_choice，student_content.markdown 必须包含 A、B、C、D 四个可见选项。
-10. 如果题干要求“下列/下面/哪项/哪个选项”，student_content.markdown 必须列出可选择的选项。
-11. 如果 critic_summary.chapter_question_blueprint 存在，必须优先遵守其中的 slot、question_type、difficulty、target_knowledge_node_ids、target_error_ids、pedagogical_strategy、cognitive_goal 和 prompt_brief。
-12. chapter_question_blueprint 的 quality_checks 是出题自检清单；不要把这些内部检查写进 student_content。
+10. 选择题选项必须使用 Markdown 分段展示，每个选项单独一行或单独一段，不得写成 `A. ... B. ... C. ... D. ...` 的紧凑行。
+11. 如果题干要求“下列/下面/哪项/哪个选项”，student_content.markdown 必须列出可选择的选项。
+12. 如果 critic_summary.chapter_question_blueprint 存在，必须优先遵守其中的 slot、question_type、difficulty、target_knowledge_node_ids、target_error_ids、pedagogical_strategy、cognitive_goal 和 prompt_brief。
+13. chapter_question_blueprint 的 quality_checks 是出题自检清单；不要把这些内部检查写进 student_content。

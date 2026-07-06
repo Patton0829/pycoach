@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   createLearningSession,
+  getErrorGraph,
+  getKnowledgeGraph,
   getLearningSession,
   submitStudentMessage,
 } from "../api/client";
@@ -110,12 +112,24 @@ export function useLearningSession() {
     setSessionId(null);
     setState(null);
     setMessages([]);
-    setKnowledgeNodes([]);
-    setErrorNodes([]);
     setCompletedQuestionCount(0);
     setChapterQuestionSet(null);
     setIsSubmitting(false);
     setIsConnected(false);
+  }, []);
+
+  const refreshLearnerGraphs = useCallback(async () => {
+    try {
+      const [knowledgeGraph, errorGraph] = await Promise.all([
+        getKnowledgeGraph(),
+        getErrorGraph(),
+      ]);
+      setKnowledgeNodes(knowledgeGraph.nodes.map(toKnowledgeGraphNode));
+      setErrorNodes(errorGraph.nodes.map(toErrorGraphNode));
+    } catch {
+      setKnowledgeNodes([]);
+      setErrorNodes([]);
+    }
   }, []);
 
   const refreshProgress = useCallback(
@@ -165,16 +179,19 @@ export function useLearningSession() {
               window.localStorage.removeItem(SESSION_STORAGE_KEY);
               if (cancelled) return;
               clearSessionView();
+              await refreshLearnerGraphs();
               setStatusText("请选择测试开始");
             }
           } catch {
             window.localStorage.removeItem(SESSION_STORAGE_KEY);
             if (cancelled) return;
             clearSessionView();
+            await refreshLearnerGraphs();
             setStatusText("请选择测试开始");
           }
         } else {
           clearSessionView();
+          await refreshLearnerGraphs();
           setStatusText("请选择测试开始");
         }
       } catch (reason) {
@@ -190,7 +207,7 @@ export function useLearningSession() {
     return () => {
       cancelled = true;
     };
-  }, [applySession, clearSessionView]);
+  }, [applySession, clearSessionView, refreshLearnerGraphs]);
 
   useEffect(() => {
     if (
@@ -390,10 +407,11 @@ export function useLearningSession() {
   const restartSession = useCallback(async () => {
     window.localStorage.removeItem(SESSION_STORAGE_KEY);
     clearSessionView();
+    await refreshLearnerGraphs();
     setIsLoading(false);
     setError(null);
     setStatusText("请选择测试开始");
-  }, [clearSessionView]);
+  }, [clearSessionView, refreshLearnerGraphs]);
 
   const placeholder = useMemo(() => statePlaceholder(state), [state]);
   const composerDisabled =

@@ -1,9 +1,22 @@
 import type {
+  ErrorNodeSummary,
+  KnowledgeNodeSummary,
   LearningSessionResponse,
   MessageAcceptedResponse,
 } from "../types/session";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
+const DEMO_LEARNER_ID = "demo_user";
+
+interface KnowledgeGraphResponse {
+  learner_id: string;
+  nodes: KnowledgeNodeSummary[];
+}
+
+interface ErrorGraphResponse {
+  learner_id: string;
+  nodes: ErrorNodeSummary[];
+}
 
 async function requestJson<T>(
   path: string,
@@ -26,7 +39,7 @@ export function createLearningSession(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      learner_id: "demo_user",
+      learner_id: DEMO_LEARNER_ID,
       module: moduleId,
     }),
   });
@@ -51,4 +64,16 @@ export function submitStudentMessage(
       client_message_id: clientMessageId,
     }),
   });
+}
+
+export function getKnowledgeGraph(
+  learnerId = DEMO_LEARNER_ID,
+): Promise<KnowledgeGraphResponse> {
+  return requestJson(`/api/learners/${learnerId}/knowledge-graph`);
+}
+
+export function getErrorGraph(
+  learnerId = DEMO_LEARNER_ID,
+): Promise<ErrorGraphResponse> {
+  return requestJson(`/api/learners/${learnerId}/error-graph`);
 }
