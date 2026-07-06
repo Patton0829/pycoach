@@ -1,13 +1,13 @@
 ---
 name: chapter-adaptive-questioning
-description: Generate high-quality adaptive question sets for a learning chapter. Use when the user asks to create, design, evaluate, or plan chapter-based practice questions, quizzes, drills, or a "skill" for topics such as Python iterators, where questions must align to chapter core ideas, learner level, knowledge graph state, error patterns, and structured QuestionPacket-style outputs.
+description: Generate high-quality 10-question adaptive sets for a selected learning chapter. Use when the user asks to create, design, evaluate, integrate, or plan chapter-based practice questions, quizzes, drills, or a "skill" for a specific chapter such as Python iterators, Python Tutorial chapter 4 control flow, chapter 5 data structures, or other scoped chapter topics where questions must align to core ideas, learner level, knowledge graph state, error patterns, and structured QuestionPacket-style outputs.
 ---
 
 # Chapter Adaptive Questioning
 
 ## Purpose
 
-Create chapter-level adaptive practice sets without modifying product runtime code. Treat this as a reusable question-design skill and artifact generator, not as a third Agent or service module.
+Create chapter-level adaptive practice sets. Treat this as a reusable question-design skill and artifact generator that feeds the existing Questioner flow, not as a third Agent or service module.
 
 Default output is a 10-question set unless the user requests another count.
 
@@ -79,6 +79,21 @@ If an error type has high severity, add at least one question targeting it. Pref
 
 ## Recommended 10-Question Shape
 
+For any scoped chapter:
+
+1. recognition of the chapter's central distinction
+2. simple construction or code completion
+3. API/operator/function behavior
+4. execution tracing or state tracking
+5. common misconception contrast
+6. output prediction
+7. boundary or edge-case diagnosis
+8. protocol or mechanism explanation
+9. transfer to a nearby example
+10. synthesis question tying the chapter together
+
+Adjust the shape to the learner profile; do not force advanced topics for a novice.
+
 For Python iterator chapters:
 
 1. iterable vs iterator recognition
@@ -91,8 +106,6 @@ For Python iterator chapters:
 8. for-loop protocol mapping
 9. generator as iterator source
 10. transfer or short explanation tying the chapter together
-
-Adjust the shape to the learner profile; do not force advanced topics for a novice.
 
 ## References
 

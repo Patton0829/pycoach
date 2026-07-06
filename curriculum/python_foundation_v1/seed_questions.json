@@ -1,0 +1,170 @@
+[
+  {
+    "question_id": "00000000-0000-4000-8000-000000000101",
+    "question_type": "multiple_choice",
+    "difficulty": 1,
+    "knowledge_node_ids": ["python.ch3.sequence_indexing"],
+    "target_error_ids": ["python.ch3.sequence_index_confusion"],
+    "pedagogical_strategy": "concept_discrimination",
+    "student_content": {
+      "markdown": "下面代码的输出是什么？\n\n```python\ntext = \"Python\"\nprint(text[1:4])\n```\n\nA. `Pyt`\n\nB. `yth`\n\nC. `tho`\n\nD. `ytho`",
+      "input_hint": "输入选项字母。"
+    },
+    "critic_content": {
+      "learning_objective": "Use half-open slicing on strings.",
+      "reference_answer": "B",
+      "acceptable_answers": ["B", "b", "yth"],
+      "grading_rubric": {
+        "correct": "Recognizes that slice stop index is excluded.",
+        "partial": "Understands indexing but makes a boundary mistake.",
+        "incorrect": "Does not apply zero-based half-open slicing."
+      },
+      "expected_reasoning": "text[1:4] starts at index 1 and stops before index 4, so it returns yth.",
+      "ambiguity_notes": null
+    }
+  },
+  {
+    "question_id": "00000000-0000-4000-8000-000000000102",
+    "question_type": "code_blank",
+    "difficulty": 1,
+    "knowledge_node_ids": ["python.ch4.for_range"],
+    "target_error_ids": ["python.ch4.control_flow_boundary_error"],
+    "pedagogical_strategy": "retrieval_practice",
+    "student_content": {
+      "markdown": "填写缺失内容，使程序输出 `0 1 2`：\n\n```python\nfor i in ________:\n    print(i, end=\" \")\n```",
+      "input_hint": "只填写缺失表达式。"
+    },
+    "critic_content": {
+      "learning_objective": "Use range() with an excluded stop value.",
+      "reference_answer": "range(3)",
+      "acceptable_answers": ["range(3)", "range(0, 3)"],
+      "grading_rubric": {
+        "correct": "Uses range with stop 3.",
+        "partial": "Uses a sequence that produces 0, 1, 2 but misses range practice.",
+        "incorrect": "Includes 3 or starts at the wrong value."
+      },
+      "expected_reasoning": "range(3) yields 0, 1, 2 and excludes 3.",
+      "ambiguity_notes": null
+    }
+  },
+  {
+    "question_id": "00000000-0000-4000-8000-000000000103",
+    "question_type": "output_prediction",
+    "difficulty": 2,
+    "knowledge_node_ids": ["python.ch5.list_methods"],
+    "target_error_ids": ["python.ch5_list_operation_confusion"],
+    "pedagogical_strategy": "output_prediction",
+    "student_content": {
+      "markdown": "预测所有输出，每行一个：\n\n```python\nitems = [3, 1, 2]\nresult = items.sort()\nprint(items)\nprint(result)\n```",
+      "input_hint": "每行一个输出。"
+    },
+    "critic_content": {
+      "learning_objective": "Distinguish in-place list methods from returned values.",
+      "reference_answer": "[1, 2, 3]\nNone",
+      "acceptable_answers": ["[1, 2, 3]\nNone", "[1,2,3]\nNone"],
+      "grading_rubric": {
+        "correct": "Recognizes sort mutates the list and returns None.",
+        "partial": "Gets the sorted list but misses the return value.",
+        "incorrect": "Treats sort as returning a new list."
+      },
+      "expected_reasoning": "list.sort() sorts items in place and returns None.",
+      "ambiguity_notes": null
+    }
+  },
+  {
+    "question_id": "00000000-0000-4000-8000-000000000104",
+    "question_type": "short_explanation",
+    "difficulty": 2,
+    "knowledge_node_ids": ["python.ch6.imports"],
+    "target_error_ids": ["python.ch6_import_namespace_confusion"],
+    "pedagogical_strategy": "protocol_explanation",
+    "student_content": {
+      "markdown": "简要说明 `import math` 和 `from math import sqrt` 在使用名称时有什么区别。",
+      "input_hint": "用 1-3 句话回答。"
+    },
+    "critic_content": {
+      "learning_objective": "Explain module namespace and imported names.",
+      "reference_answer": "`import math` 需要通过 `math.sqrt` 访问；`from math import sqrt` 会把 `sqrt` 这个名字直接放到当前命名空间。",
+      "acceptable_answers": ["math.sqrt", "sqrt 直接可用", "命名空间"],
+      "grading_rubric": {
+        "correct": "Distinguishes module attribute access from directly imported names.",
+        "partial": "Mentions one import form correctly.",
+        "incorrect": "Claims both forms create the same names."
+      },
+      "expected_reasoning": "The first form binds the module name; the second binds the selected object name.",
+      "ambiguity_notes": null
+    }
+  },
+  {
+    "question_id": "00000000-0000-4000-8000-000000000105",
+    "question_type": "multiple_choice",
+    "difficulty": 2,
+    "knowledge_node_ids": ["python.ch7.with_files"],
+    "target_error_ids": ["python.ch7_format_file_confusion"],
+    "pedagogical_strategy": "concept_discrimination",
+    "student_content": {
+      "markdown": "关于 `with open(\"data.txt\") as f:`，下面哪项正确？\n\nA. `with` 块结束后文件会自动关闭\n\nB. 文件必须手动调用 `f.close()` 才会关闭\n\nC. `open()` 默认会用写入模式打开文件\n\nD. `with` 只能用于 JSON 文件",
+      "input_hint": "输入选项字母。"
+    },
+    "critic_content": {
+      "learning_objective": "Recognize file context manager cleanup.",
+      "reference_answer": "A",
+      "acceptable_answers": ["A", "a"],
+      "grading_rubric": {
+        "correct": "Recognizes automatic close after the with block.",
+        "partial": "Mentions close but is unclear about context manager behavior.",
+        "incorrect": "Misses file mode or cleanup semantics."
+      },
+      "expected_reasoning": "The file object context manager closes the file when the block exits.",
+      "ambiguity_notes": null
+    }
+  },
+  {
+    "question_id": "00000000-0000-4000-8000-000000000106",
+    "question_type": "output_prediction",
+    "difficulty": 2,
+    "knowledge_node_ids": ["python.ch8.try_except"],
+    "target_error_ids": ["python.ch8_exception_flow_confusion"],
+    "pedagogical_strategy": "output_prediction",
+    "student_content": {
+      "markdown": "预测所有输出，每行一个：\n\n```python\ntry:\n    print(\"A\")\n    int(\"x\")\n    print(\"B\")\nexcept ValueError:\n    print(\"C\")\nfinally:\n    print(\"D\")\n```",
+      "input_hint": "每行一个输出。"
+    },
+    "critic_content": {
+      "learning_objective": "Trace try/except/finally execution order.",
+      "reference_answer": "A\nC\nD",
+      "acceptable_answers": ["A\nC\nD", "A C D"],
+      "grading_rubric": {
+        "correct": "Skips B, catches ValueError, and runs finally.",
+        "partial": "Gets the exception handling but misses finally.",
+        "incorrect": "Does not trace exceptional control flow."
+      },
+      "expected_reasoning": "int('x') raises ValueError, so B is skipped, except runs, then finally runs.",
+      "ambiguity_notes": null
+    }
+  },
+  {
+    "question_id": "00000000-0000-4000-8000-000000000107",
+    "question_type": "code_blank",
+    "difficulty": 2,
+    "knowledge_node_ids": ["python.ch9.instance_methods"],
+    "target_error_ids": ["python.ch9_class_instance_confusion"],
+    "pedagogical_strategy": "generation_effect",
+    "student_content": {
+      "markdown": "填写缺失内容，使 `p.name` 保存传入的名字：\n\n```python\nclass Person:\n    def __init__(self, name):\n        ________ = name\n\np = Person(\"Ada\")\nprint(p.name)\n```",
+      "input_hint": "只填写缺失代码。"
+    },
+    "critic_content": {
+      "learning_objective": "Use self to assign instance attributes.",
+      "reference_answer": "self.name",
+      "acceptable_answers": ["self.name"],
+      "grading_rubric": {
+        "correct": "Assigns to self.name.",
+        "partial": "Uses name but does not bind it to the instance.",
+        "incorrect": "Uses a class variable or unrelated name."
+      },
+      "expected_reasoning": "self refers to the instance being initialized, so self.name stores an instance attribute.",
+      "ambiguity_notes": null
+    }
+  }
+]

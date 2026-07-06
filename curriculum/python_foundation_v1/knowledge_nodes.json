@@ -1,0 +1,43 @@
+[
+  {"id":"python.ch3.numbers","name":"数字与运算符","description":"Numbers, arithmetic operators, division, floor division, modulo, powers, and assignment.","difficulty":1,"learning_objective":"Predict numeric expression results and distinguish /, //, %, and **."},
+  {"id":"python.ch3.text","name":"文本与字符串","description":"String literals, escaping, raw strings, concatenation, repetition, indexing, slicing, and len().","difficulty":1,"learning_objective":"Use string syntax, indexing, slicing, and immutability correctly."},
+  {"id":"python.ch3.sequence_indexing","name":"序列索引与切片","description":"Zero-based indexes, negative indexes, inclusive start and exclusive end slices.","difficulty":1,"learning_objective":"Predict sequence indexing and slicing results."},
+  {"id":"python.ch3.lists","name":"列表基础","description":"List literals, indexing, slicing, append(), nesting, and list mutability.","difficulty":1,"learning_objective":"Use and modify lists while distinguishing list values from list references."},
+  {"id":"python.ch3.assignment_mutability","name":"赋值与可变性","description":"Assignment binds names to objects; mutating a shared list is visible through aliases.","difficulty":2,"learning_objective":"Explain aliasing and mutation effects after assignment."},
+
+  {"id":"python.ch4.if","name":"if 条件分支","description":"if, elif, else, boolean tests, comparison operators, and indentation blocks.","difficulty":1,"learning_objective":"Trace conditional execution and choose the branch that runs."},
+  {"id":"python.ch4.for_range","name":"for 与 range()","description":"for loops, range(start, stop, step), and loop variable behavior.","difficulty":1,"learning_objective":"Predict iterations produced by range() and for loops."},
+  {"id":"python.ch4.loop_control","name":"循环控制","description":"break, continue, loop else clauses, and pass.","difficulty":2,"learning_objective":"Trace how break, continue, and loop else affect control flow."},
+  {"id":"python.ch4.functions","name":"函数定义","description":"def, return, local variables, docstrings, and function calls.","difficulty":2,"learning_objective":"Define functions and predict return values."},
+  {"id":"python.ch4.arguments","name":"函数参数","description":"Default values, keyword arguments, special parameters, *args, **kwargs, unpacking, lambdas, and annotations.","difficulty":3,"learning_objective":"Reason about argument binding and common default-argument pitfalls."},
+
+  {"id":"python.ch5.list_methods","name":"列表方法","description":"append, extend, insert, remove, pop, clear, index, count, sort, reverse, copy, and method return values.","difficulty":2,"learning_objective":"Choose list methods and predict their side effects."},
+  {"id":"python.ch5.comprehensions","name":"列表推导式","description":"List comprehensions, nested comprehensions, filters, and expression order.","difficulty":2,"learning_objective":"Translate between loops and comprehensions."},
+  {"id":"python.ch5.tuples_sequences","name":"元组与序列","description":"Tuples, sequence packing/unpacking, immutability, and del.","difficulty":2,"learning_objective":"Use tuple packing/unpacking and sequence operations correctly."},
+  {"id":"python.ch5.sets_dicts","name":"集合与字典","description":"Sets, dictionaries, membership, key-value access, dictionary construction, and dictionary methods.","difficulty":2,"learning_objective":"Use sets and dictionaries for membership and mapping tasks."},
+  {"id":"python.ch5.looping_conditions","name":"循环技巧与条件","description":"items(), enumerate(), zip(), sorted(), reversed(), boolean operators, and sequence comparison.","difficulty":3,"learning_objective":"Select idiomatic looping techniques and evaluate compound conditions."},
+
+  {"id":"python.ch6.imports","name":"模块导入","description":"Modules, import, from import, module namespaces, and attribute access.","difficulty":2,"learning_objective":"Import modules and access module-level names correctly."},
+  {"id":"python.ch6.module_execution","name":"模块脚本执行","description":"Executing modules as scripts and the __name__ == '__main__' idiom.","difficulty":2,"learning_objective":"Explain when script-only code runs."},
+  {"id":"python.ch6.search_path","name":"模块搜索路径","description":"sys.path, current directory, PYTHONPATH, installation defaults, and compiled Python files.","difficulty":3,"learning_objective":"Reason about how Python finds imported modules."},
+  {"id":"python.ch6.dir","name":"dir() 与命名空间查看","description":"Using dir() to inspect module names and understanding imported names.","difficulty":2,"learning_objective":"Inspect available names without confusing modules and attributes."},
+  {"id":"python.ch6.packages","name":"包与相对导入","description":"Packages, submodules, __init__.py, importing from packages, and relative imports.","difficulty":3,"learning_objective":"Identify valid package import patterns."},
+
+  {"id":"python.ch7.fstrings_format","name":"格式化输出","description":"Formatted string literals, str.format(), format specifiers, and alignment.","difficulty":2,"learning_objective":"Use f-strings and format specifiers to produce expected strings."},
+  {"id":"python.ch7.str_repr","name":"str() 与 repr()","description":"Human-readable str() and interpreter-oriented repr().","difficulty":2,"learning_objective":"Choose str() or repr() for the intended representation."},
+  {"id":"python.ch7.open_modes","name":"文件打开模式","description":"open(filename, mode, encoding), text versus binary mode, r/w/a/r+ modes.","difficulty":2,"learning_objective":"Select correct file modes and encoding handling."},
+  {"id":"python.ch7.with_files","name":"with 管理文件","description":"Context managers for files, automatic closing, read(), readline(), iteration, write(), tell(), and seek().","difficulty":2,"learning_objective":"Use with open(...) safely and predict file object behavior."},
+  {"id":"python.ch7.json","name":"JSON 结构化数据","description":"Saving structured data with json.dump(), json.dumps(), json.load(), and json.loads().","difficulty":3,"learning_objective":"Serialize and deserialize simple Python data structures as JSON."},
+
+  {"id":"python.ch8.syntax_vs_exception","name":"语法错误与异常","description":"SyntaxError versus runtime exceptions and traceback interpretation.","difficulty":2,"learning_objective":"Distinguish syntax errors from exceptions."},
+  {"id":"python.ch8.try_except","name":"异常捕获","description":"try, except, else, exception matching, and exception objects.","difficulty":2,"learning_objective":"Trace exception handling flow and choose appropriate except clauses."},
+  {"id":"python.ch8.raise","name":"抛出异常","description":"raise, re-raising, exception chaining, and exception notes.","difficulty":3,"learning_objective":"Raise and propagate exceptions intentionally."},
+  {"id":"python.ch8.finally_cleanup","name":"清理动作","description":"finally blocks and predefined cleanup actions such as with statements.","difficulty":3,"learning_objective":"Predict cleanup execution in normal and exceptional paths."},
+  {"id":"python.ch8.custom_exceptions","name":"自定义异常","description":"User-defined exception classes and exception hierarchy design.","difficulty":3,"learning_objective":"Define simple custom exceptions when domain errors need names."},
+
+  {"id":"python.ch9.namespaces_scopes","name":"命名空间与作用域","description":"Namespaces, scopes, local/nonlocal/global lookup, and name binding.","difficulty":3,"learning_objective":"Reason about where names are looked up and rebound."},
+  {"id":"python.ch9.class_definition","name":"类定义与类对象","description":"class syntax, class objects, attribute references, and instantiation.","difficulty":3,"learning_objective":"Define simple classes and identify class attributes."},
+  {"id":"python.ch9.instance_methods","name":"实例与方法","description":"Instance attributes, method binding, self, and method objects.","difficulty":3,"learning_objective":"Explain how method calls bind self and mutate instance state."},
+  {"id":"python.ch9.class_instance_variables","name":"类变量与实例变量","description":"Class variables, instance variables, shared mutable class attributes, and initialization.","difficulty":4,"learning_objective":"Distinguish shared class state from per-instance state."},
+  {"id":"python.ch9.inheritance","name":"继承与方法查找","description":"Inheritance, overriding, isinstance(), issubclass(), multiple inheritance, and method lookup.","difficulty":4,"learning_objective":"Predict inherited method and attribute lookup behavior."}
+]

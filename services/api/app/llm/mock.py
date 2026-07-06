@@ -74,9 +74,13 @@ class DemoMockLLMProvider(LLMProvider):
         goal = blueprint.get("cognitive_goal") or "retrieve"
         prompt_brief = blueprint.get(
             "prompt_brief",
-            "检验学生能否使用 Python 迭代器协议。",
+            "检验学生能否使用当前 Python 知识点。",
         )
-        variants = self._question_variants(slot, goal)
+        variants = (
+            self._foundation_question_variants(slot, goal, node_id, prompt_brief)
+            if node_id.startswith("python.ch")
+            else self._question_variants(slot, goal)
+        )
         selected = variants[question_type]
         return {
             "question_id": str(uuid4()),
@@ -97,11 +101,11 @@ class DemoMockLLMProvider(LLMProvider):
                 "reference_answer": selected["answer"],
                 "acceptable_answers": selected["acceptable"],
                 "grading_rubric": {
-                    "correct": "Matches the iterator protocol.",
-                    "partial": "Shows partial understanding.",
-                    "incorrect": "Confuses iter(), next(), or indexing.",
+                    "correct": "Matches the targeted Python rule.",
+                    "partial": "Shows partial understanding of the targeted concept.",
+                    "incorrect": "Misses the targeted Python rule or execution behavior.",
                 },
-                "expected_reasoning": "next() returns one item and advances state.",
+                "expected_reasoning": selected["reasoning"],
                 "ambiguity_notes": None,
             },
         }
@@ -207,23 +211,247 @@ class DemoMockLLMProvider(LLMProvider):
                 "markdown": f"第 {slot} 题：{multiple_choice.get(goal, multiple_choice['recognize'])}",
                 "answer": "B",
                 "acceptable": ["B", "b"],
+                "reasoning": "The correct option matches the iterator protocol rule.",
             },
             "code_blank": {
                 "markdown": code_blank.get(goal, code_blank["retrieve"]),
                 "answer": blank_answer,
                 "acceptable": [blank_answer],
+                "reasoning": "The blank must use the operation that matches the current iterator state.",
             },
             "output_prediction": {
                 "markdown": output_prediction.get(goal, output_prediction["predict_output"]),
                 "answer": output_answer,
                 "acceptable": output_acceptable,
+                "reasoning": "Trace each statement in order and follow the iterator state.",
             },
             "short_explanation": {
                 "markdown": short_explanation.get(goal, short_explanation["synthesize"]),
                 "answer": "迭代器保存当前位置，next() 取值并推进；耗尽时抛出 StopIteration。",
                 "acceptable": ["迭代器保存状态", "next会推进状态", "StopIteration"],
+                "reasoning": "A complete explanation connects state, next(), and exhaustion.",
             },
         }
+
+    def _foundation_question_variants(
+        self,
+        slot: int,
+        goal: str,
+        node_id: str,
+        prompt_brief: str,
+    ) -> dict:
+        topic = self._topic_from_prompt(prompt_brief, node_id)
+        mc_answer = self._foundation_mc_statement(node_id)
+        blank_markdown, blank_answer, blank_reasoning = self._foundation_blank(slot, node_id, topic)
+        output_markdown, output_answer, output_acceptable, output_reasoning = (
+            self._foundation_output(slot, node_id, topic)
+        )
+        explanation_answer, explanation_acceptable, explanation_reasoning = (
+            self._foundation_explanation(node_id, topic)
+        )
+        return {
+            "multiple_choice": {
+                "markdown": (
+                    f"第 {slot} 题：关于“{topic}”，下面哪项更符合 Python 规则？\n\n"
+                    "A. 只要语法能运行，结果总会自动转换成字符串\n\n"
+                    f"B. {mc_answer}\n\n"
+                    "C. 所有相关操作都会修改原对象并返回自身\n\n"
+                    "D. Python 会忽略名称绑定、作用域或执行顺序的差异"
+                ),
+                "answer": "B",
+                "acceptable": ["B", "b"],
+                "reasoning": mc_answer,
+            },
+            "code_blank": {
+                "markdown": blank_markdown,
+                "answer": blank_answer,
+                "acceptable": [blank_answer],
+                "reasoning": blank_reasoning,
+            },
+            "output_prediction": {
+                "markdown": output_markdown,
+                "answer": output_answer,
+                "acceptable": output_acceptable,
+                "reasoning": output_reasoning,
+            },
+            "short_explanation": {
+                "markdown": f"第 {slot} 题：请用 1-3 句话说明“{topic}”的核心规则。",
+                "answer": explanation_answer,
+                "acceptable": explanation_acceptable,
+                "reasoning": explanation_reasoning,
+            },
+        }
+
+    @staticmethod
+    def _topic_from_prompt(prompt_brief: str, node_id: str) -> str:
+        if "“" in prompt_brief and "”" in prompt_brief:
+            return prompt_brief.split("“", 1)[1].split("”", 1)[0]
+        return node_id
+
+    @staticmethod
+    def _foundation_mc_statement(node_id: str) -> str:
+        statements = {
+            "python.ch3.sequence_indexing": "切片的停止位置不包含在结果中。",
+            "python.ch3.assignment_mutability": "给同一个可变对象建立多个名字后，原地修改会被这些名字共同观察到。",
+            "python.ch4.for_range": "`range(stop)` 从 0 开始，到 stop 之前结束。",
+            "python.ch4.arguments": "默认参数在函数定义时求值，关键字参数按名字绑定。",
+            "python.ch5.list_methods": "`list.sort()` 会原地排序并返回 `None`。",
+            "python.ch5.sets_dicts": "字典按键查找值，集合主要表达唯一元素和集合运算。",
+            "python.ch6.imports": "`import module` 绑定模块名，`from module import name` 绑定导入的名字。",
+            "python.ch7.with_files": "`with open(...)` 会在代码块结束时关闭文件对象。",
+            "python.ch8.try_except": "异常发生后会跳到匹配的 except，finally 在离开 try 结构时执行。",
+            "python.ch9.instance_methods": "实例方法通过 `self` 访问和更新当前实例的属性。",
+        }
+        return statements.get(node_id, "需要按照表达式、语句和名称绑定规则逐步判断结果。")
+
+    @staticmethod
+    def _foundation_blank(slot: int, node_id: str, topic: str) -> tuple[str, str, str]:
+        examples = {
+            "python.ch3.numbers": (
+                "```python\nresult = ________\nprint(result)\n```",
+                "7 // 3",
+                "Floor division returns the integer quotient.",
+            ),
+            "python.ch3.text": (
+                "```python\ntext = \"Python\"\npart = ________\nprint(part)\n```",
+                "text[1:4]",
+                "String slicing uses zero-based, half-open bounds.",
+            ),
+            "python.ch4.for_range": (
+                "```python\nfor i in ________:\n    print(i)\n```",
+                "range(3)",
+                "range(3) yields 0, 1, and 2.",
+            ),
+            "python.ch5.comprehensions": (
+                "```python\nsquares = ________\nprint(squares)\n```",
+                "[x * x for x in range(3)]",
+                "A list comprehension builds a new list from the loop expression.",
+            ),
+            "python.ch6.imports": (
+                "```python\nimport math\nvalue = ________\nprint(value)\n```",
+                "math.sqrt(9)",
+                "After import math, sqrt is accessed as an attribute on the module.",
+            ),
+            "python.ch7.fstrings_format": (
+                "```python\nname = \"Ada\"\nmessage = ________\nprint(message)\n```",
+                "f\"Hi {name}\"",
+                "An f-string interpolates the name expression.",
+            ),
+            "python.ch8.raise": (
+                "```python\nif value < 0:\n    ________ ValueError(\"negative\")\n```",
+                "raise",
+                "raise starts an exception path with the given exception object.",
+            ),
+            "python.ch9.instance_methods": (
+                "```python\nclass User:\n    def __init__(self, name):\n        ________ = name\n```",
+                "self.name",
+                "self.name stores data on the current instance.",
+            ),
+        }
+        code, answer, reasoning = examples.get(
+            node_id,
+            (
+                "```python\nvalue = 3\nresult = ________\nprint(result)\n```",
+                "value",
+                "The blank should preserve the value required by the surrounding code.",
+            ),
+        )
+        return (
+            f"第 {slot} 题：围绕“{topic}”填写缺失内容。\n\n{code}",
+            answer,
+            reasoning,
+        )
+
+    @staticmethod
+    def _foundation_output(
+        slot: int,
+        node_id: str,
+        topic: str,
+    ) -> tuple[str, str, list[str], str]:
+        examples = {
+            "python.ch3.lists": (
+                "```python\nitems = [1, 2]\nitems.append(3)\nprint(items)\n```",
+                "[1, 2, 3]",
+                ["[1, 2, 3]", "[1,2,3]"],
+                "append mutates the list in place.",
+            ),
+            "python.ch4.loop_control": (
+                "```python\nfor i in range(4):\n    if i == 2:\n        break\n    print(i)\n```",
+                "0\n1",
+                ["0\n1", "0 1"],
+                "break exits the loop before printing 2.",
+            ),
+            "python.ch5.list_methods": (
+                "```python\nitems = [3, 1]\nresult = items.sort()\nprint(items)\nprint(result)\n```",
+                "[1, 3]\nNone",
+                ["[1, 3]\nNone", "[1,3]\nNone"],
+                "sort mutates the list and returns None.",
+            ),
+            "python.ch7.str_repr": (
+                "```python\nvalue = \"A\\nB\"\nprint(str(value))\nprint(repr(value))\n```",
+                "A\nB\n'A\\nB'",
+                ["A\nB\n'A\\nB'"],
+                "str displays the string; repr shows an escaped representation.",
+            ),
+            "python.ch8.try_except": (
+                "```python\ntry:\n    print(\"A\")\n    int(\"x\")\n    print(\"B\")\nexcept ValueError:\n    print(\"C\")\nfinally:\n    print(\"D\")\n```",
+                "A\nC\nD",
+                ["A\nC\nD", "A C D"],
+                "The ValueError skips B, runs except, then finally.",
+            ),
+            "python.ch9.class_instance_variables": (
+                "```python\nclass Bag:\n    items = []\n\na = Bag()\nb = Bag()\na.items.append(\"x\")\nprint(b.items)\n```",
+                "['x']",
+                ["['x']", "[\"x\"]"],
+                "items is a class variable shared by both instances.",
+            ),
+        }
+        code, answer, acceptable, reasoning = examples.get(
+            node_id,
+            (
+                "```python\nx = 2\nx = x + 3\nprint(x)\n```",
+                "5",
+                ["5"],
+                "Trace assignment and expression evaluation in order.",
+            ),
+        )
+        return (
+            f"第 {slot} 题：围绕“{topic}”预测输出。\n\n{code}",
+            answer,
+            acceptable,
+            reasoning,
+        )
+
+    @staticmethod
+    def _foundation_explanation(
+        node_id: str,
+        topic: str,
+    ) -> tuple[str, list[str], str]:
+        answers = {
+            "python.ch6.search_path": (
+                "Python 会按模块搜索路径查找导入目标，通常包括当前目录、PYTHONPATH 和安装目录。",
+                ["搜索路径", "sys.path", "PYTHONPATH"],
+                "Imports are resolved through sys.path-like search order.",
+            ),
+            "python.ch8.custom_exceptions": (
+                "自定义异常通常继承 Exception，用清晰的异常类型表达特定错误场景。",
+                ["继承 Exception", "自定义异常", "错误场景"],
+                "Custom exceptions encode domain-specific failure types.",
+            ),
+            "python.ch9.namespaces_scopes": (
+                "Python 按局部、外层、全局、内置等作用域查找名字，赋值会在相应作用域绑定名字。",
+                ["作用域", "命名空间", "名字查找"],
+                "Name lookup follows scope and namespace rules.",
+            ),
+        }
+        return answers.get(
+            node_id,
+            (
+                f"{topic} 要根据 Python 的具体语义逐步判断，包括表达式求值、名称绑定和对象行为。",
+                [topic, "规则", "语义"],
+                "A good explanation states the governing Python rule and applies it to code.",
+            ),
+        )
 
     def _question_review(self, context: dict) -> dict:
         return {
@@ -264,7 +492,7 @@ class DemoMockLLMProvider(LLMProvider):
         elif "不确定" in message or message == "不会":
             intent, verdict = "student_uncertain", "student_uncertain"
             action = "show_feedback" if state == "QUESTION_ACTIVE" else "continue_discussion"
-            reply = "没关系。`iter()` 得到迭代器，`next()` 从迭代器取出下一个元素。"
+            reply = f"没关系。关键点是：{question['critic_content']['expected_reasoning']}"
             prepare = state == "QUESTION_ACTIVE"
         elif "有问题" in message or "重新检查" in message:
             intent = "challenge_evaluation"
@@ -278,27 +506,27 @@ class DemoMockLLMProvider(LLMProvider):
             reply = "例如 `it = iter([1, 2])`，两次 `next(it)` 依次得到 1 和 2。"
         elif "总结" in message:
             intent = "request_summary"
-            reply = "`iter()` 创建迭代器，`next()` 读取并推进状态。"
+            reply = question["critic_content"]["expected_reasoning"]
         elif "懂了" in message:
             intent = "acknowledgement"
             reply = "好的。你可以继续追问，或者输入“下一题”。"
         elif "生成器" in message:
             intent = "concept_extension"
-            reply = "生成器会产生迭代器，但当前先聚焦迭代器协议。"
+            reply = "生成器会产生迭代器；当前仍按本题目标知识点来判断。"
         elif "天气" in message:
             intent = "off_topic"
-            reply = "这个问题与当前迭代器学习无关，我们先回到当前题目。"
+            reply = "这个问题与当前 Python 题目无关，我们先回到当前题目。"
         elif "?" in message or "？" in message or "为什么" in message or "这里用" in message:
             if "next(" in lowered:
                 intent = "answer_and_question"
                 verdict = "correct"
                 action = "show_feedback" if state == "QUESTION_ACTIVE" else "continue_discussion"
-                reply = "回答正确。`next()` 读取元素并推进迭代状态。"
+                reply = "回答正确。你的答案符合本题考查的 Python 规则。"
                 prepare = state == "QUESTION_ACTIVE"
             else:
                 intent = "clarification_question"
                 action = "wait_for_answer" if state == "QUESTION_ACTIVE" else "continue_discussion"
-                reply = "提示：先判断哪个对象保存了迭代状态。"
+                reply = f"提示：先抓住本题目标规则：{question['critic_content']['learning_objective']}"
         elif state == "QUESTION_ACTIVE":
             intent = "answer_attempt"
             action = "show_feedback"
@@ -313,7 +541,7 @@ class DemoMockLLMProvider(LLMProvider):
             )
             if is_correct:
                 verdict = "correct"
-                reply = "回答正确。`next()` 会返回下一个元素并推进迭代状态。"
+                reply = "回答正确。你的答案符合本题考查的 Python 规则。"
                 knowledge_updates = [
                     {
                         "node_id": node_id,
@@ -328,12 +556,15 @@ class DemoMockLLMProvider(LLMProvider):
                             "error_id": error_ids[0],
                             "action": "weaken",
                             "strength": 0.8,
-                            "reason": "Student distinguished iter() and next().",
+                            "reason": "Student resolved the targeted misconception.",
                         }
                     ]
             else:
                 verdict = "incorrect"
-                reply = "这次回答不正确。`iter()` 创建迭代器，取元素需要使用 `next()`。"
+                reply = (
+                    "这次回答不正确。关键点是："
+                    f"{question['critic_content']['expected_reasoning']}"
+                )
                 knowledge_updates = [
                     {
                         "node_id": node_id,
@@ -348,7 +579,7 @@ class DemoMockLLMProvider(LLMProvider):
                             "error_id": error_ids[0],
                             "action": "strengthen",
                             "strength": 0.8,
-                            "reason": "Student confused iter() and next().",
+                            "reason": "Student missed the targeted Python rule.",
                         }
                     ]
 

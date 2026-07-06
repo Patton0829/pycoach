@@ -45,7 +45,6 @@ export interface ChapterQuestionSetSummary {
   target_question_count: number;
   current_question_slot: number;
   learner_level: "novice" | "intermediate" | "advanced";
-  average_mastery: number;
 }
 
 export type SessionState =

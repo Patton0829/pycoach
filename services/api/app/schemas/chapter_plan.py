@@ -15,7 +15,7 @@ class ActiveErrorPriority(StrictModel):
 
 
 class ChapterQuestionBlueprintItem(StrictModel):
-    slot: int = Field(ge=1, le=10)
+    slot: int = Field(ge=1, le=50)
     question_type: QuestionType
     difficulty: int = Field(ge=1, le=5)
     cognitive_goal: str = Field(min_length=1)
@@ -29,19 +29,18 @@ class ChapterQuestionBlueprintItem(StrictModel):
 class ChapterQuestionSetPlan(StrictModel):
     chapter_id: str
     chapter_title: str
-    question_count: int = Field(default=10, ge=1, le=10)
+    question_count: int = Field(default=10, ge=1, le=50)
     learner_level: LearnerLevel
     average_mastery: float = Field(ge=0.0, le=1.0)
     active_error_priorities: list[ActiveErrorPriority] = Field(default_factory=list)
     core_principles: list[str] = Field(default_factory=list)
-    questions: list[ChapterQuestionBlueprintItem] = Field(min_length=1, max_length=10)
+    questions: list[ChapterQuestionBlueprintItem] = Field(min_length=1, max_length=50)
     set_level_quality_checks: list[str] = Field(default_factory=list)
 
 
 class ChapterQuestionSetSummary(StrictModel):
     chapter_id: str
     chapter_title: str
-    target_question_count: int = Field(ge=1, le=10)
-    current_question_slot: int = Field(ge=1, le=10)
+    target_question_count: int = Field(ge=1, le=50)
+    current_question_slot: int = Field(ge=1, le=50)
     learner_level: LearnerLevel
-    average_mastery: float = Field(ge=0.0, le=1.0)

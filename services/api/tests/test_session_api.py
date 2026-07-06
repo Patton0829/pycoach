@@ -17,6 +17,9 @@ from app.services.websocket_manager import session_websocket_manager
 CURRICULUM_DIR = (
     Path(__file__).resolve().parents[3] / "curriculum" / "python_iterator_v1"
 )
+FOUNDATION_CURRICULUM_DIR = (
+    Path(__file__).resolve().parents[3] / "curriculum" / "python_foundation_v1"
+)
 
 
 class SessionApiIntegrationTests(unittest.TestCase):
@@ -34,6 +37,7 @@ class SessionApiIntegrationTests(unittest.TestCase):
         )
         with self.factory() as database:
             seed_database(database, CURRICULUM_DIR)
+            seed_database(database, FOUNDATION_CURRICULUM_DIR)
         self.orchestrator = LearningSessionOrchestrator(
             DemoMockLLMProvider(),
             session_websocket_manager,
@@ -135,6 +139,31 @@ class SessionApiIntegrationTests(unittest.TestCase):
             self.assertEqual(payload["completed_question_count"], 1)
             self.assertNotIn("critic_content", str(payload))
             self.assertNotIn("provisional_knowledge_updates", str(payload))
+
+    def test_rest_creates_python_foundation_diagnostic(self) -> None:
+        with TestClient(app) as client:
+            modules = client.get("/api/sessions/modules")
+            self.assertEqual(modules.status_code, 200)
+            self.assertIn(
+                "python_foundation_diagnostic",
+                [item["module_id"] for item in modules.json()],
+            )
+
+            created = client.post(
+                "/api/sessions",
+                json={
+                    "learner_id": "demo_user",
+                    "module": "python_foundation_diagnostic",
+                },
+            )
+
+        self.assertEqual(created.status_code, 200)
+        payload = created.json()
+        self.assertEqual(
+            payload["chapter_question_set"]["chapter_id"],
+            "python_foundation_diagnostic",
+        )
+        self.assertEqual(payload["chapter_question_set"]["target_question_count"], 35)
 
 
 if __name__ == "__main__":

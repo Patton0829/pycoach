@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Sequence
 
@@ -13,13 +14,238 @@ from app.schemas.chapter_plan import (
     ChapterQuestionSetSummary,
     LearnerLevel,
 )
-from app.schemas.question import CandidateConstraints
+from app.schemas.question import CandidateConstraints, QuestionType
 
-CHAPTER_ID = "python_iterator"
-CHAPTER_TITLE = "Python 迭代器"
-TARGET_QUESTION_COUNT = 10
+DEFAULT_ASSESSMENT_ID = "python_iterator"
+ITERATOR_TITLE = "Python 迭代器"
+ITERATOR_TARGET_QUESTION_COUNT = 10
+FOUNDATION_TARGET_QUESTION_COUNT = 35
+CHAPTER_TARGET_QUESTION_COUNT = 10
 
-LEVEL_TYPE_SEQUENCES = {
+
+@dataclass(frozen=True)
+class AssessmentSpec:
+    module_id: str
+    title: str
+    target_question_count: int
+    node_ids: tuple[str, ...]
+    core_principles: tuple[str, ...]
+    set_level_quality_checks: tuple[str, ...]
+    source_skill: str
+    mode: str
+
+
+PYTHON_TUTORIAL_CHAPTER_NODES: dict[str, tuple[str, tuple[str, ...], tuple[str, ...]]] = {
+    "python_tutorial_ch3": (
+        "Python 入门章节测试",
+        (
+            "python.ch3.numbers",
+            "python.ch3.text",
+            "python.ch3.sequence_indexing",
+            "python.ch3.lists",
+            "python.ch3.assignment_mutability",
+        ),
+        (
+            "数字、文本和列表是 Python 入门的基础数据操作对象。",
+            "索引从 0 开始，切片使用左闭右开边界。",
+            "赋值绑定名字，可变对象的别名会共享变更。",
+        ),
+    ),
+    "python_tutorial_ch4": (
+        "控制流章节测试",
+        (
+            "python.ch4.if",
+            "python.ch4.for_range",
+            "python.ch4.loop_control",
+            "python.ch4.functions",
+            "python.ch4.arguments",
+        ),
+        (
+            "控制流决定代码执行路径。",
+            "range() 的 stop 不包含在结果中。",
+            "函数调用的参数绑定规则会影响实际执行。",
+        ),
+    ),
+    "python_tutorial_ch5": (
+        "数据结构章节测试",
+        (
+            "python.ch5.list_methods",
+            "python.ch5.comprehensions",
+            "python.ch5.tuples_sequences",
+            "python.ch5.sets_dicts",
+            "python.ch5.looping_conditions",
+        ),
+        (
+            "不同容器有不同的访问、更新和迭代语义。",
+            "原地修改方法和创建新对象的表达式必须区分。",
+            "循环技巧可以把多个集合结构组合起来处理。",
+        ),
+    ),
+    "python_tutorial_ch6": (
+        "模块章节测试",
+        (
+            "python.ch6.imports",
+            "python.ch6.module_execution",
+            "python.ch6.search_path",
+            "python.ch6.dir",
+            "python.ch6.packages",
+        ),
+        (
+            "模块是可复用代码和命名空间的组织单位。",
+            "不同 import 形式会绑定不同名字。",
+            "包和搜索路径决定模块如何被定位和加载。",
+        ),
+    ),
+    "python_tutorial_ch7": (
+        "输入输出章节测试",
+        (
+            "python.ch7.fstrings_format",
+            "python.ch7.str_repr",
+            "python.ch7.open_modes",
+            "python.ch7.with_files",
+            "python.ch7.json",
+        ),
+        (
+            "格式化输出关注展示形式，repr 更偏向可调试表示。",
+            "文件模式、编码和上下文管理决定 I/O 行为。",
+            "JSON 是结构化数据持久化的一种常见方式。",
+        ),
+    ),
+    "python_tutorial_ch8": (
+        "错误与异常章节测试",
+        (
+            "python.ch8.syntax_vs_exception",
+            "python.ch8.try_except",
+            "python.ch8.raise",
+            "python.ch8.finally_cleanup",
+            "python.ch8.custom_exceptions",
+        ),
+        (
+            "语法错误和运行时异常发生在不同阶段。",
+            "try/except/else/finally 共同决定异常路径。",
+            "自定义异常应该表达清晰的业务错误类型。",
+        ),
+    ),
+    "python_tutorial_ch9": (
+        "类章节测试",
+        (
+            "python.ch9.namespaces_scopes",
+            "python.ch9.class_definition",
+            "python.ch9.instance_methods",
+            "python.ch9.class_instance_variables",
+            "python.ch9.inheritance",
+        ),
+        (
+            "类、实例和方法依赖命名空间与属性查找规则。",
+            "self 指向当前实例，实例属性和类变量语义不同。",
+            "继承通过方法查找顺序复用或覆盖行为。",
+        ),
+    ),
+}
+
+FOUNDATION_NODE_IDS = tuple(
+    node_id
+    for _, node_ids, _ in PYTHON_TUTORIAL_CHAPTER_NODES.values()
+    for node_id in node_ids
+)
+
+ITERATOR_NODE_IDS = (
+    "python.iterable",
+    "python.iterator",
+    "python.iterator.iter",
+    "python.iterator.next",
+    "python.iterator.state",
+    "python.iterator.exhaustion",
+    "python.stop_iteration",
+    "python.for_loop.protocol",
+    "python.generator.intro",
+)
+
+ITERATOR_CORE_PRINCIPLES = (
+    "可迭代对象能通过 iter(obj) 创建迭代器。",
+    "迭代器保存当前位置，next(iterator) 返回下一个元素并推进状态。",
+    "同一个迭代器被消耗后不会自动回到开头。",
+    "迭代器耗尽后继续 next() 会抛出 StopIteration。",
+    "for 循环本质上使用 iter()、next() 和 StopIteration 协议。",
+)
+
+QUESTION_QUALITY_CHECKS = [
+    "student_content 只包含学生可见题干，不泄露答案。",
+    "critic_content 包含参考答案、可接受答案和评分依据。",
+    "题目只覆盖 1-2 个目标知识点。",
+    "题面形式不能与最近题目只做数字或变量名替换。",
+]
+
+ITERATOR_SET_QUALITY_CHECKS = (
+    "10 题覆盖识别、构造、取值、状态、耗尽、协议和迁移。",
+    "难度随 learner_level 渐进，不在前几题过早综合多个薄弱点。",
+    "优先覆盖高严重度错误类型，同时避免每题都考同一错误。",
+)
+
+CHAPTER_SET_QUALITY_CHECKS = (
+    "10 题覆盖章节核心概念、代码补全、输出预测、误区诊断和迁移解释。",
+    "题目必须限定在所选章节的知识节点范围内。",
+    "根据 learner_level 调整代码长度、推理步数和边界情况复杂度。",
+)
+
+FOUNDATION_SET_QUALITY_CHECKS = (
+    "35 题覆盖 Python Tutorial 第 3-9 章，每章 5 个核心知识节点。",
+    "每章至少包含识别、补全、追踪、误区和解释/迁移信号。",
+    "最终诊断应能形成整体等级、章节短板和知识节点掌握画像。",
+)
+
+ASSESSMENT_SPECS: dict[str, AssessmentSpec] = {
+    DEFAULT_ASSESSMENT_ID: AssessmentSpec(
+        module_id=DEFAULT_ASSESSMENT_ID,
+        title=ITERATOR_TITLE,
+        target_question_count=ITERATOR_TARGET_QUESTION_COUNT,
+        node_ids=ITERATOR_NODE_IDS,
+        core_principles=ITERATOR_CORE_PRINCIPLES,
+        set_level_quality_checks=ITERATOR_SET_QUALITY_CHECKS,
+        source_skill="chapter-adaptive-questioning",
+        mode="iterator",
+    ),
+    "python_foundation_diagnostic": AssessmentSpec(
+        module_id="python_foundation_diagnostic",
+        title="Python 综合能力诊断（3-9 章）",
+        target_question_count=FOUNDATION_TARGET_QUESTION_COUNT,
+        node_ids=FOUNDATION_NODE_IDS,
+        core_principles=(
+            "综合诊断按 Python Tutorial 第 3-9 章建立基础画像。",
+            "每章覆盖 5 个核心节点，用于定位章节短板和后续学习路径。",
+            "题目从识别到追踪、误区诊断和解释迁移逐步收集证据。",
+        ),
+        set_level_quality_checks=FOUNDATION_SET_QUALITY_CHECKS,
+        source_skill="python-foundation-diagnostic",
+        mode="foundation",
+    ),
+}
+
+for module_id, (title, node_ids, principles) in PYTHON_TUTORIAL_CHAPTER_NODES.items():
+    ASSESSMENT_SPECS[module_id] = AssessmentSpec(
+        module_id=module_id,
+        title=title,
+        target_question_count=CHAPTER_TARGET_QUESTION_COUNT,
+        node_ids=node_ids,
+        core_principles=principles,
+        set_level_quality_checks=CHAPTER_SET_QUALITY_CHECKS,
+        source_skill="chapter-adaptive-questioning",
+        mode="chapter",
+    )
+
+ASSESSMENT_DISPLAY_ORDER = (
+    "python_foundation_diagnostic",
+    "python_iterator",
+    "python_tutorial_ch3",
+    "python_tutorial_ch4",
+    "python_tutorial_ch5",
+    "python_tutorial_ch6",
+    "python_tutorial_ch7",
+    "python_tutorial_ch8",
+    "python_tutorial_ch9",
+)
+
+ITERATOR_TYPE_SEQUENCES: dict[LearnerLevel, list[QuestionType]] = {
     "novice": [
         "multiple_choice",
         "multiple_choice",
@@ -58,13 +284,37 @@ LEVEL_TYPE_SEQUENCES = {
     ],
 }
 
-LEVEL_DIFFICULTIES = {
+ITERATOR_DIFFICULTIES: dict[LearnerLevel, list[int]] = {
     "novice": [1, 1, 1, 2, 2, 2, 2, 2, 3, 3],
     "intermediate": [1, 2, 2, 2, 3, 3, 3, 3, 4, 4],
     "advanced": [2, 2, 3, 3, 3, 4, 4, 4, 5, 5],
 }
 
-COGNITIVE_GOALS = [
+GENERIC_TYPE_SEQUENCES: dict[LearnerLevel, tuple[QuestionType, ...]] = {
+    "novice": (
+        "multiple_choice",
+        "code_blank",
+        "output_prediction",
+        "multiple_choice",
+        "short_explanation",
+    ),
+    "intermediate": (
+        "multiple_choice",
+        "code_blank",
+        "output_prediction",
+        "short_explanation",
+        "code_blank",
+    ),
+    "advanced": (
+        "output_prediction",
+        "short_explanation",
+        "code_blank",
+        "multiple_choice",
+        "short_explanation",
+    ),
+}
+
+ITERATOR_COGNITIVE_GOALS = [
     "recognize",
     "construct",
     "retrieve",
@@ -77,7 +327,17 @@ COGNITIVE_GOALS = [
     "synthesize",
 ]
 
-GOAL_NODE_PREFERENCES = {
+GENERIC_COGNITIVE_GOALS = (
+    "recognize",
+    "construct",
+    "predict_output",
+    "misconception_check",
+    "explain",
+    "transfer",
+    "synthesize",
+)
+
+ITERATOR_GOAL_NODE_PREFERENCES = {
     "recognize": ["python.iterable", "python.iterator"],
     "construct": ["python.iterator.iter"],
     "retrieve": ["python.iterator.next"],
@@ -94,7 +354,7 @@ GOAL_NODE_PREFERENCES = {
     ],
 }
 
-PEDAGOGICAL_STRATEGIES = {
+ITERATOR_PEDAGOGICAL_STRATEGIES = {
     "recognize": "concept_discrimination",
     "construct": "generation_effect",
     "retrieve": "retrieval_practice",
@@ -107,7 +367,17 @@ PEDAGOGICAL_STRATEGIES = {
     "synthesize": "mixed_synthesis",
 }
 
-PROMPT_BRIEFS = {
+GENERIC_PEDAGOGICAL_STRATEGIES = {
+    "recognize": "concept_discrimination",
+    "construct": "generation_effect",
+    "predict_output": "output_prediction",
+    "misconception_check": "error_diagnosis",
+    "explain": "protocol_explanation",
+    "transfer": "transfer_practice",
+    "synthesize": "mixed_synthesis",
+}
+
+ITERATOR_PROMPT_BRIEFS = {
     "recognize": "区分可迭代对象、迭代器，以及哪个对象能直接传给 next()。",
     "construct": "让学生补全 iter(obj)，明确这是创建迭代器而不是取元素。",
     "retrieve": "让学生补全 next(iterator)，检验从迭代器取下一个元素。",
@@ -120,26 +390,28 @@ PROMPT_BRIEFS = {
     "synthesize": "综合状态推进、耗尽和异常处理，要求学生给出完整推理。",
 }
 
-CORE_PRINCIPLES = [
-    "可迭代对象能通过 iter(obj) 创建迭代器。",
-    "迭代器保存当前位置，next(iterator) 返回下一个元素并推进状态。",
-    "同一个迭代器被消耗后不会自动回到开头。",
-    "迭代器耗尽后继续 next() 会抛出 StopIteration。",
-    "for 循环本质上使用 iter()、next() 和 StopIteration 协议。",
-]
 
-QUESTION_QUALITY_CHECKS = [
-    "student_content 只包含学生可见题干，不泄露答案。",
-    "critic_content 包含参考答案、可接受答案和评分依据。",
-    "题目只覆盖 1-2 个目标知识点。",
-    "题面形式不能与最近题目只做数字或变量名替换。",
-]
+def is_supported_assessment_module(module_id: str) -> bool:
+    return module_id in ASSESSMENT_SPECS
 
-SET_QUALITY_CHECKS = [
-    "10 题覆盖识别、构造、取值、状态、耗尽、协议和迁移。",
-    "难度随 learner_level 渐进，不在前几题过早综合多个薄弱点。",
-    "优先覆盖高严重度错误类型，同时避免每题都考同一错误。",
-]
+
+def list_assessment_options() -> list[dict]:
+    return [
+        {
+            "module_id": spec.module_id,
+            "title": spec.title,
+            "target_question_count": spec.target_question_count,
+            "mode": spec.mode,
+        }
+        for spec in (ASSESSMENT_SPECS[module_id] for module_id in ASSESSMENT_DISPLAY_ORDER)
+    ]
+
+
+def assessment_spec(module_id: str) -> AssessmentSpec:
+    try:
+        return ASSESSMENT_SPECS[module_id]
+    except KeyError as error:
+        raise ValueError(f"Unsupported assessment module: {module_id}") from error
 
 
 class ChapterQuestioningService:
@@ -151,13 +423,13 @@ class ChapterQuestioningService:
     def create_question_set_for_session(
         self,
         session: LearningSession,
-        chapter_id: str = CHAPTER_ID,
+        assessment_id: str = DEFAULT_ASSESSMENT_ID,
     ) -> ChapterQuestionSet:
         existing = self.session_repository.get_chapter_question_set(session.id)
         if existing is not None:
             return existing
 
-        plan = self.generate_plan(session.learner_id, chapter_id)
+        plan = self.generate_plan(session.learner_id, assessment_id)
         record = ChapterQuestionSet(
             session_id=session.id,
             learner_id=session.learner_id,
@@ -182,65 +454,55 @@ class ChapterQuestioningService:
     def generate_plan(
         self,
         learner_id: str,
-        chapter_id: str = CHAPTER_ID,
+        assessment_id: str = DEFAULT_ASSESSMENT_ID,
     ) -> ChapterQuestionSetPlan:
+        spec = assessment_spec(assessment_id)
         nodes = list(self.question_repository.list_knowledge_nodes())
+        node_by_id = {node.id: node for node in nodes}
+        target_nodes = [node_by_id[node_id] for node_id in spec.node_ids if node_id in node_by_id]
+        if not target_nodes:
+            raise ValueError(f"Assessment has no seeded knowledge nodes: {assessment_id}")
+
         error_types = list(self.question_repository.list_error_types())
         learner_nodes = self.question_repository.list_personal_knowledge(learner_id)
         learner_errors = self.question_repository.list_personal_errors(learner_id)
         mastery_by_node = {item.knowledge_node_id: item.mastery for item in learner_nodes}
-        average_mastery = self._average_mastery(nodes, mastery_by_node)
+        average_mastery = self._average_mastery(target_nodes, mastery_by_node)
         level = self._infer_level(average_mastery)
-        active_errors = [
-            ActiveErrorPriority(
-                error_id=item.error_type_id,
-                severity=item.severity,
-                status=item.status,
-            )
-            for item in learner_errors
-            if item.status in {"new", "active", "improving", "relapsed"}
-            and item.severity > 0
-        ]
-        active_errors.sort(key=lambda item: item.severity, reverse=True)
+        active_errors = self._active_errors_for_spec(
+            spec,
+            error_types,
+            learner_errors,
+        )
 
-        items: list[ChapterQuestionBlueprintItem] = []
-        for index, goal in enumerate(COGNITIVE_GOALS):
-            target_nodes = self._choose_nodes_for_goal(
-                goal,
-                nodes,
+        if spec.mode == "iterator":
+            items = self._iterator_items(
+                spec,
+                target_nodes,
                 error_types,
                 mastery_by_node,
                 active_errors,
+                level,
             )
-            target_errors = self._choose_errors_for_nodes(
+        else:
+            items = self._generic_items(
+                spec,
                 target_nodes,
                 error_types,
                 active_errors,
-            )
-            items.append(
-                ChapterQuestionBlueprintItem(
-                    slot=index + 1,
-                    question_type=LEVEL_TYPE_SEQUENCES[level][index],
-                    difficulty=LEVEL_DIFFICULTIES[level][index],
-                    cognitive_goal=goal,
-                    target_knowledge_node_ids=target_nodes,
-                    target_error_ids=target_errors,
-                    pedagogical_strategy=PEDAGOGICAL_STRATEGIES[goal],
-                    prompt_brief=PROMPT_BRIEFS[goal],
-                    quality_checks=QUESTION_QUALITY_CHECKS,
-                )
+                level,
             )
 
         return ChapterQuestionSetPlan(
-            chapter_id=chapter_id,
-            chapter_title=CHAPTER_TITLE,
-            question_count=TARGET_QUESTION_COUNT,
+            chapter_id=spec.module_id,
+            chapter_title=spec.title,
+            question_count=spec.target_question_count,
             learner_level=level,
             average_mastery=average_mastery,
-            active_error_priorities=active_errors[:3],
-            core_principles=CORE_PRINCIPLES,
+            active_error_priorities=active_errors[:5],
+            core_principles=list(spec.core_principles),
             questions=items,
-            set_level_quality_checks=SET_QUALITY_CHECKS,
+            set_level_quality_checks=list(spec.set_level_quality_checks),
         )
 
     def plan_from_record(self, record: ChapterQuestionSet) -> ChapterQuestionSetPlan:
@@ -261,7 +523,6 @@ class ChapterQuestioningService:
             target_question_count=record.target_question_count,
             current_question_slot=max(1, slot),
             learner_level=record.learner_level,
-            average_mastery=record.average_mastery,
         )
 
     def generation_inputs_for_slot(
@@ -269,8 +530,12 @@ class ChapterQuestioningService:
         session: LearningSession,
         slot: int,
         recent_questions: Sequence[Question] = (),
+        assessment_id: str | None = None,
     ) -> tuple[dict, CandidateConstraints]:
-        record = self.create_question_set_for_session(session)
+        record = self.create_question_set_for_session(
+            session,
+            assessment_id or DEFAULT_ASSESSMENT_ID,
+        )
         plan = self.plan_from_record(record)
         if slot > plan.question_count:
             return self._default_inputs_after_planned_set(plan, recent_questions)
@@ -307,7 +572,7 @@ class ChapterQuestioningService:
 
     @staticmethod
     def current_slot(completed_question_count: int) -> int:
-        return min(completed_question_count + 1, TARGET_QUESTION_COUNT)
+        return completed_question_count + 1
 
     @staticmethod
     def next_slot(completed_question_count: int) -> int:
@@ -371,7 +636,104 @@ class ChapterQuestioningService:
             return 14
         return 20
 
-    def _choose_nodes_for_goal(
+    def _iterator_items(
+        self,
+        spec: AssessmentSpec,
+        nodes: Sequence[object],
+        error_types: Sequence[ErrorType],
+        mastery_by_node: dict[str, float],
+        active_errors: Sequence[ActiveErrorPriority],
+        level: LearnerLevel,
+    ) -> list[ChapterQuestionBlueprintItem]:
+        items: list[ChapterQuestionBlueprintItem] = []
+        for index, goal in enumerate(ITERATOR_COGNITIVE_GOALS):
+            target_nodes = self._choose_iterator_nodes_for_goal(
+                goal,
+                nodes,
+                error_types,
+                mastery_by_node,
+                active_errors,
+            )
+            target_errors = self._choose_errors_for_nodes(
+                target_nodes,
+                error_types,
+                active_errors,
+            )
+            items.append(
+                ChapterQuestionBlueprintItem(
+                    slot=index + 1,
+                    question_type=ITERATOR_TYPE_SEQUENCES[level][index],
+                    difficulty=ITERATOR_DIFFICULTIES[level][index],
+                    cognitive_goal=goal,
+                    target_knowledge_node_ids=target_nodes,
+                    target_error_ids=target_errors,
+                    pedagogical_strategy=ITERATOR_PEDAGOGICAL_STRATEGIES[goal],
+                    prompt_brief=ITERATOR_PROMPT_BRIEFS[goal],
+                    quality_checks=[
+                        *QUESTION_QUALITY_CHECKS,
+                        f"题目必须限定在 {spec.title} 的知识点范围。",
+                    ],
+                )
+            )
+        return items
+
+    def _generic_items(
+        self,
+        spec: AssessmentSpec,
+        nodes: Sequence[object],
+        error_types: Sequence[ErrorType],
+        active_errors: Sequence[ActiveErrorPriority],
+        level: LearnerLevel,
+    ) -> list[ChapterQuestionBlueprintItem]:
+        node_by_id = {node.id: node for node in nodes}
+        ordered_node_ids = [node_id for node_id in spec.node_ids if node_id in node_by_id]
+        question_types = GENERIC_TYPE_SEQUENCES[level]
+        items: list[ChapterQuestionBlueprintItem] = []
+
+        for index in range(spec.target_question_count):
+            node_id = ordered_node_ids[index % len(ordered_node_ids)]
+            node = node_by_id[node_id]
+            goal = GENERIC_COGNITIVE_GOALS[index % len(GENERIC_COGNITIVE_GOALS)]
+            question_type = question_types[index % len(question_types)]
+            target_errors = self._choose_errors_for_nodes(
+                [node_id],
+                error_types,
+                active_errors,
+            )
+            items.append(
+                ChapterQuestionBlueprintItem(
+                    slot=index + 1,
+                    question_type=question_type,
+                    difficulty=self._generic_difficulty(node.difficulty, level, index),
+                    cognitive_goal=goal,
+                    target_knowledge_node_ids=[node_id],
+                    target_error_ids=target_errors,
+                    pedagogical_strategy=GENERIC_PEDAGOGICAL_STRATEGIES[goal],
+                    prompt_brief=(
+                        f"围绕《{spec.title}》中的“{node.name}”出题："
+                        f"{node.learning_objective}"
+                    ),
+                    quality_checks=[
+                        *QUESTION_QUALITY_CHECKS,
+                        f"题目必须限定在 {spec.title} 的知识点范围。",
+                    ],
+                )
+            )
+        return items
+
+    @staticmethod
+    def _generic_difficulty(
+        node_difficulty: int,
+        level: LearnerLevel,
+        index: int,
+    ) -> int:
+        if level == "novice":
+            return min(3, max(1, node_difficulty))
+        if level == "intermediate":
+            return min(4, max(1, node_difficulty + (1 if index % 5 >= 3 else 0)))
+        return min(5, max(2, node_difficulty + (1 if index % 5 >= 2 else 0)))
+
+    def _choose_iterator_nodes_for_goal(
         self,
         goal: str,
         nodes: Sequence[object],
@@ -382,7 +744,7 @@ class ChapterQuestioningService:
         existing_node_ids = {node.id for node in nodes}
         preferred = [
             node_id
-            for node_id in GOAL_NODE_PREFERENCES[goal]
+            for node_id in ITERATOR_GOAL_NODE_PREFERENCES[goal]
             if node_id in existing_node_ids
         ]
         error_related = self._active_error_related_nodes(error_types, active_errors)
@@ -402,6 +764,31 @@ class ChapterQuestioningService:
             key=lambda node_id: (mastery_by_node.get(node_id, 0.0), node_id),
         )
         return fallback[:1]
+
+    @staticmethod
+    def _active_errors_for_spec(
+        spec: AssessmentSpec,
+        error_types: Sequence[ErrorType],
+        learner_errors: Sequence[object],
+    ) -> list[ActiveErrorPriority]:
+        node_ids = set(spec.node_ids)
+        error_type_by_id = {item.id: item for item in error_types}
+        active_errors = [
+            ActiveErrorPriority(
+                error_id=item.error_type_id,
+                severity=item.severity,
+                status=item.status,
+            )
+            for item in learner_errors
+            if item.status in {"new", "active", "improving", "relapsed"}
+            and item.severity > 0
+            and error_type_by_id.get(item.error_type_id) is not None
+            and node_ids.intersection(
+                error_type_by_id[item.error_type_id].related_knowledge_nodes
+            )
+        ]
+        active_errors.sort(key=lambda item: item.severity, reverse=True)
+        return active_errors
 
     @staticmethod
     def _active_error_related_nodes(

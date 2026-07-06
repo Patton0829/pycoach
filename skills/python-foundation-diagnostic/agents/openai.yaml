@@ -1,0 +1,4 @@
+interface:
+  display_name: "Python Foundation Diagnostic"
+  short_description: "Diagnose Python 3-9 mastery."
+  default_prompt: "Use $python-foundation-diagnostic to create an adaptive Python baseline diagnostic from tutorial chapters 3-9."

@@ -40,7 +40,6 @@ const initialSession = {
     target_question_count: 10,
     current_question_slot: 1,
     learner_level: "novice",
-    average_mastery: 0.28,
   },
   critic_content: {
     reference_answer: "绝不能显示",
@@ -104,6 +103,14 @@ class MockWebSocket {
   }
 }
 
+async function startIteratorTest() {
+  const button = await screen.findByRole("button", {
+    name: "开始 Python 迭代器章节测试",
+  });
+  await waitFor(() => expect(button).not.toBeDisabled());
+  fireEvent.click(button);
+}
+
 describe("LearningPage integration", () => {
   beforeEach(() => {
     MockWebSocket.instances = [];
@@ -124,6 +131,40 @@ describe("LearningPage integration", () => {
   afterEach(() => {
     vi.useRealTimers();
     vi.unstubAllGlobals();
+  });
+
+  it("starts the Python foundation diagnostic from the selector", async () => {
+    const diagnosticSession = {
+      ...initialSession,
+      chapter_question_set: {
+        ...initialSession.chapter_question_set,
+        chapter_id: "python_foundation_diagnostic",
+        chapter_title: "Python 综合能力诊断（3-9 章）",
+        target_question_count: 35,
+      },
+    };
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith("/api/sessions") && init?.method === "POST") {
+        expect(JSON.parse(String(init.body))).toMatchObject({
+          learner_id: "demo_user",
+          module: "python_foundation_diagnostic",
+        });
+        return new Response(JSON.stringify(diagnosticSession), { status: 200 });
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+    const button = await screen.findByRole("button", {
+      name: "开始 Python 综合能力诊断",
+    });
+    await waitFor(() => expect(button).not.toBeDisabled());
+    fireEvent.click(button);
+
+    expect(await screen.findByText("Python 综合能力诊断（3-9 章）")).toBeInTheDocument();
+    expect(await screen.findByText(/第 1 \/ 35 题/)).toBeInTheDocument();
   });
 
   it("connects REST and WebSocket without exposing internal JSON", async () => {
@@ -150,6 +191,7 @@ describe("LearningPage integration", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     render(<LearningPage />);
+    await startIteratorTest();
 
     expect(await screen.findByText("请填写：")).toBeInTheDocument();
     expect(screen.getByText("Python 迭代器")).toBeInTheDocument();
@@ -322,6 +364,7 @@ describe("LearningPage integration", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     render(<LearningPage />);
+    await startIteratorTest();
 
     const input = await screen.findByLabelText("学习输入");
     fireEvent.change(input, { target: { value: "下一题" } });
@@ -373,6 +416,7 @@ describe("LearningPage integration", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     render(<LearningPage />);
+    await startIteratorTest();
 
     expect(await screen.findByText("请填写：")).toBeInTheDocument();
     const socket = MockWebSocket.instances[0];
@@ -386,37 +430,16 @@ describe("LearningPage integration", () => {
     expect(await screen.findByText("候选题事件同步出的新题")).toBeInTheDocument();
   });
 
-  it("starts a fresh session on refresh when the stored session has progressed", async () => {
+  it("returns to the assessment selector on refresh when the stored session has progressed", async () => {
     window.localStorage.setItem("pycoach.session_id", initialSession.session_id);
     const progressedSession = {
       ...refreshedSession,
       state: "FEEDBACK_DISCUSSION",
     };
-    const newSession = {
-      ...initialSession,
-      session_id: "91111111-1111-4111-8111-111111111111",
-      messages: [
-        {
-          id: "92111111-1111-4111-8111-111111111111",
-          role: "questioner",
-          content_markdown: "刷新后创建的新会话题目",
-          created_at: "2026-06-24T00:05:00Z",
-        },
-      ],
-      current_question_id: "93111111-1111-4111-8111-111111111111",
-      current_question: {
-        question_id: "93111111-1111-4111-8111-111111111111",
-        markdown: "刷新后创建的新会话题目",
-        input_hint: null,
-      },
-    };
     const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
       if (url.includes(`/api/sessions/${initialSession.session_id}`)) {
         return new Response(JSON.stringify(progressedSession), { status: 200 });
-      }
-      if (url.endsWith("/api/sessions") && init?.method === "POST") {
-        return new Response(JSON.stringify(newSession), { status: 200 });
       }
       return new Response("not found", { status: 404 });
     });
@@ -424,9 +447,15 @@ describe("LearningPage integration", () => {
 
     render(<LearningPage />);
 
-    expect(await screen.findByText("刷新后创建的新会话题目")).toBeInTheDocument();
-    expect(window.localStorage.getItem("pycoach.session_id")).toBe(
-      newSession.session_id,
+    expect(
+      await screen.findByRole("button", {
+        name: "开始 Python 综合能力诊断",
+      }),
+    ).toBeInTheDocument();
+    expect(window.localStorage.getItem("pycoach.session_id")).toBeNull();
+    expect(fetchMock).not.toHaveBeenCalledWith(
+      expect.stringContaining("/api/sessions"),
+      expect.objectContaining({ method: "POST" }),
     );
   });
 
@@ -441,6 +470,7 @@ describe("LearningPage integration", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     render(<LearningPage />);
+    await startIteratorTest();
 
     const input = await screen.findByLabelText("学习输入");
     await waitFor(() => expect(MockWebSocket.instances).toHaveLength(1));

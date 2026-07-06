@@ -1,0 +1,86 @@
+[
+  {
+    "id": "python.ch3.sequence_index_confusion",
+    "name": "序列索引与切片混淆",
+    "description": "Confuses zero-based indexing, half-open slices, negative indices, or string/list immutability.",
+    "related_knowledge_nodes": ["python.ch3.text", "python.ch3.sequence_indexing", "python.ch3.lists"],
+    "remediation_strategy": "Use short string and list traces that require index, slice, and mutation reasoning."
+  },
+  {
+    "id": "python.ch3.assignment_mutability_confusion",
+    "name": "赋值与可变性混淆",
+    "description": "Treats assignment as copying values or misses how mutable list aliases share state.",
+    "related_knowledge_nodes": ["python.ch3.assignment_mutability", "python.ch3.lists"],
+    "remediation_strategy": "Contrast rebinding with mutating the object through two references."
+  },
+  {
+    "id": "python.ch4.control_flow_boundary_error",
+    "name": "控制流边界错误",
+    "description": "Misreads if/elif/else branches, range stop values, loop else behavior, break, or continue.",
+    "related_knowledge_nodes": ["python.ch4.if", "python.ch4.for_range", "python.ch4.loop_control"],
+    "remediation_strategy": "Ask the learner to enumerate executed lines and loop values explicitly."
+  },
+  {
+    "id": "python.ch4.function_argument_confusion",
+    "name": "函数参数语义混淆",
+    "description": "Confuses default argument evaluation, keyword arguments, unpacking, or return values.",
+    "related_knowledge_nodes": ["python.ch4.functions", "python.ch4.arguments"],
+    "remediation_strategy": "Use small function calls that isolate one argument binding rule at a time."
+  },
+  {
+    "id": "python.ch5_list_operation_confusion",
+    "name": "列表操作返回值混淆",
+    "description": "Confuses in-place list methods with expressions that create new lists.",
+    "related_knowledge_nodes": ["python.ch5.list_methods", "python.ch5.comprehensions"],
+    "remediation_strategy": "Compare append/sort side effects with comprehensions and slicing."
+  },
+  {
+    "id": "python.ch5_collection_semantics_confusion",
+    "name": "集合与映射语义混淆",
+    "description": "Misunderstands tuples, sets, dictionaries, membership, iteration order, or dictionary lookup.",
+    "related_knowledge_nodes": ["python.ch5.tuples_sequences", "python.ch5.sets_dicts", "python.ch5.looping_conditions"],
+    "remediation_strategy": "Use collection-specific examples and ask which operation is supported."
+  },
+  {
+    "id": "python.ch6_import_namespace_confusion",
+    "name": "导入与命名空间混淆",
+    "description": "Confuses module objects, imported names, attribute access, dir(), search paths, or package imports.",
+    "related_knowledge_nodes": ["python.ch6.imports", "python.ch6.module_execution", "python.ch6.search_path", "python.ch6.dir", "python.ch6.packages"],
+    "remediation_strategy": "Trace where a name lives after each import form and how Python resolves modules."
+  },
+  {
+    "id": "python.ch7_format_file_confusion",
+    "name": "格式化与文件操作混淆",
+    "description": "Misuses f-strings, format specifiers, str()/repr(), file modes, context managers, or json serialization.",
+    "related_knowledge_nodes": ["python.ch7.fstrings_format", "python.ch7.str_repr", "python.ch7.open_modes", "python.ch7.with_files", "python.ch7.json"],
+    "remediation_strategy": "Separate display formatting from data representation and file lifecycle."
+  },
+  {
+    "id": "python.ch8_exception_flow_confusion",
+    "name": "异常流程混淆",
+    "description": "Confuses syntax errors with runtime exceptions or misreads try/except/else/finally execution order.",
+    "related_knowledge_nodes": ["python.ch8.syntax_vs_exception", "python.ch8.try_except", "python.ch8.finally_cleanup"],
+    "remediation_strategy": "Ask for an execution trace through normal and exceptional paths."
+  },
+  {
+    "id": "python.ch8_raise_custom_exception_confusion",
+    "name": "抛出与自定义异常混淆",
+    "description": "Misuses raise, exception chaining, or custom exception class design.",
+    "related_knowledge_nodes": ["python.ch8.raise", "python.ch8.custom_exceptions"],
+    "remediation_strategy": "Use minimal exception classes and explicit raise/catch examples."
+  },
+  {
+    "id": "python.ch9_namespace_scope_confusion",
+    "name": "命名空间与作用域混淆",
+    "description": "Confuses local, global, nonlocal, class, and instance namespaces.",
+    "related_knowledge_nodes": ["python.ch9.namespaces_scopes", "python.ch9.class_definition"],
+    "remediation_strategy": "Trace name lookup from local scope outward and distinguish class body from methods."
+  },
+  {
+    "id": "python.ch9_class_instance_confusion",
+    "name": "类对象与实例对象混淆",
+    "description": "Confuses class attributes, instance attributes, self, method binding, or inheritance lookup.",
+    "related_knowledge_nodes": ["python.ch9.instance_methods", "python.ch9.class_instance_variables", "python.ch9.inheritance"],
+    "remediation_strategy": "Compare attribute lookup on the class and on two separate instances."
+  }
+]

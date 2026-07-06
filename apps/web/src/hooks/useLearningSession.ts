@@ -87,7 +87,7 @@ export function useLearningSession() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
-  const [statusText, setStatusText] = useState("正在准备学习会话…");
+  const [statusText, setStatusText] = useState("请选择测试开始");
   const [error, setError] = useState<string | null>(null);
 
   const applySession = useCallback((session: LearningSessionResponse) => {
@@ -103,6 +103,18 @@ export function useLearningSession() {
     setErrorNodes(session.error_graph.map(toErrorGraphNode));
     setCompletedQuestionCount(session.completed_question_count);
     setChapterQuestionSet(session.chapter_question_set ?? null);
+  }, []);
+
+  const clearSessionView = useCallback(() => {
+    setSessionId(null);
+    setState(null);
+    setMessages([]);
+    setKnowledgeNodes([]);
+    setErrorNodes([]);
+    setCompletedQuestionCount(0);
+    setChapterQuestionSet(null);
+    setIsSubmitting(false);
+    setIsConnected(false);
   }, []);
 
   const refreshProgress = useCallback(
@@ -141,28 +153,32 @@ export function useLearningSession() {
       setError(null);
       try {
         const storedSessionId = window.localStorage.getItem(SESSION_STORAGE_KEY);
-        let session: LearningSessionResponse;
         if (storedSessionId) {
           try {
-            session = await getLearningSession(storedSessionId);
-            if (!shouldReuseStoredSession(session)) {
+            const session = await getLearningSession(storedSessionId);
+            if (shouldReuseStoredSession(session)) {
+              if (cancelled) return;
+              applySession(session);
+              setStatusText("题目已准备好");
+            } else {
               window.localStorage.removeItem(SESSION_STORAGE_KEY);
-              session = await createLearningSession();
+              if (cancelled) return;
+              clearSessionView();
+              setStatusText("请选择测试开始");
             }
           } catch {
             window.localStorage.removeItem(SESSION_STORAGE_KEY);
-            session = await createLearningSession();
+            if (cancelled) return;
+            clearSessionView();
+            setStatusText("请选择测试开始");
           }
         } else {
-          session = await createLearningSession();
+          clearSessionView();
+          setStatusText("请选择测试开始");
         }
-        if (cancelled) return;
-        window.localStorage.setItem(SESSION_STORAGE_KEY, session.session_id);
-        applySession(session);
-        setStatusText("题目已准备好");
       } catch (reason) {
         if (cancelled) return;
-        setError(reason instanceof Error ? reason.message : "无法创建学习会话");
+        setError(reason instanceof Error ? reason.message : "无法恢复学习会话");
         setStatusText("后端连接失败");
       } finally {
         if (!cancelled) setIsLoading(false);
@@ -173,7 +189,7 @@ export function useLearningSession() {
     return () => {
       cancelled = true;
     };
-  }, [applySession]);
+  }, [applySession, clearSessionView]);
 
   useEffect(() => {
     if (
@@ -348,21 +364,35 @@ export function useLearningSession() {
     [isSubmitting, sessionId],
   );
 
+  const startSession = useCallback(
+    async (moduleId: string) => {
+      window.localStorage.removeItem(SESSION_STORAGE_KEY);
+      clearSessionView();
+      setIsLoading(true);
+      setError(null);
+      setStatusText("正在准备测试…");
+      try {
+        const session = await createLearningSession(moduleId);
+        window.localStorage.setItem(SESSION_STORAGE_KEY, session.session_id);
+        applySession(session);
+        setStatusText("题目已准备好");
+      } catch (reason) {
+        setError(reason instanceof Error ? reason.message : "无法创建学习会话");
+        setStatusText("后端连接失败");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [applySession, clearSessionView],
+  );
+
   const restartSession = useCallback(async () => {
     window.localStorage.removeItem(SESSION_STORAGE_KEY);
-    setIsLoading(true);
+    clearSessionView();
+    setIsLoading(false);
     setError(null);
-    try {
-      const session = await createLearningSession();
-      window.localStorage.setItem(SESSION_STORAGE_KEY, session.session_id);
-      applySession(session);
-      setStatusText("已创建新的学习会话");
-    } catch (reason) {
-      setError(reason instanceof Error ? reason.message : "无法创建学习会话");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [applySession]);
+    setStatusText("请选择测试开始");
+  }, [clearSessionView]);
 
   const placeholder = useMemo(() => statePlaceholder(state), [state]);
   const composerDisabled =
@@ -390,6 +420,7 @@ export function useLearningSession() {
     error,
     placeholder,
     composerDisabled,
+    startSession,
     sendStudentMessage,
     restartSession,
   };

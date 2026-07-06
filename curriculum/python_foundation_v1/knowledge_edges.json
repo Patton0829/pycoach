@@ -1,0 +1,40 @@
+[
+  {"source_node_id":"python.ch3.numbers","target_node_id":"python.ch3.text","relation_type":"related_to","weight":0.6},
+  {"source_node_id":"python.ch3.text","target_node_id":"python.ch3.sequence_indexing","relation_type":"prerequisite_of","weight":0.9},
+  {"source_node_id":"python.ch3.sequence_indexing","target_node_id":"python.ch3.lists","relation_type":"prerequisite_of","weight":0.9},
+  {"source_node_id":"python.ch3.lists","target_node_id":"python.ch3.assignment_mutability","relation_type":"prerequisite_of","weight":1.0},
+
+  {"source_node_id":"python.ch4.if","target_node_id":"python.ch4.for_range","relation_type":"related_to","weight":0.6},
+  {"source_node_id":"python.ch4.for_range","target_node_id":"python.ch4.loop_control","relation_type":"prerequisite_of","weight":0.9},
+  {"source_node_id":"python.ch4.if","target_node_id":"python.ch4.functions","relation_type":"prerequisite_of","weight":0.7},
+  {"source_node_id":"python.ch4.functions","target_node_id":"python.ch4.arguments","relation_type":"prerequisite_of","weight":1.0},
+
+  {"source_node_id":"python.ch5.list_methods","target_node_id":"python.ch5.comprehensions","relation_type":"related_to","weight":0.7},
+  {"source_node_id":"python.ch5.comprehensions","target_node_id":"python.ch5.looping_conditions","relation_type":"prerequisite_of","weight":0.8},
+  {"source_node_id":"python.ch5.tuples_sequences","target_node_id":"python.ch5.sets_dicts","relation_type":"related_to","weight":0.6},
+  {"source_node_id":"python.ch5.sets_dicts","target_node_id":"python.ch5.looping_conditions","relation_type":"prerequisite_of","weight":0.7},
+
+  {"source_node_id":"python.ch6.imports","target_node_id":"python.ch6.module_execution","relation_type":"related_to","weight":0.7},
+  {"source_node_id":"python.ch6.imports","target_node_id":"python.ch6.search_path","relation_type":"prerequisite_of","weight":0.8},
+  {"source_node_id":"python.ch6.imports","target_node_id":"python.ch6.dir","relation_type":"prerequisite_of","weight":0.6},
+  {"source_node_id":"python.ch6.search_path","target_node_id":"python.ch6.packages","relation_type":"prerequisite_of","weight":0.9},
+
+  {"source_node_id":"python.ch7.fstrings_format","target_node_id":"python.ch7.str_repr","relation_type":"related_to","weight":0.6},
+  {"source_node_id":"python.ch7.open_modes","target_node_id":"python.ch7.with_files","relation_type":"prerequisite_of","weight":1.0},
+  {"source_node_id":"python.ch7.with_files","target_node_id":"python.ch7.json","relation_type":"prerequisite_of","weight":0.7},
+
+  {"source_node_id":"python.ch8.syntax_vs_exception","target_node_id":"python.ch8.try_except","relation_type":"prerequisite_of","weight":1.0},
+  {"source_node_id":"python.ch8.try_except","target_node_id":"python.ch8.raise","relation_type":"prerequisite_of","weight":0.8},
+  {"source_node_id":"python.ch8.try_except","target_node_id":"python.ch8.finally_cleanup","relation_type":"prerequisite_of","weight":0.8},
+  {"source_node_id":"python.ch8.raise","target_node_id":"python.ch8.custom_exceptions","relation_type":"prerequisite_of","weight":0.9},
+
+  {"source_node_id":"python.ch9.namespaces_scopes","target_node_id":"python.ch9.class_definition","relation_type":"prerequisite_of","weight":0.7},
+  {"source_node_id":"python.ch9.class_definition","target_node_id":"python.ch9.instance_methods","relation_type":"prerequisite_of","weight":1.0},
+  {"source_node_id":"python.ch9.instance_methods","target_node_id":"python.ch9.class_instance_variables","relation_type":"prerequisite_of","weight":0.9},
+  {"source_node_id":"python.ch9.instance_methods","target_node_id":"python.ch9.inheritance","relation_type":"prerequisite_of","weight":0.9},
+
+  {"source_node_id":"python.ch3.lists","target_node_id":"python.ch5.list_methods","relation_type":"prerequisite_of","weight":0.8},
+  {"source_node_id":"python.ch4.for_range","target_node_id":"python.ch5.comprehensions","relation_type":"prerequisite_of","weight":0.8},
+  {"source_node_id":"python.ch4.functions","target_node_id":"python.ch6.imports","relation_type":"prerequisite_of","weight":0.6},
+  {"source_node_id":"python.ch8.custom_exceptions","target_node_id":"python.ch9.inheritance","relation_type":"related_to","weight":0.5}
+]

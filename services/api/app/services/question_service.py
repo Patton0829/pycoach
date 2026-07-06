@@ -338,13 +338,7 @@ class QuestionService:
             )
         ]
         if not eligible:
-            eligible = [
-                question
-                for question in self.seed_questions
-                if question.question_type in constraints.allowed_question_types
-            ]
-        if not eligible:
-            raise RuntimeError("No seed question satisfies the candidate constraints")
+            return self._generic_seed_fallback(constraints)
 
         preferred = [
             question
@@ -368,11 +362,104 @@ class QuestionService:
         selected = (non_repeated or pool)[0]
         return selected.model_copy(update={"question_id": uuid4()}, deep=True)
 
-    def _load_seed_questions(self) -> List[QuestionPacket]:
-        path = self.curriculum_dir / "seed_questions.json"
-        return TypeAdapter(List[QuestionPacket]).validate_json(
-            path.read_text(encoding="utf-8")
+    @staticmethod
+    def _generic_seed_fallback(
+        constraints: CandidateConstraints,
+    ) -> QuestionPacket:
+        question_type = constraints.preferred_question_type or constraints.allowed_question_types[0]
+        node_id = (
+            constraints.allowed_knowledge_node_ids[0]
+            if constraints.allowed_knowledge_node_ids
+            else "python.iterator.next"
         )
+        error_ids = constraints.allowed_error_ids[:1]
+        variants = {
+            "multiple_choice": {
+                "markdown": (
+                    f"围绕 `{node_id}`，下面哪项更合理？\n\n"
+                    "A. 可以忽略题目中的执行顺序\n\n"
+                    "B. 需要按 Python 规则逐步判断\n\n"
+                    "C. 所有表达式都会修改原对象\n\n"
+                    "D. 所有异常都会被自动忽略"
+                ),
+                "answer": "B",
+                "acceptable": ["B", "b"],
+                "reasoning": "The learner should apply the targeted Python rule step by step.",
+            },
+            "code_blank": {
+                "markdown": (
+                    f"围绕 `{node_id}` 填写缺失内容，使程序输出 `1`：\n\n"
+                    "```python\nvalue = ________\nprint(value)\n```"
+                ),
+                "answer": "1",
+                "acceptable": ["1"],
+                "reasoning": "The blank must produce the requested value.",
+            },
+            "output_prediction": {
+                "markdown": (
+                    f"围绕 `{node_id}` 预测输出：\n\n"
+                    "```python\nvalue = 1\nvalue = value + 1\nprint(value)\n```"
+                ),
+                "answer": "2",
+                "acceptable": ["2"],
+                "reasoning": "Assignments execute in order, so the final value is 2.",
+            },
+            "short_explanation": {
+                "markdown": f"请简要说明 `{node_id}` 这个知识点的关键规则。",
+                "answer": "需要按 Python 的具体规则逐步判断表达式、语句和对象状态。",
+                "acceptable": ["规则", "逐步判断", "Python"],
+                "reasoning": "A valid explanation should state the targeted Python rule.",
+            },
+        }
+        selected = variants[question_type]
+        return QuestionPacket.model_validate(
+            {
+                "question_id": uuid4(),
+                "question_type": question_type,
+                "difficulty": 1,
+                "knowledge_node_ids": [node_id],
+                "target_error_ids": error_ids,
+                "pedagogical_strategy": "retrieval_practice",
+                "student_content": {
+                    "markdown": selected["markdown"],
+                    "input_hint": "直接输入答案，也可以提出疑问。",
+                },
+                "critic_content": {
+                    "learning_objective": f"Apply the targeted rule for {node_id}.",
+                    "reference_answer": selected["answer"],
+                    "acceptable_answers": selected["acceptable"],
+                    "grading_rubric": {
+                        "correct": "Applies the targeted rule.",
+                        "partial": "Shows partial understanding.",
+                        "incorrect": "Does not apply the targeted rule.",
+                    },
+                    "expected_reasoning": selected["reasoning"],
+                    "ambiguity_notes": None,
+                },
+            }
+        )
+
+    def _load_seed_questions(self) -> List[QuestionPacket]:
+        packets: list[QuestionPacket] = []
+        for path in self._seed_question_paths():
+            packets.extend(
+                TypeAdapter(List[QuestionPacket]).validate_json(
+                    path.read_text(encoding="utf-8")
+                )
+            )
+        if not packets:
+            raise RuntimeError(f"No seed_questions.json found under {self.curriculum_dir}")
+        return packets
+
+    def _seed_question_paths(self) -> list[Path]:
+        paths = []
+        current = self.curriculum_dir / "seed_questions.json"
+        if current.is_file():
+            paths.append(current)
+        for sibling in sorted(self.curriculum_dir.parent.glob("python_*_v1/seed_questions.json")):
+            if sibling not in paths:
+                paths.append(sibling)
+        return paths
 
     def _load_system_prompt(self) -> str:
         path = (

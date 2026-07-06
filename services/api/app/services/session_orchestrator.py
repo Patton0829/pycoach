@@ -205,6 +205,7 @@ class LearningSessionOrchestrator:
                 chapter_service.generation_inputs_for_slot(
                     session,
                     slot=ChapterQuestioningService.current_slot(0),
+                    assessment_id=request.module,
                 )
             )
             context = QuestionContextBuilder(database).build(

@@ -104,7 +104,12 @@ def seed_database(database: Session, curriculum_dir: Path) -> SeedResult:
         database.add(learner)
     database.flush()
 
+    seeded_node_ids = {item.id for item in knowledge_nodes}
+    seeded_error_ids = {item.id for item in error_types}
+
     for node_id, (mastery, status) in DEMO_KNOWLEDGE_STATE.items():
+        if node_id not in seeded_node_ids:
+            continue
         statement = select(LearnerKnowledgeNode).where(
             LearnerKnowledgeNode.learner_id == learner.id,
             LearnerKnowledgeNode.knowledge_node_id == node_id,
@@ -120,6 +125,8 @@ def seed_database(database: Session, curriculum_dir: Path) -> SeedResult:
             )
 
     for error_id, (severity, status) in DEMO_ERROR_STATE.items():
+        if error_id not in seeded_error_ids:
+            continue
         statement = select(LearnerErrorNode).where(
             LearnerErrorNode.learner_id == learner.id,
             LearnerErrorNode.error_type_id == error_id,
@@ -149,6 +156,20 @@ def seed_database(database: Session, curriculum_dir: Path) -> SeedResult:
     )
 
 
+def curriculum_directories(curriculum_dir: Path) -> list[Path]:
+    if (curriculum_dir / "knowledge_nodes.json").is_file():
+        directories = [curriculum_dir]
+        foundation_dir = curriculum_dir.parent / "python_foundation_v1"
+        if foundation_dir.is_dir() and foundation_dir not in directories:
+            directories.append(foundation_dir)
+        return directories
+    return sorted(
+        path
+        for path in curriculum_dir.iterdir()
+        if path.is_dir() and (path / "knowledge_nodes.json").is_file()
+    )
+
+
 def _count(database: Session, model: Any) -> int:
     return database.scalar(select(func.count()).select_from(model)) or 0
 
@@ -156,7 +177,11 @@ def _count(database: Session, model: Any) -> int:
 def main() -> None:
     curriculum_dir = Path(settings.curriculum_dir)
     with SessionLocal() as database:
-        result = seed_database(database, curriculum_dir)
+        result = None
+        for directory in curriculum_directories(curriculum_dir):
+            result = seed_database(database, directory)
+        if result is None:
+            raise RuntimeError(f"No curriculum seed directories found under {curriculum_dir}")
     print(result.model_dump_json())
 
 

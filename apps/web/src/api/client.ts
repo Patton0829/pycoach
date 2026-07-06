@@ -19,13 +19,15 @@ async function requestJson<T>(
   return response.json() as Promise<T>;
 }
 
-export function createLearningSession(): Promise<LearningSessionResponse> {
+export function createLearningSession(
+  moduleId: string,
+): Promise<LearningSessionResponse> {
   return requestJson("/api/sessions", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       learner_id: "demo_user",
-      module: "python_iterator",
+      module: moduleId,
     }),
   });
 }

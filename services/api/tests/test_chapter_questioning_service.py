@@ -14,6 +14,9 @@ from app.services.chapter_questioning_service import ChapterQuestioningService
 CURRICULUM_DIR = (
     Path(__file__).resolve().parents[3] / "curriculum" / "python_iterator_v1"
 )
+FOUNDATION_CURRICULUM_DIR = (
+    Path(__file__).resolve().parents[3] / "curriculum" / "python_foundation_v1"
+)
 
 
 class ChapterQuestioningServiceTests(unittest.TestCase):
@@ -31,6 +34,7 @@ class ChapterQuestioningServiceTests(unittest.TestCase):
         )
         with self.factory() as database:
             seed_database(database, CURRICULUM_DIR)
+            seed_database(database, FOUNDATION_CURRICULUM_DIR)
 
     def tearDown(self) -> None:
         Base.metadata.drop_all(self.engine)
@@ -77,6 +81,37 @@ class ChapterQuestioningServiceTests(unittest.TestCase):
             critic_summary["chapter_question_blueprint"]["question_type"],
         )
         self.assertEqual(len(constraints.allowed_knowledge_node_ids), 1)
+
+    def test_generates_python_foundation_diagnostic_plan(self) -> None:
+        with self.factory() as database:
+            plan = ChapterQuestioningService(database).generate_plan(
+                "demo_user",
+                "python_foundation_diagnostic",
+            )
+
+        self.assertEqual(plan.chapter_id, "python_foundation_diagnostic")
+        self.assertEqual(plan.question_count, 35)
+        self.assertEqual([item.slot for item in plan.questions], list(range(1, 36)))
+        self.assertIn("python.ch3.numbers", plan.questions[0].target_knowledge_node_ids)
+        self.assertIn("python.ch9.inheritance", plan.questions[-1].target_knowledge_node_ids)
+        self.assertEqual(plan.learner_level, "novice")
+
+    def test_generates_selected_python_chapter_plan(self) -> None:
+        with self.factory() as database:
+            plan = ChapterQuestioningService(database).generate_plan(
+                "demo_user",
+                "python_tutorial_ch4",
+            )
+
+        self.assertEqual(plan.chapter_id, "python_tutorial_ch4")
+        self.assertEqual(plan.question_count, 10)
+        self.assertTrue(
+            all(
+                node_id.startswith("python.ch4")
+                for item in plan.questions
+                for node_id in item.target_knowledge_node_ids
+            )
+        )
 
     def test_slots_after_planned_set_fall_back_to_default_constraints(self) -> None:
         with self.factory() as database:
