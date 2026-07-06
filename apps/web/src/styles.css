@@ -52,6 +52,22 @@ textarea {
   gap: 18px;
 }
 
+.topbar__actions button {
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid rgb(255 255 255 / 58%);
+  border-radius: 8px;
+  color: white;
+  background: transparent;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.topbar__actions button:hover {
+  background: rgb(255 255 255 / 10%);
+}
+
 .workspace {
   min-height: 0;
   display: grid;

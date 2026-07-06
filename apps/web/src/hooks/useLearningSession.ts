@@ -34,6 +34,7 @@ function shouldReuseStoredSession(session: LearningSessionResponse): boolean {
   );
   return (
     session.state === "QUESTION_ACTIVE" &&
+    session.chapter_question_set != null &&
     session.completed_question_count === 0 &&
     !hasStudentOrCriticMessage
   );

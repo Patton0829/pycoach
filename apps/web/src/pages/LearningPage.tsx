@@ -84,6 +84,7 @@ export function LearningPage() {
     placeholder,
     composerDisabled,
     startSession,
+    restartSession,
     sendStudentMessage,
   } = useLearningSession();
 
@@ -100,6 +101,11 @@ export function LearningPage() {
         <strong>PyCoach Lab</strong>
         <div className="topbar__actions">
           <span>当前模块：{chapterQuestionSet?.chapter_title ?? "请选择测试"}</span>
+          {sessionId && (
+            <button type="button" onClick={() => void restartSession()}>
+              重新选择测试
+            </button>
+          )}
         </div>
       </header>
       {!sessionId ? (

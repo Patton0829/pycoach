@@ -459,6 +459,57 @@ describe("LearningPage integration", () => {
     );
   });
 
+  it("returns to the assessment selector when a stored legacy session has no module", async () => {
+    window.localStorage.setItem("pycoach.session_id", initialSession.session_id);
+    const legacySession = {
+      ...initialSession,
+      chapter_question_set: null,
+    };
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes(`/api/sessions/${initialSession.session_id}`)) {
+        return new Response(JSON.stringify(legacySession), { status: 200 });
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+
+    expect(
+      await screen.findByRole("button", {
+        name: "开始 Python 综合能力诊断",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("请填写：")).not.toBeInTheDocument();
+    expect(window.localStorage.getItem("pycoach.session_id")).toBeNull();
+  });
+
+  it("lets the learner return to the assessment selector from an active session", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith("/api/sessions") && init?.method === "POST") {
+        return new Response(JSON.stringify(initialSession), { status: 200 });
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+    await startIteratorTest();
+    expect(await screen.findByText("Python 迭代器")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "重新选择测试" }));
+
+    expect(
+      await screen.findByRole("button", {
+        name: "开始 Python 综合能力诊断",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Python 迭代器")).not.toBeInTheDocument();
+    expect(window.localStorage.getItem("pycoach.session_id")).toBeNull();
+  });
+
   it("keeps the composer disabled while an invalid question is being replaced", async () => {
     const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
