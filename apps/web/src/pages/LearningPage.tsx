@@ -178,6 +178,7 @@ const chapterKnowledgeNodeIds: Record<string, string[]> = {
 
 type ActiveView =
   | "learning"
+  | "foundationIntro"
   | "chapters"
   | "challenge"
   | "knowledge"
@@ -230,6 +231,59 @@ function PreparingAssessment({ option }: { option: AssessmentOption }) {
             <code key={token}>{token}</code>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+function FoundationDiagnosticIntro({
+  onStart,
+  disabled,
+}: {
+  onStart: () => void;
+  disabled: boolean;
+}) {
+  return (
+    <section className="diagnostic-intro" aria-labelledby="diagnostic-title">
+      <div className="diagnostic-intro__hero">
+        <span>{foundationOption.meta}</span>
+        <h1 id="diagnostic-title">Python 综合能力测试</h1>
+        <p>
+          这不是一套为了打分而存在的考试，而是 AI Python Coach
+          建立你个人学习画像的入口。它会从 Python 官方教程第 3-9
+          章中抽取核心知识点，观察你对语义、推理、代码阅读和常见误区的真实掌握情况。
+        </p>
+        <button
+          type="button"
+          className="primary-action"
+          onClick={onStart}
+          disabled={disabled}
+        >
+          开始测评
+        </button>
+      </div>
+
+      <div className="diagnostic-intro__grid">
+        <article className="diagnostic-card">
+          <strong>覆盖范围</strong>
+          <p>
+            数字与运算符、文本与字符串、列表和切片、控制流、数据结构、模块、输入输出、
+            错误与异常、类。
+          </p>
+        </article>
+        <article className="diagnostic-card">
+          <strong>题目方式</strong>
+          <p>
+            Questioner 会生成阅读代码、预测输出、填空、概念辨析和迁移应用题，
+            用 35 道题建立初始水平画像。
+          </p>
+        </article>
+        <article className="diagnostic-card">
+          <strong>评估方式</strong>
+          <p>
+            Critic 会判断你的答案是否抓住关键规则，并把证据写入个人知识图谱和个人错误图谱。
+          </p>
+        </article>
       </div>
     </section>
   );
@@ -527,6 +581,8 @@ export function LearningPage() {
         ? "个人错误图谱"
         : activeView === "about"
           ? "关于 AI Python Coach"
+          : activeView === "foundationIntro"
+            ? foundationOption.displayTitle
           : preparingOption != null
             ? preparingOption.displayTitle
             : activeView === "chapters"
@@ -581,13 +637,14 @@ export function LearningPage() {
             <button
               type="button"
               className={navButtonClass(
-                activeView === "learning" &&
-                  (preparingModuleId === foundationOption.moduleId ||
-                    chapterQuestionSet?.chapter_id === foundationOption.moduleId),
+                activeView === "foundationIntro" ||
+                  (activeView === "learning" &&
+                    (preparingModuleId === foundationOption.moduleId ||
+                      chapterQuestionSet?.chapter_id === foundationOption.moduleId)),
               )}
-              onClick={() => void handleStart(foundationOption.moduleId)}
+              onClick={() => setActiveView("foundationIntro")}
               disabled={isLoading}
-              aria-label={`开始 ${foundationOption.title}`}
+              aria-label={`查看 ${foundationOption.title}介绍`}
             >
               <span>{foundationOption.title}</span>
               <small>{foundationOption.meta}</small>
@@ -691,6 +748,11 @@ export function LearningPage() {
                 ))}
               </div>
             </section>
+          ) : activeView === "foundationIntro" ? (
+            <FoundationDiagnosticIntro
+              onStart={() => void handleStart(foundationOption.moduleId)}
+              disabled={isLoading}
+            />
           ) : activeView === "challenge" ? (
             <section className="chapter-selector">
               <div className="view-header">

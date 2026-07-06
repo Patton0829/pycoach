@@ -748,6 +748,108 @@ textarea {
   }
 }
 
+.diagnostic-intro {
+  flex: 1;
+  min-height: 0;
+  max-width: 980px;
+  overflow-y: auto;
+  padding: 22px 0 56px;
+}
+
+.diagnostic-intro__hero {
+  display: grid;
+  gap: 14px;
+  max-width: 820px;
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, #eaf3ff 0%, #ffffff 52%, #f3fbf7 100%);
+  box-shadow: var(--shadow-soft);
+}
+
+.diagnostic-intro__hero > span {
+  width: fit-content;
+  padding: 5px 9px;
+  border: 1px solid var(--color-primary);
+  border-radius: 8px;
+  color: var(--color-primary);
+  background: #eef6ff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.diagnostic-intro__hero h1 {
+  margin: 0;
+  color: var(--color-primary-strong);
+  font-size: 30px;
+  line-height: 1.25;
+}
+
+.diagnostic-intro__hero p {
+  max-width: 740px;
+  margin: 0;
+  color: var(--color-text-muted);
+  line-height: 1.8;
+}
+
+.primary-action {
+  width: fit-content;
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid var(--color-primary);
+  border-radius: 8px;
+  color: white;
+  background: var(--color-primary);
+  box-shadow: 0 10px 22px rgb(39 100 173 / 18%);
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    background 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.primary-action:hover {
+  background: #1f5597;
+  box-shadow: 0 14px 28px rgb(39 100 173 / 22%);
+  transform: translateY(-1px);
+}
+
+.primary-action:disabled {
+  cursor: wait;
+  opacity: 0.65;
+  transform: none;
+}
+
+.diagnostic-intro__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(190px, 1fr));
+  gap: 14px;
+  max-width: 980px;
+  margin-top: 16px;
+}
+
+.diagnostic-card {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.diagnostic-card strong {
+  color: var(--color-primary-strong);
+}
+
+.diagnostic-card p {
+  margin: 0;
+  color: var(--color-text-muted);
+  line-height: 1.65;
+}
+
 .chapter-selector,
 .graph-detail {
   flex: 1;
@@ -1329,7 +1431,8 @@ textarea {
   .diagram-row--graphs,
   .diagram-row--interaction,
   .diagram-input-grid,
-  .diagram-feedback-grid {
+  .diagram-feedback-grid,
+  .diagnostic-intro__grid {
     grid-template-columns: 1fr;
   }
 

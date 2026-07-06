@@ -150,7 +150,7 @@ describe("LearningPage integration", () => {
     vi.unstubAllGlobals();
   });
 
-  it("starts the Python foundation diagnostic from the left navigation", async () => {
+  it("shows the Python foundation diagnostic intro before starting", async () => {
     const diagnosticSession = {
       ...initialSession,
       chapter_question_set: {
@@ -175,10 +175,21 @@ describe("LearningPage integration", () => {
 
     render(<LearningPage />);
     const button = await screen.findByRole("button", {
-      name: "开始 Python 综合能力测试",
+      name: "查看 Python 综合能力测试介绍",
     });
     await waitFor(() => expect(button).not.toBeDisabled());
     fireEvent.click(button);
+
+    expect(
+      await screen.findByRole("heading", { name: "Python 综合能力测试" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/建立你个人学习画像/)).toBeInTheDocument();
+    expect(fetchMock).not.toHaveBeenCalledWith(
+      expect.stringContaining("/api/sessions"),
+      expect.objectContaining({ method: "POST" }),
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "开始测评" }));
 
     expect(await screen.findByText("当前模块：Python 综合能力测试"))
       .toBeInTheDocument();
@@ -207,10 +218,17 @@ describe("LearningPage integration", () => {
 
     render(<LearningPage />);
     const button = await screen.findByRole("button", {
-      name: "开始 Python 综合能力测试",
+      name: "查看 Python 综合能力测试介绍",
     });
     await waitFor(() => expect(button).not.toBeDisabled());
     fireEvent.click(button);
+    expect(await screen.findByText(/建立你个人学习画像/)).toBeInTheDocument();
+    expect(fetchMock).not.toHaveBeenCalledWith(
+      expect.stringContaining("/api/sessions"),
+      expect.objectContaining({ method: "POST" }),
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "开始测评" }));
 
     expect(await screen.findByText("正在生成综合能力诊断")).toBeInTheDocument();
     expect(screen.getByText("我爱 Python")).toBeInTheDocument();
@@ -819,7 +837,7 @@ describe("LearningPage integration", () => {
 
     expect(
       await screen.findByRole("button", {
-        name: "开始 Python 综合能力测试",
+        name: "查看 Python 综合能力测试介绍",
       }),
     ).toBeInTheDocument();
     expect(window.localStorage.getItem("pycoach.session_id")).toBeNull();
@@ -848,7 +866,7 @@ describe("LearningPage integration", () => {
 
     expect(
       await screen.findByRole("button", {
-        name: "开始 Python 综合能力测试",
+        name: "查看 Python 综合能力测试介绍",
       }),
     ).toBeInTheDocument();
     expect(screen.queryByText("请填写：")).not.toBeInTheDocument();
@@ -904,7 +922,7 @@ describe("LearningPage integration", () => {
 
     expect(
       await screen.findByRole("button", {
-        name: "开始 Python 综合能力测试",
+        name: "查看 Python 综合能力测试介绍",
       }),
     ).toBeInTheDocument();
     expect(screen.queryByText("Python 迭代器")).not.toBeInTheDocument();
