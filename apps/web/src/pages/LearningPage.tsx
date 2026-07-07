@@ -109,7 +109,7 @@ const chapterTestOptions = [
 const challengeOptions = chapterTestOptions.map((option) => ({
   ...option,
   moduleId: option.moduleId.replace("python_tutorial_", "python_challenge_"),
-  meta: "单题闯关 / 掌握为止",
+  meta: "单题闯关",
   kind: "challenge" as const,
   loadingLead: `${option.displayTitle}单题闯关正在准备。系统会优先挑选你还没完全掌握的知识点，一次只出一道题。`,
 }));
@@ -592,7 +592,7 @@ function AboutCoach() {
         <p>
           在AI Python Coach，我们从不强调Python多么重要，就像我们的高中数学老师总是强调得数学者得天下一样，那样会增长功利心，也就没法享受学习Python的乐趣，而做我们喜欢的事情，就不会觉得累，我们会乐此不疲，我们希望通过引入高反馈机制、好的学习方法、适宜的难度、大模型能力来做这样更懂用户的多智能体系统，帮助用户在学习Python的道路上略尽绵薄之力。
         </p>
-        <footer>—AI Python Coach创始人</footer>
+        <footer>—PyCoach Lab</footer>
       </blockquote>
     </section>
   );
@@ -724,7 +724,7 @@ export function LearningPage() {
   return (
     <main className="shell">
       <header className="topbar">
-        <strong>PyCoach Lab</strong>
+        <strong>AI Python Coach</strong>
         <div className="topbar__actions">
           <span>当前模块：{currentTitle}</span>
         </div>
@@ -761,7 +761,7 @@ export function LearningPage() {
               onClick={() => setActiveView("challenge")}
             >
               <span>Python 单题闯关</span>
-              <small>第 3-9 章 / 掌握为止</small>
+              <small>单题闯关</small>
             </button>
             <button
               type="button"
@@ -818,7 +818,7 @@ export function LearningPage() {
               )}
               <small>
                 {isActiveChallengeSession
-                  ? "单题闯关，掌握为止"
+                  ? "单题闯关"
                   : learnerLevelLabels[chapterQuestionSet.learner_level]}
               </small>
             </div>

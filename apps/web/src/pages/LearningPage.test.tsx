@@ -159,6 +159,7 @@ describe("LearningPage integration", () => {
     expect(
       await screen.findByRole("heading", { name: "关于 AI Python Coach" }),
     ).toBeInTheDocument();
+    expect(screen.getByText("AI Python Coach")).toBeInTheDocument();
     expect(screen.getByText("当前模块：关于 AI Python Coach"))
       .toBeInTheDocument();
     expect(screen.getByText(/高反馈学习为核心/)).toBeInTheDocument();
@@ -643,7 +644,7 @@ describe("LearningPage integration", () => {
     expect(screen.getByText(/我们从不强调Python多么重要/))
       .toBeInTheDocument();
     expect(screen.getByText(/我们会乐此不疲/)).toBeInTheDocument();
-    expect(screen.getByText("—AI Python Coach创始人")).toBeInTheDocument();
+    expect(screen.getByText("—PyCoach Lab")).toBeInTheDocument();
   });
 
   it("connects REST and WebSocket without exposing internal JSON", async () => {
