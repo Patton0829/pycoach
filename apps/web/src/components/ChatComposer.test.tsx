@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { ChatComposer } from "./ChatComposer";
 
@@ -13,6 +14,37 @@ describe("ChatComposer", () => {
 
     expect(onSend).toHaveBeenCalledWith("next(iterator)");
     expect(input).toHaveValue("");
+  });
+
+  it("restores focus after a submitted message finishes processing", async () => {
+    function ComposerHarness() {
+      const [disabled, setDisabled] = useState(false);
+      return (
+        <>
+          <ChatComposer
+            placeholder="输入答案"
+            onSend={() => setDisabled(true)}
+            disabled={disabled}
+          />
+          <button type="button" onClick={() => setDisabled(false)}>
+            完成处理
+          </button>
+        </>
+      );
+    }
+
+    render(<ComposerHarness />);
+    const input = screen.getByLabelText("学习输入");
+    input.focus();
+
+    fireEvent.change(input, { target: { value: "B" } });
+    fireEvent.keyDown(input, { key: "Enter", shiftKey: false });
+
+    expect(input).toBeDisabled();
+    input.blur();
+    fireEvent.click(screen.getByRole("button", { name: "完成处理" }));
+
+    await waitFor(() => expect(input).toHaveFocus());
   });
 
   it("keeps a newline with Shift+Enter", () => {

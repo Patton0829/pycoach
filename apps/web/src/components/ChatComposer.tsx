@@ -1,4 +1,4 @@
-import { useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 
 interface ChatComposerProps {
   placeholder: string;
@@ -12,14 +12,30 @@ export function ChatComposer({
   disabled = false,
 }: ChatComposerProps) {
   const [content, setContent] = useState("");
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const isComposing = useRef(false);
   const compositionJustEnded = useRef(false);
+  const shouldRestoreFocus = useRef(false);
+
+  useEffect(() => {
+    if (!disabled && shouldRestoreFocus.current) {
+      inputRef.current?.focus();
+      shouldRestoreFocus.current = false;
+    }
+  }, [disabled]);
 
   function send() {
     const normalized = content.trim();
     if (!normalized || disabled) return;
+    shouldRestoreFocus.current = true;
     onSend(normalized);
     setContent("");
+    window.setTimeout(() => {
+      if (!inputRef.current?.disabled) {
+        inputRef.current?.focus();
+        shouldRestoreFocus.current = false;
+      }
+    }, 0);
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
@@ -39,6 +55,7 @@ export function ChatComposer({
 
   return (
     <textarea
+      ref={inputRef}
       className="composer"
       value={content}
       rows={2}
