@@ -23,43 +23,12 @@ import {
 import { useSessionSocket } from "./useSessionSocket";
 
 const SESSION_STORAGE_KEY = "pycoach.session_id";
-const FOUNDATION_DIAGNOSTIC_MODULE_ID = "python_foundation_diagnostic";
-const RESTORABLE_MODULE_IDS = new Set([
-  "python_tutorial_ch3",
-  "python_tutorial_ch4",
-  "python_tutorial_ch5",
-  "python_tutorial_ch6",
-  "python_tutorial_ch7",
-  "python_tutorial_ch8",
-  "python_tutorial_ch9",
-  "python_challenge_ch3",
-  "python_challenge_ch4",
-  "python_challenge_ch5",
-  "python_challenge_ch6",
-  "python_challenge_ch7",
-  "python_challenge_ch8",
-  "python_challenge_ch9",
-]);
 const streamMessageId = (streamId: string) => `stream-${streamId}`;
 const SUBMITTING_STATES: SessionState[] = [
   "USER_MESSAGE_RECEIVED",
   "CRITIC_PROCESSING",
   "ROUND_FINALIZING",
 ];
-
-function shouldReuseStoredSession(session: LearningSessionResponse): boolean {
-  const chapterQuestionSet = session.chapter_question_set;
-  const hasStudentOrCriticMessage = session.messages.some(
-    (message) => message.role === "student" || message.role === "critic",
-  );
-  return (
-    session.state === "QUESTION_ACTIVE" &&
-    chapterQuestionSet != null &&
-    RESTORABLE_MODULE_IDS.has(chapterQuestionSet.chapter_id) &&
-    session.completed_question_count === 0 &&
-    !hasStudentOrCriticMessage
-  );
-}
 
 function statePlaceholder(state: SessionState | null): string {
   if (
@@ -186,33 +155,11 @@ export function useLearningSession() {
       setIsLoading(true);
       setError(null);
       try {
-        const storedSessionId = window.localStorage.getItem(SESSION_STORAGE_KEY);
-        if (storedSessionId) {
-          try {
-            const session = await getLearningSession(storedSessionId);
-            if (shouldReuseStoredSession(session)) {
-              if (cancelled) return;
-              applySession(session);
-              setStatusText("题目已准备好");
-            } else {
-              window.localStorage.removeItem(SESSION_STORAGE_KEY);
-              if (cancelled) return;
-              clearSessionView();
-              await refreshLearnerGraphs();
-              setStatusText("请选择测试开始");
-            }
-          } catch {
-            window.localStorage.removeItem(SESSION_STORAGE_KEY);
-            if (cancelled) return;
-            clearSessionView();
-            await refreshLearnerGraphs();
-            setStatusText("请选择测试开始");
-          }
-        } else {
-          clearSessionView();
-          await refreshLearnerGraphs();
-          setStatusText("请选择测试开始");
-        }
+        window.localStorage.removeItem(SESSION_STORAGE_KEY);
+        clearSessionView();
+        await refreshLearnerGraphs();
+        if (cancelled) return;
+        setStatusText("请选择测试开始");
       } catch (reason) {
         if (cancelled) return;
         setError(reason instanceof Error ? reason.message : "无法恢复学习会话");
@@ -424,9 +371,6 @@ export function useLearningSession() {
       setStatusText("正在准备测试…");
       try {
         const session = await createLearningSession(moduleId);
-        if (moduleId !== FOUNDATION_DIAGNOSTIC_MODULE_ID) {
-          window.localStorage.setItem(SESSION_STORAGE_KEY, session.session_id);
-        }
         applySession(session);
         setStatusText("题目已准备好");
       } catch (reason) {

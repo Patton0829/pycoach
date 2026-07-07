@@ -169,7 +169,7 @@ describe("LearningPage integration", () => {
     );
   });
 
-  it("shows the AI Python Coach introduction first even when a session can resume", async () => {
+  it("clears stored sessions on refresh and does not show continue controls", async () => {
     window.localStorage.setItem("pycoach.session_id", initialSession.session_id);
     const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
       const url = String(input);
@@ -188,14 +188,20 @@ describe("LearningPage integration", () => {
     expect(screen.getByText("当前模块：关于 AI Python Coach"))
       .toBeInTheDocument();
     expect(screen.queryByText("请填写：")).not.toBeInTheDocument();
-    expect(window.localStorage.getItem("pycoach.session_id")).toBe(
-      initialSession.session_id,
-    );
+    expect(window.localStorage.getItem("pycoach.session_id")).toBeNull();
+    expect(
+      fetchMock.mock.calls.some(([input]) =>
+        String(input).includes(`/api/sessions/${initialSession.session_id}`),
+      ),
+    ).toBe(false);
 
     fireEvent.click(screen.getByRole("button", { name: /Python 章节测试/ }));
     expect(
-      await screen.findByRole("button", { name: "继续 第 4 章：控制流" }),
+      await screen.findByRole("button", { name: "开始 第 4 章：控制流" }),
     ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "继续 第 4 章：控制流" }),
+    ).not.toBeInTheDocument();
   });
 
   it("shows the Python foundation diagnostic intro before starting", async () => {
@@ -1087,9 +1093,7 @@ describe("LearningPage integration", () => {
       await screen.findByRole("button", { name: "开始 第 5 章：数据结构" }),
     ).toBeInTheDocument();
     expect(screen.queryByText(/重新选择测试/)).not.toBeInTheDocument();
-    expect(window.localStorage.getItem("pycoach.session_id")).toBe(
-      initialSession.session_id,
-    );
+    expect(window.localStorage.getItem("pycoach.session_id")).toBeNull();
   });
 
   it("continues an active chapter test after viewing the graph", async () => {
