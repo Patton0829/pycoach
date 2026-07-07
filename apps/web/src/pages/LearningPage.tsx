@@ -600,7 +600,6 @@ function AboutCoach() {
 
 export function LearningPage() {
   const conversationRef = useRef<HTMLDivElement>(null);
-  const restoredSessionActivatedRef = useRef(false);
   const [activeView, setActiveView] = useState<ActiveView>("about");
   const [preparingModuleId, setPreparingModuleId] = useState<string | null>(null);
   const {
@@ -641,23 +640,6 @@ export function LearningPage() {
       conversation.scrollTop = conversation.scrollHeight;
     }
   }, [messages]);
-
-  useEffect(() => {
-    if (!sessionId) {
-      restoredSessionActivatedRef.current = false;
-      return;
-    }
-    if (
-      !isLoading &&
-      chapterQuestionSet != null &&
-      !restoredSessionActivatedRef.current
-    ) {
-      restoredSessionActivatedRef.current = true;
-      if (activeView === "about") {
-        setActiveView("learning");
-      }
-    }
-  }, [activeView, chapterQuestionSet, isLoading, sessionId]);
 
   const currentTitle =
     activeView === "knowledge"

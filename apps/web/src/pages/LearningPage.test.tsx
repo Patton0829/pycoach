@@ -169,6 +169,35 @@ describe("LearningPage integration", () => {
     );
   });
 
+  it("shows the AI Python Coach introduction first even when a session can resume", async () => {
+    window.localStorage.setItem("pycoach.session_id", initialSession.session_id);
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes(`/api/sessions/${initialSession.session_id}`)) {
+        return new Response(JSON.stringify(initialSession), { status: 200 });
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+
+    expect(
+      await screen.findByRole("heading", { name: "关于 AI Python Coach" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("当前模块：关于 AI Python Coach"))
+      .toBeInTheDocument();
+    expect(screen.queryByText("请填写：")).not.toBeInTheDocument();
+    expect(window.localStorage.getItem("pycoach.session_id")).toBe(
+      initialSession.session_id,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /Python 章节测试/ }));
+    expect(
+      await screen.findByRole("button", { name: "继续 第 4 章：控制流" }),
+    ).toBeInTheDocument();
+  });
+
   it("shows the Python foundation diagnostic intro before starting", async () => {
     const diagnosticSession = {
       ...initialSession,
