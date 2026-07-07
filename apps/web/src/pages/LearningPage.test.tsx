@@ -214,6 +214,56 @@ describe("LearningPage integration", () => {
     expect(await screen.findByText(/第 1 \/ 35 题/)).toBeInTheDocument();
   });
 
+  it("continues an active foundation diagnostic after viewing the graph", async () => {
+    const diagnosticSession = {
+      ...initialSession,
+      chapter_question_set: {
+        ...initialSession.chapter_question_set,
+        chapter_id: "python_foundation_diagnostic",
+        chapter_title: "Python 综合能力诊断（3-9 章）",
+        target_question_count: 35,
+      },
+    };
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith("/api/sessions") && init?.method === "POST") {
+        return new Response(JSON.stringify(diagnosticSession), { status: 200 });
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+    fireEvent.click(
+      await screen.findByRole("button", {
+        name: "查看 Python 综合能力测试介绍",
+      }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "开始测评" }));
+    expect(await screen.findByText("请填写：")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /个人知识图谱/ }));
+    expect(
+      await screen.findByRole("heading", { name: "个人知识图谱" }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "查看 Python 综合能力测试介绍",
+      }),
+    );
+    expect(await screen.findByRole("button", { name: "继续测评" }))
+      .toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "继续测评" }));
+
+    expect(await screen.findByText("请填写：")).toBeInTheDocument();
+    const createCalls = fetchMock.mock.calls.filter(
+      ([input, init]) =>
+        String(input).endsWith("/api/sessions") && init?.method === "POST",
+    );
+    expect(createCalls).toHaveLength(1);
+  });
+
   it("shows a Python-themed preparing state while foundation diagnostic is generated", async () => {
     const diagnosticSession = {
       ...initialSession,
@@ -370,6 +420,61 @@ describe("LearningPage integration", () => {
       .toBeInTheDocument();
     expect(await screen.findByText("第 1 题")).toBeInTheDocument();
     expect(screen.queryByText(/重新选择测试/)).not.toBeInTheDocument();
+  });
+
+  it("continues an active single-question challenge after viewing the graph", async () => {
+    const challengeSession = {
+      ...initialSession,
+      chapter_question_set: {
+        ...initialSession.chapter_question_set,
+        chapter_id: "python_challenge_ch3",
+        chapter_title: "第 3 章：Python 入门单题闯关",
+        target_question_count: 50,
+      },
+    };
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith("/api/sessions") && init?.method === "POST") {
+        return new Response(JSON.stringify(challengeSession), { status: 200 });
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+    fireEvent.click(await screen.findByRole("button", { name: /Python 单题闯关/ }));
+    fireEvent.click(
+      await screen.findByRole("button", {
+        name: "开始 第 3 章：Python 入门单题闯关",
+      }),
+    );
+    expect(await screen.findByText("请填写：")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /个人知识图谱/ }));
+    expect(
+      await screen.findByRole("heading", { name: "个人知识图谱" }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /Python 单题闯关/ }));
+    expect(
+      await screen.findByRole("button", {
+        name: "继续 第 3 章：Python 入门单题闯关",
+      }),
+    ).toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "继续 第 3 章：Python 入门单题闯关",
+      }),
+    );
+
+    expect(await screen.findByText("请填写：")).toBeInTheDocument();
+    expect(screen.getByText("当前模块：第 3 章：Python 入门"))
+      .toBeInTheDocument();
+    const createCalls = fetchMock.mock.calls.filter(
+      ([input, init]) =>
+        String(input).endsWith("/api/sessions") && init?.method === "POST",
+    );
+    expect(createCalls).toHaveLength(1);
   });
 
   it("shows the challenge completion animation when all chapter nodes are mastered", async () => {
@@ -955,6 +1060,43 @@ describe("LearningPage integration", () => {
     expect(window.localStorage.getItem("pycoach.session_id")).toBe(
       initialSession.session_id,
     );
+  });
+
+  it("continues an active chapter test after viewing the graph", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith("/api/sessions") && init?.method === "POST") {
+        return new Response(JSON.stringify(initialSession), { status: 200 });
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+    await startControlFlowChapterTest();
+    expect(await screen.findByText("请填写：")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /个人错误图谱/ }));
+    expect(
+      await screen.findByRole("heading", { name: "错误图谱" }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /Python 章节测试/ }));
+    expect(
+      await screen.findByRole("button", { name: "继续 第 4 章：控制流" }),
+    ).toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole("button", { name: "继续 第 4 章：控制流" }),
+    );
+
+    expect(await screen.findByText("请填写：")).toBeInTheDocument();
+    expect(screen.getByText("当前模块：第 4 章：控制流"))
+      .toBeInTheDocument();
+    const createCalls = fetchMock.mock.calls.filter(
+      ([input, init]) =>
+        String(input).endsWith("/api/sessions") && init?.method === "POST",
+    );
+    expect(createCalls).toHaveLength(1);
   });
 
   it("does not restore a stored iterator session removed from the test navigation", async () => {

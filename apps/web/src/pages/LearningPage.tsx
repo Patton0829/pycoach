@@ -189,6 +189,57 @@ function navButtonClass(isActive: boolean): string {
   return `nav-button${isActive ? " nav-button--active" : ""}`;
 }
 
+function AssessmentOptionCard({
+  option,
+  startLabel,
+  continueLabel,
+  canContinue,
+  disabled,
+  onStart,
+  onContinue,
+}: {
+  option: AssessmentOption;
+  startLabel: string;
+  continueLabel: string;
+  canContinue: boolean;
+  disabled: boolean;
+  onStart: () => void;
+  onContinue: () => void;
+}) {
+  return (
+    <article
+      className={`chapter-card${canContinue ? " chapter-card--active" : ""}`}
+    >
+      <div className="chapter-card__content">
+        <span>{option.title}</span>
+        <small>{option.meta}</small>
+      </div>
+      <div className="chapter-card__actions">
+        <button
+          type="button"
+          className="chapter-card__action"
+          onClick={onStart}
+          disabled={disabled}
+          aria-label={startLabel}
+        >
+          开始
+        </button>
+        {canContinue && (
+          <button
+            type="button"
+            className="chapter-card__action chapter-card__action--primary"
+            onClick={onContinue}
+            disabled={disabled}
+            aria-label={continueLabel}
+          >
+            继续
+          </button>
+        )}
+      </div>
+    </article>
+  );
+}
+
 function PreparingAssessment({ option }: { option: AssessmentOption }) {
   const isFoundation = option.kind === "foundation";
   return (
@@ -238,9 +289,13 @@ function PreparingAssessment({ option }: { option: AssessmentOption }) {
 
 function FoundationDiagnosticIntro({
   onStart,
+  onContinue,
+  canContinue,
   disabled,
 }: {
   onStart: () => void;
+  onContinue: () => void;
+  canContinue: boolean;
   disabled: boolean;
 }) {
   return (
@@ -253,14 +308,26 @@ function FoundationDiagnosticIntro({
           建立你个人学习画像的入口。它会从 Python 官方教程第 3-9
           章中抽取核心知识点，观察你对语义、推理、代码阅读和常见误区的真实掌握情况。
         </p>
-        <button
-          type="button"
-          className="primary-action"
-          onClick={onStart}
-          disabled={disabled}
-        >
-          开始测评
-        </button>
+        <div className="diagnostic-intro__actions">
+          <button
+            type="button"
+            className="primary-action"
+            onClick={onStart}
+            disabled={disabled}
+          >
+            开始测评
+          </button>
+          {canContinue && (
+            <button
+              type="button"
+              className="secondary-action"
+              onClick={onContinue}
+              disabled={disabled}
+            >
+              继续测评
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="diagnostic-intro__grid">
@@ -621,6 +688,19 @@ export function LearningPage() {
     }
   }
 
+  function handleContinue() {
+    setPreparingModuleId(null);
+    setActiveView("learning");
+  }
+
+  function canContinueModule(moduleId: string): boolean {
+    return (
+      sessionId != null &&
+      chapterQuestionSet != null &&
+      chapterQuestionSet.chapter_id === moduleId
+    );
+  }
+
   const isPreparingAssessment =
     activeView === "learning" &&
     isLoading &&
@@ -752,23 +832,24 @@ export function LearningPage() {
               </div>
               <div className="chapter-grid">
                 {chapterTestOptions.map((option) => (
-                  <button
-                    type="button"
-                    className="chapter-card"
+                  <AssessmentOptionCard
                     key={option.moduleId}
-                    onClick={() => void handleStart(option.moduleId)}
+                    option={option}
+                    startLabel={`开始 ${option.title}`}
+                    continueLabel={`继续 ${option.title}`}
+                    canContinue={canContinueModule(option.moduleId)}
                     disabled={isLoading}
-                    aria-label={`开始 ${option.title}`}
-                  >
-                    <span>{option.title}</span>
-                    <small>{option.meta}</small>
-                  </button>
+                    onStart={() => void handleStart(option.moduleId)}
+                    onContinue={handleContinue}
+                  />
                 ))}
               </div>
             </section>
           ) : activeView === "foundationIntro" ? (
             <FoundationDiagnosticIntro
               onStart={() => void handleStart(foundationOption.moduleId)}
+              onContinue={handleContinue}
+              canContinue={canContinueModule(foundationOption.moduleId)}
               disabled={isLoading}
             />
           ) : activeView === "challenge" ? (
@@ -781,17 +862,16 @@ export function LearningPage() {
               </div>
               <div className="chapter-grid">
                 {challengeOptions.map((option) => (
-                  <button
-                    type="button"
-                    className="chapter-card"
+                  <AssessmentOptionCard
                     key={option.moduleId}
-                    onClick={() => void handleStart(option.moduleId)}
+                    option={option}
+                    startLabel={`开始 ${option.title}单题闯关`}
+                    continueLabel={`继续 ${option.title}单题闯关`}
+                    canContinue={canContinueModule(option.moduleId)}
                     disabled={isLoading}
-                    aria-label={`开始 ${option.title}单题闯关`}
-                  >
-                    <span>{option.title}</span>
-                    <small>{option.meta}</small>
-                  </button>
+                    onStart={() => void handleStart(option.moduleId)}
+                    onContinue={handleContinue}
+                  />
                 ))}
               </div>
             </section>
