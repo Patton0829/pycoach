@@ -1,6 +1,11 @@
 import { useEffect, useRef } from "react";
 import type { SessionSocketEvent } from "../types/session";
 
+function defaultWebSocketBaseUrl(): string {
+  const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+  return `${protocol}//${window.location.host}`;
+}
+
 export function useSessionSocket(
   sessionId: string | null,
   onEvent: (event: SessionSocketEvent) => void,
@@ -16,7 +21,7 @@ export function useSessionSocket(
 
   useEffect(() => {
     if (!sessionId) return;
-    const baseUrl = import.meta.env.VITE_WS_BASE_URL ?? "ws://localhost:8000";
+    const baseUrl = import.meta.env.VITE_WS_BASE_URL ?? defaultWebSocketBaseUrl();
     const socket = new WebSocket(`${baseUrl}/ws/sessions/${sessionId}`);
     socket.onopen = () => onConnectionChangeRef.current?.(true);
     socket.onmessage = (message) => {

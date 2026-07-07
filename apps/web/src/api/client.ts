@@ -5,7 +5,7 @@ import type {
   MessageAcceptedResponse,
 } from "../types/session";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 const DEMO_LEARNER_ID = "demo_user";
 
 interface KnowledgeGraphResponse {
