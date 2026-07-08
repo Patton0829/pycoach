@@ -15,6 +15,7 @@ export function ChatComposer({
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const isComposing = useRef(false);
   const enterSubmittedOnKeyDown = useRef(false);
+  const shouldSubmitAfterComposition = useRef(false);
   const shouldRestoreFocus = useRef(false);
 
   useEffect(() => {
@@ -24,8 +25,8 @@ export function ChatComposer({
     }
   }, [disabled]);
 
-  async function send() {
-    const normalized = content.trim();
+  async function send(value = inputRef.current?.value ?? content) {
+    const normalized = value.trim();
     if (!normalized || disabled) return;
     shouldRestoreFocus.current = true;
     const accepted = await onSend(normalized);
@@ -51,6 +52,7 @@ export function ChatComposer({
         event.nativeEvent.isComposing ||
         event.keyCode === 229
       ) {
+        shouldSubmitAfterComposition.current = true;
         return;
       }
       event.preventDefault();
@@ -84,9 +86,15 @@ export function ChatComposer({
       onKeyUp={handleKeyUp}
       onCompositionStart={() => {
         isComposing.current = true;
+        shouldSubmitAfterComposition.current = false;
       }}
       onCompositionEnd={() => {
         isComposing.current = false;
+        if (shouldSubmitAfterComposition.current) {
+          shouldSubmitAfterComposition.current = false;
+          enterSubmittedOnKeyDown.current = true;
+          window.setTimeout(() => void send(), 0);
+        }
       }}
     />
   );

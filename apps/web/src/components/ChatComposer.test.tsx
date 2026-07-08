@@ -118,7 +118,7 @@ describe("ChatComposer", () => {
     fireEvent.compositionEnd(input);
     fireEvent.keyUp(input, { key: "Enter", shiftKey: false });
 
-    expect(onSend).toHaveBeenCalledWith("b");
+    await waitFor(() => expect(onSend).toHaveBeenCalledWith("b"));
     await waitFor(() => expect(input).toHaveValue(""));
   });
 });
