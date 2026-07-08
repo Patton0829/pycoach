@@ -20,6 +20,7 @@ import {
   toKnowledgeGraphNode,
   toTimelineMessage,
 } from "../types/session";
+import { createClientId } from "../utils/clientId";
 import { useSessionSocket } from "./useSessionSocket";
 
 const SESSION_STORAGE_KEY = "pycoach.session_id";
@@ -260,7 +261,7 @@ export function useLearningSession() {
         case "question_invalid":
           setMessages((current) =>
             appendUnique(current, {
-              id: `invalid-${crypto.randomUUID()}`,
+              id: `invalid-${createClientId()}`,
               role: "critic",
               contentMarkdown: event.payload.student_visible_reason_markdown,
             }),
@@ -330,7 +331,7 @@ export function useLearningSession() {
         setStatusText("上一条消息还在处理中，请稍等");
         return false;
       }
-      const messageId = crypto.randomUUID();
+      const messageId = createClientId();
       const optimisticMessage: TimelineMessage = {
         id: messageId,
         role: "student",
