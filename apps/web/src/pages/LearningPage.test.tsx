@@ -725,13 +725,14 @@ describe("LearningPage integration", () => {
     fireEvent.change(input, { target: { value: "next(iterator)" } });
     fireEvent.keyDown(input, { key: "Enter", shiftKey: false });
 
-    expect(screen.getByText("next(iterator)")).toBeInTheDocument();
+    expect(screen.getAllByText("next(iterator)").length).toBeGreaterThan(0);
     await waitFor(() =>
       expect(fetchMock).toHaveBeenCalledWith(
         expect.stringContaining("/messages"),
         expect.objectContaining({ method: "POST" }),
       ),
     );
+    await waitFor(() => expect(input).toHaveValue(""));
 
     const socket = MockWebSocket.instances[0];
     expect(socket.url).toContain(initialSession.session_id);

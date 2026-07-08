@@ -322,7 +322,14 @@ export function useLearningSession() {
 
   const sendStudentMessage = useCallback(
     async (contentMarkdown: string) => {
-      if (!sessionId || isSubmitting) return;
+      if (!sessionId) {
+        setStatusText("当前还没有开始测试，请先选择一个测试");
+        return false;
+      }
+      if (isSubmitting) {
+        setStatusText("上一条消息还在处理中，请稍等");
+        return false;
+      }
       const messageId = crypto.randomUUID();
       const optimisticMessage: TimelineMessage = {
         id: messageId,
@@ -346,6 +353,7 @@ export function useLearningSession() {
               : message,
           ),
         );
+        return true;
       } catch (reason) {
         setMessages((current) =>
           current.map((message) =>
@@ -357,6 +365,7 @@ export function useLearningSession() {
         setIsSubmitting(false);
         setError(reason instanceof Error ? reason.message : "消息发送失败");
         setStatusText("消息发送失败");
+        return false;
       }
     },
     [isSubmitting, sessionId],

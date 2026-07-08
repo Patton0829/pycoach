@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import { ChatComposer } from "./ChatComposer";
 
 describe("ChatComposer", () => {
-  it("sends with Enter and clears the input", () => {
+  it("sends with Enter and clears the input", async () => {
     const onSend = vi.fn();
     render(<ChatComposer placeholder="输入答案" onSend={onSend} />);
     const input = screen.getByLabelText("学习输入");
@@ -13,7 +13,20 @@ describe("ChatComposer", () => {
     fireEvent.keyDown(input, { key: "Enter", shiftKey: false });
 
     expect(onSend).toHaveBeenCalledWith("next(iterator)");
-    expect(input).toHaveValue("");
+    await waitFor(() => expect(input).toHaveValue(""));
+  });
+
+  it("keeps the input when the message is not accepted", async () => {
+    const onSend = vi.fn(() => false);
+    render(<ChatComposer placeholder="输入答案" onSend={onSend} />);
+    const input = screen.getByLabelText("学习输入");
+
+    fireEvent.change(input, { target: { value: "B" } });
+    fireEvent.keyDown(input, { key: "Enter", shiftKey: false });
+
+    expect(onSend).toHaveBeenCalledWith("B");
+    await waitFor(() => expect(input).toHaveValue("B"));
+    expect(input).toHaveFocus();
   });
 
   it("restores focus after a submitted message finishes processing", async () => {

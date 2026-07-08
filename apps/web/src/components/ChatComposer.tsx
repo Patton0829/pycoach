@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 
 interface ChatComposerProps {
   placeholder: string;
-  onSend: (content: string) => void;
+  onSend: (content: string) => boolean | void | Promise<boolean | void>;
   disabled?: boolean;
 }
 
@@ -24,11 +24,16 @@ export function ChatComposer({
     }
   }, [disabled]);
 
-  function send() {
+  async function send() {
     const normalized = content.trim();
     if (!normalized || disabled) return;
     shouldRestoreFocus.current = true;
-    onSend(normalized);
+    const accepted = await onSend(normalized);
+    if (accepted === false) {
+      shouldRestoreFocus.current = false;
+      inputRef.current?.focus();
+      return;
+    }
     setContent("");
     window.setTimeout(() => {
       if (!inputRef.current?.disabled) {
@@ -49,7 +54,7 @@ export function ChatComposer({
     }
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
-      send();
+      void send();
     }
   }
 
