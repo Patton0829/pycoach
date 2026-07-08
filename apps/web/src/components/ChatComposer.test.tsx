@@ -65,11 +65,23 @@ describe("ChatComposer", () => {
     render(<ChatComposer placeholder="输入答案" onSend={onSend} />);
     const input = screen.getByLabelText("学习输入");
 
-    fireEvent.change(input, { target: { value: "第一行\n第二行" } });
     fireEvent.keyDown(input, { key: "Enter", shiftKey: true });
+    fireEvent.change(input, { target: { value: "第一行\n第二行" } });
 
     expect(onSend).not.toHaveBeenCalled();
     expect(input).toHaveValue("第一行\n第二行");
+  });
+
+  it("submits when Enter is inserted as a textarea line break", async () => {
+    const onSend = vi.fn();
+    render(<ChatComposer placeholder="输入答案" onSend={onSend} />);
+    const input = screen.getByLabelText("学习输入");
+
+    fireEvent.change(input, { target: { value: "B" } });
+    fireEvent.change(input, { target: { value: "B\n" } });
+
+    await waitFor(() => expect(onSend).toHaveBeenCalledWith("B"));
+    await waitFor(() => expect(input).toHaveValue(""));
   });
 
   it("does not send when disabled", () => {

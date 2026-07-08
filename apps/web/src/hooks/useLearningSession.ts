@@ -252,7 +252,7 @@ export function useLearningSession() {
           setStatusText("Critic 已回复");
           break;
         case "candidate_question_ready":
-          setStatusText("下一题已在后台准备好，输入“下一题”继续");
+          setStatusText("后续题目已准备好，请继续回答当前题");
           break;
         case "candidate_question_stale":
           setStatusText("学习诊断已更新，正在重新准备后续题目");

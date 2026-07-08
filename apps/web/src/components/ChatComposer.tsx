@@ -1,4 +1,11 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+  type KeyboardEvent,
+} from "react";
 
 interface ChatComposerProps {
   placeholder: string;
@@ -15,6 +22,7 @@ export function ChatComposer({
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const isComposing = useRef(false);
   const enterSubmittedOnKeyDown = useRef(false);
+  const allowLineBreak = useRef(false);
   const shouldSubmitAfterComposition = useRef(false);
   const shouldRestoreFocus = useRef(false);
 
@@ -44,25 +52,66 @@ export function ChatComposer({
     }, 0);
   }
 
-  function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
-    if (event.key === "Enter" && !event.shiftKey) {
-      enterSubmittedOnKeyDown.current = false;
-      if (
-        isComposing.current ||
-        event.nativeEvent.isComposing ||
-        event.keyCode === 229
-      ) {
-        shouldSubmitAfterComposition.current = true;
-        return;
-      }
-      event.preventDefault();
-      enterSubmittedOnKeyDown.current = true;
-      void send();
+  function handleBeforeInput(event: FormEvent<HTMLTextAreaElement>) {
+    const nativeEvent = event.nativeEvent as InputEvent;
+    if (
+      nativeEvent.inputType !== "insertLineBreak" &&
+      nativeEvent.inputType !== "insertParagraph"
+    ) {
+      return;
     }
+    if (
+      allowLineBreak.current ||
+      isComposing.current ||
+      nativeEvent.isComposing
+    ) {
+      return;
+    }
+    event.preventDefault();
+    void send();
+  }
+
+  function handleChange(event: ChangeEvent<HTMLTextAreaElement>) {
+    const nextValue = event.target.value;
+    if (!allowLineBreak.current && /[\r\n]/.test(nextValue)) {
+      const valueWithoutBreaks = nextValue.replace(/[\r\n]+/g, "").trim();
+      setContent(valueWithoutBreaks);
+      if (valueWithoutBreaks && !isComposing.current) {
+        void send(valueWithoutBreaks);
+      }
+      return;
+    }
+    setContent(nextValue);
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key !== "Enter") return;
+    if (event.shiftKey) {
+      allowLineBreak.current = true;
+      return;
+    }
+    allowLineBreak.current = false;
+    enterSubmittedOnKeyDown.current = false;
+    if (
+      isComposing.current ||
+      event.nativeEvent.isComposing ||
+      event.keyCode === 229
+    ) {
+      shouldSubmitAfterComposition.current = true;
+      return;
+    }
+    event.preventDefault();
+    enterSubmittedOnKeyDown.current = true;
+    void send();
   }
 
   function handleKeyUp(event: KeyboardEvent<HTMLTextAreaElement>) {
-    if (event.key !== "Enter" || event.shiftKey) return;
+    if (event.key !== "Enter") return;
+    if (event.shiftKey) {
+      allowLineBreak.current = false;
+      return;
+    }
+    allowLineBreak.current = false;
     if (enterSubmittedOnKeyDown.current) {
       enterSubmittedOnKeyDown.current = false;
       return;
@@ -81,11 +130,19 @@ export function ChatComposer({
       placeholder={placeholder}
       aria-label="学习输入"
       disabled={disabled}
-      onChange={(event) => setContent(event.target.value)}
+      onBeforeInput={handleBeforeInput}
+      onChange={handleChange}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
+      onPaste={() => {
+        allowLineBreak.current = true;
+        window.setTimeout(() => {
+          allowLineBreak.current = false;
+        }, 0);
+      }}
       onCompositionStart={() => {
         isComposing.current = true;
+        allowLineBreak.current = false;
         shouldSubmitAfterComposition.current = false;
       }}
       onCompositionEnd={() => {

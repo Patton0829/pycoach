@@ -885,7 +885,7 @@ describe("LearningPage integration", () => {
     });
 
     expect(
-      await screen.findByText("下一题已在后台准备好，输入“下一题”继续"),
+      await screen.findByText("后续题目已准备好，请继续回答当前题"),
     ).toBeInTheDocument();
     expect(screen.getByText("请填写：")).toBeInTheDocument();
     expect(screen.getByText("答对了，这个判断很稳。")).toBeInTheDocument();
