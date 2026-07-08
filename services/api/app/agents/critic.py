@@ -10,6 +10,13 @@ CriticSchema = TypeVar(
     DiscussionSummary,
 )
 
+STREAMING_VISIBLE_REPLY_CONTRACT = (
+    "\n\n流式展示要求：当输出 CriticTurnResult JSON 时，必须把 "
+    '"student_visible_reply_markdown" 作为第一个字段输出，并先生成该字段的'
+    "完整学生可见回复文本；随后再输出 intent、intent_confidence、verdict、"
+    "round_action 和图谱更新字段。"
+)
+
 
 class Critic:
     def __init__(self, provider: LLMProvider) -> None:
@@ -23,10 +30,13 @@ class Critic:
         validation_feedback: Optional[str] = None,
         on_delta: Optional[TextDeltaCallback] = None,
     ) -> CriticSchema:
+        prompt = system_prompt
+        if on_delta is not None and schema is CriticTurnResult:
+            prompt += STREAMING_VISIBLE_REPLY_CONTRACT
         messages: List[Dict[str, str]] = [
             {
                 "role": "system",
-                "content": system_prompt + schema_output_contract(schema),
+                "content": prompt + schema_output_contract(schema),
             },
             {"role": "user", "content": context_json},
         ]

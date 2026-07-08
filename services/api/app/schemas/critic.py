@@ -119,9 +119,9 @@ class CriticTurnContext(StrictModel):
 
 
 class CriticTurnResult(StrictModel):
+    student_visible_reply_markdown: str = Field(min_length=1)
     intent: Intent
     intent_confidence: float = Field(ge=0.0, le=1.0)
-    student_visible_reply_markdown: str = Field(min_length=1)
     verdict: Literal[
         "correct",
         "partially_correct",
