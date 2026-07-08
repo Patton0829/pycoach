@@ -14,7 +14,7 @@ export function ChatComposer({
   const [content, setContent] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const isComposing = useRef(false);
-  const compositionJustEnded = useRef(false);
+  const enterSubmittedOnKeyDown = useRef(false);
   const shouldRestoreFocus = useRef(false);
 
   useEffect(() => {
@@ -44,18 +44,30 @@ export function ChatComposer({
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
-    if (
-      isComposing.current ||
-      compositionJustEnded.current ||
-      event.nativeEvent.isComposing ||
-      event.keyCode === 229
-    ) {
-      return;
-    }
     if (event.key === "Enter" && !event.shiftKey) {
+      enterSubmittedOnKeyDown.current = false;
+      if (
+        isComposing.current ||
+        event.nativeEvent.isComposing ||
+        event.keyCode === 229
+      ) {
+        return;
+      }
       event.preventDefault();
+      enterSubmittedOnKeyDown.current = true;
       void send();
     }
+  }
+
+  function handleKeyUp(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key !== "Enter" || event.shiftKey) return;
+    if (enterSubmittedOnKeyDown.current) {
+      enterSubmittedOnKeyDown.current = false;
+      return;
+    }
+    if (isComposing.current || event.nativeEvent.isComposing) return;
+    event.preventDefault();
+    void send();
   }
 
   return (
@@ -69,15 +81,12 @@ export function ChatComposer({
       disabled={disabled}
       onChange={(event) => setContent(event.target.value)}
       onKeyDown={handleKeyDown}
+      onKeyUp={handleKeyUp}
       onCompositionStart={() => {
         isComposing.current = true;
       }}
       onCompositionEnd={() => {
         isComposing.current = false;
-        compositionJustEnded.current = true;
-        window.setTimeout(() => {
-          compositionJustEnded.current = false;
-        }, 0);
       }}
     />
   );

@@ -86,7 +86,7 @@ describe("ChatComposer", () => {
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 
-  it("does not submit while Enter confirms an IME composition", () => {
+  it("does not submit while Enter is still composing", () => {
     const onSend = vi.fn();
     render(<ChatComposer placeholder="输入答案" onSend={onSend} />);
     const input = screen.getByLabelText("学习输入");
@@ -101,11 +101,24 @@ describe("ChatComposer", () => {
 
     expect(onSend).not.toHaveBeenCalled();
     expect(input).toHaveValue("那g");
+  });
 
+  it("submits on Enter keyup after an IME composition is committed", async () => {
+    const onSend = vi.fn();
+    render(<ChatComposer placeholder="输入答案" onSend={onSend} />);
+    const input = screen.getByLabelText("学习输入");
+
+    fireEvent.change(input, { target: { value: "b" } });
+    fireEvent.compositionStart(input);
+    fireEvent.keyDown(input, {
+      key: "Enter",
+      keyCode: 229,
+      isComposing: true,
+    });
     fireEvent.compositionEnd(input);
-    fireEvent.keyDown(input, { key: "Enter", shiftKey: false });
+    fireEvent.keyUp(input, { key: "Enter", shiftKey: false });
 
-    expect(onSend).not.toHaveBeenCalled();
-    expect(input).toHaveValue("那g");
+    expect(onSend).toHaveBeenCalledWith("b");
+    await waitFor(() => expect(input).toHaveValue(""));
   });
 });
