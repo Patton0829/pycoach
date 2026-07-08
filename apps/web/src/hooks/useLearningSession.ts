@@ -83,14 +83,22 @@ export function useLearningSession() {
   const [error, setError] = useState<string | null>(null);
 
   const applySession = useCallback((session: LearningSessionResponse) => {
+    const roundMessages = selectCurrentRoundMessages(
+      session.messages.map(toTimelineMessage),
+    );
     setSessionId(session.session_id);
     setState(session.state);
     if (!SUBMITTING_STATES.includes(session.state)) {
       setIsSubmitting(false);
     }
-    setMessages(
-      selectCurrentRoundMessages(session.messages.map(toTimelineMessage)),
-    );
+    setMessages((current) => {
+      if (session.state !== "CRITIC_PROCESSING") {
+        return roundMessages;
+      }
+      return current
+        .filter((message) => message.deliveryStatus === "streaming")
+        .reduce(appendUnique, roundMessages);
+    });
     setKnowledgeNodes(session.knowledge_graph.map(toKnowledgeGraphNode));
     setErrorNodes(session.error_graph.map(toErrorGraphNode));
     setCompletedQuestionCount(session.completed_question_count);
