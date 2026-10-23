@@ -1396,12 +1396,14 @@ class LearningSessionOrchestrator:
                 session.current_question_id = replacement.id
                 transition_session(session, SessionState.QUESTION_ACTIVE)
                 text = reason + "已为你换一道真题。"
-                database.add(create_message(
+                question_message = create_message(
                     session.id, new_round.id, "questioner",
                     replacement.student_content_json["markdown"],
-                ))
+                )
             message = create_message(session.id, old_round.id, "critic", text)
             database.add(message)
+            if replacement is not None:
+                database.add(question_message)
             metadata = question_metadata(database, replacement) if replacement else None
             database.commit()
             reply = CriticReplyReadyEvent(

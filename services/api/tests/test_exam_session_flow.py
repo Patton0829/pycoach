@@ -3,11 +3,16 @@
 import asyncio
 from pathlib import Path
 import unittest
+from uuid import uuid4
 
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, func, select
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
+from app.api.sessions import router as sessions_router
+from app.core.orchestrator import get_session_orchestrator
 from app.llm.mock import DemoMockLLMProvider
 from app.models.base import Base
 from app.models.entities import (
@@ -16,6 +21,7 @@ from app.models.entities import (
     GraphUpdateEvent,
     LearnerKnowledgeNode,
     LearningRound,
+    LearningSession,
     Question,
 )
 from app.schemas.question_bank import QuestionBankImport
@@ -68,6 +74,7 @@ class ExamSessionFlowTests(unittest.TestCase):
             service = QuestionBankService(database)
             service.register_catalog(self.payload.catalog_chapters, self.payload.catalog_knowledge_nodes)
             document = service.register_document(self.payload.document)
+            self.document_id = document.id
             for question in self.payload.questions:
                 service.create_revision(document.id, question)
             database.commit()
@@ -260,3 +267,46 @@ class ExamSessionFlowTests(unittest.TestCase):
                 self.assertEqual(revision.review_status, "approved")
             self.assertFalse(any(name == "QuestionPacket" for name, _ in self.provider.calls))
         asyncio.run(scenario())
+
+    def test_empty_reviewed_bank_returns_api_error_without_orphan_session(self):
+        with self.factory() as database:
+            service = QuestionBankService(database)
+            approved = list(database.scalars(select(BankQuestionRevision).where(
+                BankQuestionRevision.review_status == "approved",
+            )).all())
+            for revision in approved:
+                service.review_revision(revision.id, "invalid")
+            database.commit()
+        api = FastAPI()
+        api.include_router(sessions_router)
+        api.dependency_overrides[get_session_orchestrator] = lambda: self.orchestrator
+        with TestClient(api) as client:
+            response = client.post("/api/sessions", json={
+                "learner_id": "demo_user", "module": EXAM_MODULE,
+            })
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("真题", response.json()["detail"])
+        with self.factory() as database:
+            self.assertEqual(database.scalar(select(func.count()).select_from(LearningSession)), 0)
+            self.assertEqual(database.scalar(select(func.count()).select_from(LearningRound)), 0)
+
+    def test_explicit_source_starts_exam_and_unknown_source_returns_api_error(self):
+        api = FastAPI()
+        api.include_router(sessions_router)
+        api.dependency_overrides[get_session_orchestrator] = lambda: self.orchestrator
+        with TestClient(api) as client:
+            response = client.post("/api/sessions", json={
+                "learner_id": "demo_user", "module": EXAM_MODULE,
+                "source_document_id": self.document_id,
+            })
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.json()["chapter_question_set"]["target_question_count"], 27)
+            unknown = client.post("/api/sessions", json={
+                "learner_id": "demo_user", "module": EXAM_MODULE,
+                "source_document_id": str(uuid4()),
+            })
+        self.assertEqual(unknown.status_code, 400)
+        self.assertIn("source document", unknown.json()["detail"])
+        with self.factory() as database:
+            self.assertEqual(database.scalar(select(func.count()).select_from(LearningSession)), 1)
+            self.assertEqual(database.scalar(select(func.count()).select_from(LearningRound)), 1)

@@ -88,11 +88,11 @@ PYTHONPATH=services/api python -m unittest services/api/tests/test_mysql_integra
 
 ## 题库结构与本地管理
 
-当前实现包括数据结构、回合评估和本地题库管理。题库候选支持按知识点及难度筛选；学习会话仍使用现有 Questioner 出题，尚未接入自动真题选题、PDF 自动解析、embedding 或向量检索。
+当前实现包括数据结构、回合评估、本地题库管理和学生真题测试。AI 练习使用现有 Questioner 出题；真题测试按个人画像、题目难度和历史作答检索已审核的原题，由 Critic 评价。当前检索使用 MySQL 结构化数据，未新增通用 PDF 自动解析、embedding 或向量检索服务。
 
 0004 为章节增加 `reference_url`，为知识点增加 `reference_url`、`reference_section`、`is_supplementary` 和 `runtime_enabled`。章节以 `curriculum/python_tutorial_catalog.json` 中的 Python 官方教程第 1～16 章为依据；项目细分的知识点记录对应小节。教程未直接覆盖的 IPO、turtle 等概念明确标注为补充专题。已有知识点 ID 和个人学习进度保持不变。
 
-题库内容审核与学习课程启用分别判断。`approved` 表示题面、答案与知识点映射已审核；当前学生真题候选仍限定为已启用的迭代器知识点。为全卷映射而新增的目录知识点默认 `runtime_enabled=false`，不会进入现有 Questioner 上下文或个人课程图谱。
+题库内容审核与 AI 课程启用分别判断。`approved` 表示题面、答案与知识点映射已审核；普通题库服务仍保留迭代器范围限制。用户明确选择的“真题测试”使用独立的已审核题库池，可以覆盖整份试卷。为全卷映射而新增的目录知识点默认 `runtime_enabled=false`，不会进入普通 Questioner 的课程上下文；学生完成这些知识点的有效评估后，相关掌握记录会显示在其个人知识图谱中。
 
 从项目根目录执行以下命令。`schema` 不连接数据库；其余命令使用 `.env` 的 `DATABASE_URL`。
 
@@ -122,3 +122,5 @@ PYTHONPATH=services/api python -m app.question_bank_cli import-json 'python考�
 审核脚本根据固定 PDF 指纹、逐题审核标注和官方教程目录生成 36 题的审核版本、审核报告、可读 HTML 及题面/内部答案分别存放的检索资料。各题独立保留版本号，原始提取文件和历史版本保留。缺失答案的第 31～36 题使用项目补充参考答案；第 15 题保留原卷 B，并将纠错后的 C 单独标明来源。含无法唯一判分问题的原题记录为 `invalid`，不进入审核后的默认检索资料。
 
 数据库难度仍存 1～5 的整数。学生页面通过公开字段 `question_metadata` 接收难度、知识点名称及来源摘要，以五颗实心星展示：前 N 颗金黄色，其余灰色。REST 历史消息、当前题目和 WebSocket 新题均使用同一公开字段契约；内部答案、评分依据、文件路径和指纹不进入该契约。
+
+学生从侧栏“真题测试”选择试卷开始，页面通过 `GET /api/exams` 读取实际可用题数与排除题数，再以 `module=python_exam_practice` 和可选 `source_document_id` 创建学习会话。会话固定当时审核题库池，出题前再次检查最新审核状态；同一会话不会重复原题。下一题在上一回合评估提交后选择，题库耗尽即完成测试，不回退到生成题。作答、追问、“下一题”和结束测试均沿用统一文本框。

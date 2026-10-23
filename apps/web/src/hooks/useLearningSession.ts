@@ -152,6 +152,11 @@ export function useLearningSession() {
       setErrorNodes(session.error_graph.map(toErrorGraphNode));
       setCompletedQuestionCount(session.completed_question_count);
       setChapterQuestionSet(session.chapter_question_set ?? null);
+      if (session.state === "SESSION_ENDED") {
+        setState("SESSION_ENDED");
+        setIsSubmitting(false);
+        setStatusText("本次学习已结束");
+      }
     },
     [sessionId],
   );
@@ -166,6 +171,8 @@ export function useLearningSession() {
         setStatusText("新题已准备好");
       } else if (session.state === "FEEDBACK_DISCUSSION") {
         setStatusText("下一题暂时未发布，可以重试");
+      } else if (session.state === "SESSION_ENDED") {
+        setStatusText("本次学习已结束");
       }
     },
     [applySession, sessionId],
@@ -272,7 +279,11 @@ export function useLearningSession() {
           });
           setState(event.payload.session_state);
           setIsSubmitting(false);
-          setStatusText("Critic 已回复");
+          setStatusText(
+            event.payload.session_state === "SESSION_ENDED"
+              ? "本次学习已结束"
+              : "Critic 已回复",
+          );
           break;
         case "candidate_question_ready":
           setStatusText("后续题目已准备好，请继续回答当前题");

@@ -327,6 +327,101 @@ describe("LearningPage integration", () => {
     expect(screen.queryByRole("button", { name: /下一题|提交答案|我不会/ })).not.toBeInTheDocument();
   });
 
+  it("shows newly assessed exam knowledge points and ends when the final summary arrives", async () => {
+    const examSession = {
+      ...initialSession,
+      chapter_question_set: {
+        ...initialSession.chapter_question_set,
+        chapter_id: "python_exam_practice",
+        chapter_title: "真题测试",
+        target_question_count: 1,
+      },
+    };
+    const learnedExamNode = {
+      node_id: "python.exam.ipo",
+      name: "IPO 模型",
+      display_status: "正在学习",
+      chapter_id: "python_supplementary",
+      evaluated_count: 1,
+    };
+    const endedSession = {
+      ...examSession,
+      state: "SESSION_ENDED",
+      completed_question_count: 1,
+      knowledge_graph: [
+        { ...initialSession.knowledge_graph[0], chapter_id: "python_tutorial.ch09" },
+        learnedExamNode,
+      ],
+    };
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith("/api/exams")) {
+        return new Response(JSON.stringify([{
+          id: "91111111-1111-4111-8111-111111111111",
+          title: "Python 样题",
+          document_type: "sample_exam",
+          exam_year: null,
+          available_question_count: 1,
+          excluded_question_count: 0,
+          question_types: ["multiple_choice"],
+        }]), { status: 200 });
+      }
+      if (url.endsWith("/api/sessions") && init?.method === "POST") {
+        return new Response(JSON.stringify(examSession), { status: 200 });
+      }
+      if (url.endsWith(`/api/sessions/${examSession.session_id}`)) {
+        return new Response(JSON.stringify(endedSession), { status: 200 });
+      }
+      if (url.endsWith("/knowledge-graph")) {
+        return new Response(JSON.stringify({ nodes: initialSession.knowledge_graph }), { status: 200 });
+      }
+      if (url.endsWith("/error-graph")) {
+        return new Response(JSON.stringify({ nodes: [] }), { status: 200 });
+      }
+      if (url.endsWith("/messages") && init?.method === "POST") {
+        return new Response(JSON.stringify({
+          message_id: "61111111-1111-4111-8111-111111111111",
+          status: "processing",
+          session_state: "CRITIC_PROCESSING",
+        }), { status: 202 });
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+    fireEvent.click(await screen.findByRole("button", { name: /个人知识图谱/ }));
+    expect(await screen.findByText("next()")).toBeInTheDocument();
+    expect(screen.queryByText("IPO 模型")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "查看真题测试" }));
+    fireEvent.click(await screen.findByRole("button", { name: "开始 Python 样题 真题测试" }));
+
+    const input = await screen.findByLabelText("学习输入");
+    fireEvent.change(input, { target: { value: "结束测试" } });
+    fireEvent.keyDown(input, { key: "Enter", shiftKey: false });
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining("/messages"),
+      expect.objectContaining({ method: "POST" }),
+    ));
+    await waitFor(() => expect(MockWebSocket.instances).toHaveLength(1));
+    act(() => {
+      MockWebSocket.instances[0].emit({
+        type: "session_summary_ready",
+        session_id: examSession.session_id,
+        payload: { completed_question_count: 1, graphs_changed: true },
+      });
+    });
+
+    expect(await screen.findByText("本次学习已结束")).toBeInTheDocument();
+    expect(input).toBeDisabled();
+    expect(input).toHaveAttribute("placeholder", "本次学习已结束。");
+    expect(screen.getByText("本次已完成 1 题")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /个人知识图谱/ }));
+    expect(await screen.findByText("IPO 模型")).toBeInTheDocument();
+    expect(screen.getByText("next()")).toBeInTheDocument();
+    expect(screen.queryByText("turtle")).not.toBeInTheDocument();
+  });
+
   it("shows the Python foundation diagnostic intro before starting", async () => {
     const diagnosticSession = {
       ...initialSession,
