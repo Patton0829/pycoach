@@ -1,0 +1,697 @@
+{
+  "$defs": {
+    "AnswerProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "origin": {
+          "enum": [
+            "provided_pdf_reference_answers",
+            "project_annotation",
+            "unknown"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "correct_option": {
+          "anyOf": [
+            {
+              "maxLength": 8,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Correct Option"
+        },
+        "source_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Text"
+        },
+        "explanation_origin": {
+          "default": "project_annotation",
+          "enum": [
+            "provided_pdf_reference_answers",
+            "project_annotation",
+            "unknown"
+          ],
+          "title": "Explanation Origin",
+          "type": "string"
+        },
+        "source_correct_option": {
+          "anyOf": [
+            {
+              "maxLength": 8,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Correct Option"
+        },
+        "review_note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Review Note"
+        },
+        "assumptions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "verification_sources": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Verification Sources",
+          "type": "array"
+        }
+      },
+      "required": [
+        "origin"
+      ],
+      "title": "AnswerProvenance",
+      "type": "object"
+    },
+    "BankQuestionRevisionInput": {
+      "additionalProperties": false,
+      "properties": {
+        "bank_question_id": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Bank Question Id",
+          "type": "string"
+        },
+        "question_number": {
+          "maxLength": 40,
+          "minLength": 1,
+          "title": "Question Number",
+          "type": "string"
+        },
+        "revision": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "question_type": {
+          "enum": [
+            "multiple_choice",
+            "code_blank",
+            "output_prediction",
+            "short_explanation",
+            "programming"
+          ],
+          "title": "Question Type",
+          "type": "string"
+        },
+        "difficulty": {
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Difficulty",
+          "type": "integer"
+        },
+        "difficulty_origin": {
+          "default": "project_annotation",
+          "enum": [
+            "project_annotation",
+            "source_document",
+            "calibrated"
+          ],
+          "title": "Difficulty Origin",
+          "type": "string"
+        },
+        "difficulty_reason": {
+          "minLength": 1,
+          "title": "Difficulty Reason",
+          "type": "string"
+        },
+        "cognitive_goal": {
+          "minLength": 1,
+          "title": "Cognitive Goal",
+          "type": "string"
+        },
+        "original_content": {
+          "$ref": "#/$defs/OriginalQuestionContent"
+        },
+        "student_content": {
+          "$ref": "#/$defs/StudentQuestionContent"
+        },
+        "critic_content": {
+          "$ref": "#/$defs/QuestionCriticContent"
+        },
+        "source_locations": {
+          "$ref": "#/$defs/SourceLocations"
+        },
+        "answer_provenance": {
+          "$ref": "#/$defs/AnswerProvenance"
+        },
+        "normalizations": {
+          "items": {
+            "$ref": "#/$defs/ContentNormalization"
+          },
+          "title": "Normalizations",
+          "type": "array"
+        },
+        "topic_tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Topic Tags",
+          "type": "array"
+        },
+        "target_error_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Target Error Ids",
+          "type": "array"
+        },
+        "knowledge_targets": {
+          "items": {
+            "$ref": "#/$defs/QuestionKnowledgeTarget"
+          },
+          "title": "Knowledge Targets",
+          "type": "array"
+        },
+        "review_status": {
+          "default": "draft",
+          "enum": [
+            "draft",
+            "approved",
+            "invalid"
+          ],
+          "title": "Review Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "bank_question_id",
+        "question_number",
+        "question_type",
+        "difficulty",
+        "difficulty_reason",
+        "cognitive_goal",
+        "original_content",
+        "student_content",
+        "critic_content",
+        "source_locations",
+        "answer_provenance"
+      ],
+      "title": "BankQuestionRevisionInput",
+      "type": "object"
+    },
+    "CatalogChapterInput": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "course_id": {
+          "default": "python",
+          "title": "Course Id",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "sort_order": {
+          "default": 0,
+          "title": "Sort Order",
+          "type": "integer"
+        },
+        "reference_url": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reference Url"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "title": "CatalogChapterInput",
+      "type": "object"
+    },
+    "CatalogKnowledgeNodeInput": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "chapter_id": {
+          "title": "Chapter Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "difficulty": {
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Difficulty",
+          "type": "integer"
+        },
+        "learning_objective": {
+          "minLength": 1,
+          "title": "Learning Objective",
+          "type": "string"
+        },
+        "reference_url": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reference Url"
+        },
+        "reference_section": {
+          "anyOf": [
+            {
+              "maxLength": 40,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reference Section"
+        },
+        "is_supplementary": {
+          "default": false,
+          "title": "Is Supplementary",
+          "type": "boolean"
+        },
+        "runtime_enabled": {
+          "const": false,
+          "default": false,
+          "title": "Runtime Enabled",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "chapter_id",
+        "name",
+        "description",
+        "difficulty",
+        "learning_objective"
+      ],
+      "title": "CatalogKnowledgeNodeInput",
+      "type": "object"
+    },
+    "ContentNormalization": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "minLength": 1,
+          "title": "Field",
+          "type": "string"
+        },
+        "before": {
+          "title": "Before",
+          "type": "string"
+        },
+        "after": {
+          "title": "After",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "field",
+        "before",
+        "after",
+        "reason"
+      ],
+      "title": "ContentNormalization",
+      "type": "object"
+    },
+    "OriginalOption": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "maxLength": 8,
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "text"
+      ],
+      "title": "OriginalOption",
+      "type": "object"
+    },
+    "OriginalQuestionContent": {
+      "additionalProperties": false,
+      "properties": {
+        "stem": {
+          "minLength": 1,
+          "title": "Stem",
+          "type": "string"
+        },
+        "code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Code"
+        },
+        "options": {
+          "items": {
+            "$ref": "#/$defs/OriginalOption"
+          },
+          "title": "Options",
+          "type": "array"
+        }
+      },
+      "required": [
+        "stem"
+      ],
+      "title": "OriginalQuestionContent",
+      "type": "object"
+    },
+    "QuestionCriticContent": {
+      "additionalProperties": false,
+      "properties": {
+        "learning_objective": {
+          "minLength": 1,
+          "title": "Learning Objective",
+          "type": "string"
+        },
+        "reference_answer": {
+          "minLength": 1,
+          "title": "Reference Answer",
+          "type": "string"
+        },
+        "acceptable_answers": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Acceptable Answers",
+          "type": "array"
+        },
+        "grading_rubric": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Grading Rubric",
+          "type": "object"
+        },
+        "expected_reasoning": {
+          "minLength": 1,
+          "title": "Expected Reasoning",
+          "type": "string"
+        },
+        "ambiguity_notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ambiguity Notes"
+        }
+      },
+      "required": [
+        "learning_objective",
+        "reference_answer",
+        "acceptable_answers",
+        "grading_rubric",
+        "expected_reasoning"
+      ],
+      "title": "QuestionCriticContent",
+      "type": "object"
+    },
+    "QuestionKnowledgeTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "knowledge_node_id": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Knowledge Node Id",
+          "type": "string"
+        },
+        "role": {
+          "default": "assessed",
+          "enum": [
+            "assessed",
+            "prerequisite"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "is_primary": {
+          "default": false,
+          "title": "Is Primary",
+          "type": "boolean"
+        },
+        "assessment_criterion": {
+          "default": "",
+          "title": "Assessment Criterion",
+          "type": "string"
+        }
+      },
+      "required": [
+        "knowledge_node_id"
+      ],
+      "title": "QuestionKnowledgeTarget",
+      "type": "object"
+    },
+    "SourceDocumentInput": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 36,
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 255,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "document_type": {
+          "enum": [
+            "sample_exam",
+            "past_exam"
+          ],
+          "title": "Document Type",
+          "type": "string"
+        },
+        "exam_year": {
+          "anyOf": [
+            {
+              "maximum": 9999,
+              "minimum": 1900,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exam Year"
+        },
+        "file_path": {
+          "minLength": 1,
+          "title": "File Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "page_count": {
+          "minimum": 1,
+          "title": "Page Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "title",
+        "document_type",
+        "file_path",
+        "sha256",
+        "page_count"
+      ],
+      "title": "SourceDocumentInput",
+      "type": "object"
+    },
+    "SourceLocations": {
+      "additionalProperties": false,
+      "properties": {
+        "question_pdf_pages": {
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 1,
+          "title": "Question Pdf Pages",
+          "type": "array"
+        },
+        "stem_pdf_pages": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Stem Pdf Pages",
+          "type": "array"
+        },
+        "options_pdf_pages": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Options Pdf Pages",
+          "type": "array"
+        },
+        "answer_pdf_pages": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Answer Pdf Pages",
+          "type": "array"
+        }
+      },
+      "required": [
+        "question_pdf_pages"
+      ],
+      "title": "SourceLocations",
+      "type": "object"
+    },
+    "StudentQuestionContent": {
+      "additionalProperties": false,
+      "properties": {
+        "markdown": {
+          "minLength": 1,
+          "title": "Markdown",
+          "type": "string"
+        },
+        "input_hint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Input Hint"
+        }
+      },
+      "required": [
+        "markdown"
+      ],
+      "title": "StudentQuestionContent",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "document": {
+      "$ref": "#/$defs/SourceDocumentInput"
+    },
+    "questions": {
+      "items": {
+        "$ref": "#/$defs/BankQuestionRevisionInput"
+      },
+      "minItems": 1,
+      "title": "Questions",
+      "type": "array"
+    },
+    "catalog_chapters": {
+      "items": {
+        "$ref": "#/$defs/CatalogChapterInput"
+      },
+      "title": "Catalog Chapters",
+      "type": "array"
+    },
+    "catalog_knowledge_nodes": {
+      "items": {
+        "$ref": "#/$defs/CatalogKnowledgeNodeInput"
+      },
+      "title": "Catalog Knowledge Nodes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "document",
+    "questions"
+  ],
+  "title": "QuestionBankImport",
+  "type": "object"
+}

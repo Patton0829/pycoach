@@ -28,5 +28,5 @@ docker compose up --build
 6. 图谱更新仅在回合最终结束时提交，并记录可审计事件。
 7. 自动化测试必须使用 MockLLMProvider，不得依赖真实模型 API。
 8. 课程范围仅限 Python 可迭代对象、迭代器、`iter()`、`next()`、状态、耗尽和 `StopIteration`。
-9. 不引入 Redis、Celery、Neo4j、向量数据库、多 Agent 框架或第三个运行时 Agent。
+9. Agent 调用链使用 LangChain，校验、重试和回退工作流使用 LangGraph；图中的校验与路由节点必须是确定性代码。不得引入 Redis、Celery、Neo4j、向量数据库或第三个运行时 Agent。
 

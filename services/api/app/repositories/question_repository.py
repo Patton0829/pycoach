@@ -22,12 +22,20 @@ class QuestionRepository:
 
     def list_knowledge_nodes(self) -> Sequence[KnowledgeNode]:
         return self.database.scalars(
-            select(KnowledgeNode).order_by(KnowledgeNode.difficulty, KnowledgeNode.id)
+            select(KnowledgeNode).where(KnowledgeNode.runtime_enabled.is_(True))
+            .order_by(KnowledgeNode.difficulty, KnowledgeNode.id)
         ).all()
 
     def list_knowledge_edges(self) -> Sequence[KnowledgeEdge]:
         return self.database.scalars(
-            select(KnowledgeEdge).order_by(
+            select(KnowledgeEdge).where(
+                KnowledgeEdge.source_node_id.in_(
+                    select(KnowledgeNode.id).where(KnowledgeNode.runtime_enabled.is_(True))
+                ),
+                KnowledgeEdge.target_node_id.in_(
+                    select(KnowledgeNode.id).where(KnowledgeNode.runtime_enabled.is_(True))
+                ),
+            ).order_by(
                 KnowledgeEdge.source_node_id,
                 KnowledgeEdge.relation_type,
                 KnowledgeEdge.target_node_id,

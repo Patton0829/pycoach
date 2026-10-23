@@ -1,0 +1,541 @@
+{
+  "$defs": {
+    "ContentNormalization": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "minLength": 1,
+          "title": "Field",
+          "type": "string"
+        },
+        "before": {
+          "title": "Before",
+          "type": "string"
+        },
+        "after": {
+          "title": "After",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "field",
+        "before",
+        "after",
+        "reason"
+      ],
+      "title": "ContentNormalization",
+      "type": "object"
+    },
+    "ExamQuestion": {
+      "additionalProperties": false,
+      "properties": {
+        "question_id": {
+          "title": "Question Id",
+          "type": "string"
+        },
+        "question_number": {
+          "maximum": 36,
+          "minimum": 1,
+          "title": "Question Number",
+          "type": "integer"
+        },
+        "source_section": {
+          "title": "Source Section",
+          "type": "string"
+        },
+        "question_type": {
+          "enum": [
+            "multiple_choice",
+            "code_blank",
+            "programming"
+          ],
+          "title": "Question Type",
+          "type": "string"
+        },
+        "original_content": {
+          "$ref": "#/$defs/OriginalQuestionContent"
+        },
+        "raw_extracted_text": {
+          "title": "Raw Extracted Text",
+          "type": "string"
+        },
+        "student_content": {
+          "$ref": "#/$defs/StudentQuestionContent"
+        },
+        "formula_latex": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Formula Latex"
+        },
+        "source_locations": {
+          "$ref": "#/$defs/SourceLocations"
+        },
+        "answer": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReferenceAnswer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "answer_status": {
+          "enum": [
+            "provided",
+            "not_provided"
+          ],
+          "title": "Answer Status",
+          "type": "string"
+        },
+        "answer_source_note": {
+          "title": "Answer Source Note",
+          "type": "string"
+        },
+        "topic_tags": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Topic Tags",
+          "type": "array"
+        },
+        "difficulty": {
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Difficulty",
+          "type": "integer"
+        },
+        "difficulty_reason": {
+          "title": "Difficulty Reason",
+          "type": "string"
+        },
+        "annotation_origin": {
+          "const": "project_annotation",
+          "default": "project_annotation",
+          "title": "Annotation Origin",
+          "type": "string"
+        },
+        "review_status": {
+          "const": "draft",
+          "default": "draft",
+          "title": "Review Status",
+          "type": "string"
+        },
+        "runtime_curriculum_eligible": {
+          "const": false,
+          "default": false,
+          "title": "Runtime Curriculum Eligible",
+          "type": "boolean"
+        },
+        "runtime_knowledge_node_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 0,
+          "title": "Runtime Knowledge Node Ids",
+          "type": "array"
+        },
+        "quality_issues": {
+          "items": {
+            "$ref": "#/$defs/QualityIssue"
+          },
+          "title": "Quality Issues",
+          "type": "array"
+        },
+        "retrieval_ready": {
+          "title": "Retrieval Ready",
+          "type": "boolean"
+        },
+        "normalizations": {
+          "items": {
+            "$ref": "#/$defs/ContentNormalization"
+          },
+          "title": "Normalizations",
+          "type": "array"
+        },
+        "assets": {
+          "items": {
+            "$ref": "#/$defs/SourceAsset"
+          },
+          "title": "Assets",
+          "type": "array"
+        }
+      },
+      "required": [
+        "question_id",
+        "question_number",
+        "source_section",
+        "question_type",
+        "original_content",
+        "raw_extracted_text",
+        "student_content",
+        "source_locations",
+        "answer",
+        "answer_status",
+        "answer_source_note",
+        "topic_tags",
+        "difficulty",
+        "difficulty_reason",
+        "retrieval_ready"
+      ],
+      "title": "ExamQuestion",
+      "type": "object"
+    },
+    "OriginalOption": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "maxLength": 8,
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "text"
+      ],
+      "title": "OriginalOption",
+      "type": "object"
+    },
+    "OriginalQuestionContent": {
+      "additionalProperties": false,
+      "properties": {
+        "stem": {
+          "minLength": 1,
+          "title": "Stem",
+          "type": "string"
+        },
+        "code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Code"
+        },
+        "options": {
+          "items": {
+            "$ref": "#/$defs/OriginalOption"
+          },
+          "title": "Options",
+          "type": "array"
+        }
+      },
+      "required": [
+        "stem"
+      ],
+      "title": "OriginalQuestionContent",
+      "type": "object"
+    },
+    "QualityIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "blocking",
+            "advisory"
+          ],
+          "title": "Severity",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "origin": {
+          "const": "project_annotation",
+          "default": "project_annotation",
+          "title": "Origin",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "description"
+      ],
+      "title": "QualityIssue",
+      "type": "object"
+    },
+    "ReferenceAnswer": {
+      "additionalProperties": false,
+      "properties": {
+        "origin": {
+          "const": "provided_pdf_reference_answers",
+          "title": "Origin",
+          "type": "string"
+        },
+        "correct_option": {
+          "enum": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "title": "Correct Option",
+          "type": "string"
+        },
+        "source_text": {
+          "title": "Source Text",
+          "type": "string"
+        },
+        "explanation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Explanation"
+        }
+      },
+      "required": [
+        "origin",
+        "correct_option",
+        "source_text"
+      ],
+      "title": "ReferenceAnswer",
+      "type": "object"
+    },
+    "SourceAsset": {
+      "additionalProperties": false,
+      "properties": {
+        "pdf_page": {
+          "minimum": 1,
+          "title": "Pdf Page",
+          "type": "integer"
+        },
+        "role": {
+          "enum": [
+            "formula",
+            "figure",
+            "code_layout"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "pdf_page",
+        "role",
+        "path",
+        "sha256",
+        "description"
+      ],
+      "title": "SourceAsset",
+      "type": "object"
+    },
+    "SourceDocumentInput": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 36,
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 255,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "document_type": {
+          "enum": [
+            "sample_exam",
+            "past_exam"
+          ],
+          "title": "Document Type",
+          "type": "string"
+        },
+        "exam_year": {
+          "anyOf": [
+            {
+              "maximum": 9999,
+              "minimum": 1900,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exam Year"
+        },
+        "file_path": {
+          "minLength": 1,
+          "title": "File Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "page_count": {
+          "minimum": 1,
+          "title": "Page Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "title",
+        "document_type",
+        "file_path",
+        "sha256",
+        "page_count"
+      ],
+      "title": "SourceDocumentInput",
+      "type": "object"
+    },
+    "SourceLocations": {
+      "additionalProperties": false,
+      "properties": {
+        "question_pdf_pages": {
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 1,
+          "title": "Question Pdf Pages",
+          "type": "array"
+        },
+        "stem_pdf_pages": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Stem Pdf Pages",
+          "type": "array"
+        },
+        "options_pdf_pages": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Options Pdf Pages",
+          "type": "array"
+        },
+        "answer_pdf_pages": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Answer Pdf Pages",
+          "type": "array"
+        }
+      },
+      "required": [
+        "question_pdf_pages"
+      ],
+      "title": "SourceLocations",
+      "type": "object"
+    },
+    "StudentQuestionContent": {
+      "additionalProperties": false,
+      "properties": {
+        "markdown": {
+          "minLength": 1,
+          "title": "Markdown",
+          "type": "string"
+        },
+        "input_hint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Input Hint"
+        }
+      },
+      "required": [
+        "markdown"
+      ],
+      "title": "StudentQuestionContent",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "pycoach.exam-rag.v1",
+      "default": "pycoach.exam-rag.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "document": {
+      "$ref": "#/$defs/SourceDocumentInput"
+    },
+    "exam_year_note": {
+      "title": "Exam Year Note",
+      "type": "string"
+    },
+    "processing_notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Processing Notes",
+      "type": "array"
+    },
+    "questions": {
+      "items": {
+        "$ref": "#/$defs/ExamQuestion"
+      },
+      "maxItems": 36,
+      "minItems": 36,
+      "title": "Questions",
+      "type": "array"
+    }
+  },
+  "required": [
+    "document",
+    "exam_year_note",
+    "processing_notes",
+    "questions"
+  ],
+  "title": "StructuredExam",
+  "type": "object"
+}

@@ -1,0 +1,284 @@
+{
+  "schema_version": "exam-bank-example.v1",
+  "purpose": "展示所提供 PDF 前三道选择题的结构化结果，供题库设计审阅。",
+  "source_document": {
+    "title": "全国计算机等级考试（NCRE）二级 Python 语言程序设计 样题及参考答案",
+    "document_type": "sample_exam",
+    "exam_year": null,
+    "year_note": "文件未标明考试年份。",
+    "relative_path": "python考试真题/二级Python语言程序设计——样题及参考答案.pdf",
+    "sha256": "a0f6a19967464aba6bbb5150d4311311672179c963f631eeed6745e7f4956fd8",
+    "page_count": 9,
+    "input_origin": "user_provided_pdf"
+  },
+  "annotation_policy": {
+    "source_content": "题干、原始选项和答案字母来自所提供 PDF；按物理 PDF 页码定位。",
+    "project_annotations": "难度、知识标签、学习目标、解析、评分依据和课程映射为项目补充标注。",
+    "normalization": "题号与选项标记结构化，清理版式；代码字符变更逐项记录，原文保留。",
+    "student_visibility": "学生端只读取 student_content；答案及评分材料保留在内部。",
+    "curriculum_scope": "前三题均不属于 python_iterator_v1 范围，eligible=false；本文件为独立题库示例。"
+  },
+  "questions": [
+    {
+      "question_id": "ncre-python-sample-q001",
+      "question_type": "multiple_choice",
+      "source": {
+        "section": "一、单项选择题",
+        "question_number": 1,
+        "question_pdf_pages": [
+          1
+        ],
+        "stem_pdf_pages": [
+          1
+        ],
+        "options_pdf_pages": [
+          1
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "original_content": {
+        "stem": "下面不是 IPO 模式的一部分的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "Input"
+          },
+          {
+            "label": "B",
+            "text": "Program"
+          },
+          {
+            "label": "C",
+            "text": "Process"
+          },
+          {
+            "label": "D",
+            "text": "Output"
+          }
+        ]
+      },
+      "student_content": {
+        "markdown": "下面不是 IPO 模式的一部分的是\n\nA. Input\n\nB. Program\n\nC. Process\n\nD. Output",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "critic_content": {
+        "learning_objective": "识别 IPO 模式中的 Input、Process、Output 三个部分。",
+        "reference_answer": "B（Program）",
+        "acceptable_answers": [
+          "B",
+          "Program"
+        ],
+        "grading_rubric": {
+          "correct": "选择 B，或明确写出该选项的正确内容。",
+          "incorrect": "选择其他选项或给出与参考答案不符的结果。"
+        },
+        "expected_reasoning": "IPO 分别表示 Input（输入）、Process（处理）、Output（输出），Program 不属于其中的组成部分。",
+        "ambiguity_notes": null
+      },
+      "answer_provenance": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "B",
+        "source_text": "1.B",
+        "explanation_origin": "project_annotation"
+      },
+      "annotations": {
+        "origin": "project_annotation",
+        "difficulty": 1,
+        "difficulty_scale": "1-5",
+        "difficulty_reason": "单个基础概念的识别题。",
+        "topic_tags": [
+          "IPO 模式",
+          "输入、处理与输出"
+        ],
+        "curriculum_mapping": {
+          "curriculum_id": "python_iterator_v1",
+          "eligible": false,
+          "knowledge_node_ids": [],
+          "reason": "考查 IPO 模式，不属于当前迭代器课程范围。"
+        }
+      },
+      "normalizations": []
+    },
+    {
+      "question_id": "ncre-python-sample-q002",
+      "question_type": "multiple_choice",
+      "source": {
+        "section": "一、单项选择题",
+        "question_number": 2,
+        "question_pdf_pages": [
+          1
+        ],
+        "stem_pdf_pages": [
+          1
+        ],
+        "options_pdf_pages": [
+          1
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "original_content": {
+        "stem": "在 Python3.X 版本中语句输出正确的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": ">>>3/2\n1.50"
+          },
+          {
+            "label": "B",
+            "text": ">>>3/2\n1"
+          },
+          {
+            "label": "C",
+            "text": ">>>3//2\n1"
+          },
+          {
+            "label": "D",
+            "text": ">>>3//2\n1.5"
+          }
+        ]
+      },
+      "student_content": {
+        "markdown": "在 Python3.X 版本中语句输出正确的是\n\nA. \n\n```pycon\n>>>3/2\n1.50\n```\n\nB. \n\n```pycon\n>>>3/2\n1\n```\n\nC. \n\n```pycon\n>>>3//2\n1\n```\n\nD. \n\n```pycon\n>>>3//2\n1.5\n```",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "critic_content": {
+        "learning_objective": "区分 Python 3 中 / 与 // 的运算结果及交互式显示。",
+        "reference_answer": "C（>>>3//2 → 1）",
+        "acceptable_answers": [
+          "C",
+          ">>>3//2\n1",
+          "3//2 的结果是整数 1。"
+        ],
+        "grading_rubric": {
+          "correct": "选择 C，或明确写出该选项的正确内容。",
+          "incorrect": "选择其他选项或给出与参考答案不符的结果。"
+        },
+        "expected_reasoning": "Python 3 中，3/2 的结果是 1.5，交互式解释器显示 1.5；3//2 的结果是整数 1，因此 C 正确。A 中的 1.50 与默认显示不一致，B 和 D 的结果也不正确。",
+        "ambiguity_notes": "A 项的 1.50 按原卷保留。本题考查交互式解释器的实际显示，1.50 与 1.5 数值相等，但不是该表达式的默认显示形式。"
+      },
+      "answer_provenance": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "C",
+        "source_text": "2.C",
+        "explanation_origin": "project_annotation"
+      },
+      "annotations": {
+        "origin": "project_annotation",
+        "difficulty": 1,
+        "difficulty_scale": "1-5",
+        "difficulty_reason": "比较两个基础运算符及其交互式显示结果。",
+        "topic_tags": [
+          "Python 3",
+          "真除法 /",
+          "整除 //",
+          "交互式解释器显示"
+        ],
+        "curriculum_mapping": {
+          "curriculum_id": "python_iterator_v1",
+          "eligible": false,
+          "knowledge_node_ids": [],
+          "reason": "考查算术运算符，不属于当前迭代器课程范围。"
+        }
+      },
+      "normalizations": []
+    },
+    {
+      "question_id": "ncre-python-sample-q003",
+      "question_type": "multiple_choice",
+      "source": {
+        "section": "一、单项选择题",
+        "question_number": 3,
+        "question_pdf_pages": [
+          1,
+          2
+        ],
+        "stem_pdf_pages": [
+          1
+        ],
+        "options_pdf_pages": [
+          2
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "original_content": {
+        "stem": "下面语句输出正确的是",
+        "code": ">>>TempStr = “105C”\n>>>eval(TempStr[0:-1])",
+        "options": [
+          {
+            "label": "A",
+            "text": "105"
+          },
+          {
+            "label": "B",
+            "text": "105C"
+          },
+          {
+            "label": "C",
+            "text": "C"
+          },
+          {
+            "label": "D",
+            "text": "1"
+          }
+        ]
+      },
+      "student_content": {
+        "markdown": "下面语句输出正确的是\n\n```pycon\n>>>TempStr = \"105C\"\n>>>eval(TempStr[0:-1])\n```\n\nA. 105\n\nB. 105C\n\nC. C\n\nD. 1",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "critic_content": {
+        "learning_objective": "理解字符串切片去除末尾字符，以及 eval 对数字表达式字符串的求值结果。",
+        "reference_answer": "A（105）",
+        "acceptable_answers": [
+          "A",
+          "105"
+        ],
+        "grading_rubric": {
+          "correct": "选择 A，或明确写出该选项的正确内容。",
+          "incorrect": "选择其他选项或给出与参考答案不符的结果。"
+        },
+        "expected_reasoning": "TempStr[0:-1] 取得字符串 \"105\"，eval(\"105\") 得到整数 105，因此选择 A。",
+        "ambiguity_notes": "原 PDF 使用排版引号 “105C”。学生展示代码已将它规范化为 ASCII 双引号；original_content 保留原文，normalizations 记录这一处理。"
+      },
+      "answer_provenance": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "A",
+        "source_text": "3.A",
+        "explanation_origin": "project_annotation"
+      },
+      "annotations": {
+        "origin": "project_annotation",
+        "difficulty": 2,
+        "difficulty_scale": "1-5",
+        "difficulty_reason": "先进行字符串切片，再判断表达式求值结果，需要两步推理。",
+        "topic_tags": [
+          "字符串切片",
+          "负索引",
+          "eval()"
+        ],
+        "curriculum_mapping": {
+          "curriculum_id": "python_iterator_v1",
+          "eligible": false,
+          "knowledge_node_ids": [],
+          "reason": "考查字符串切片与 eval()，不属于当前迭代器课程范围。"
+        }
+      },
+      "normalizations": [
+        {
+          "field": "student_content.markdown: code",
+          "before": ">>>TempStr = “105C”\n>>>eval(TempStr[0:-1])",
+          "after": ">>>TempStr = \"105C\"\n>>>eval(TempStr[0:-1])",
+          "reason": "将原 PDF 的排版引号改为代码字符串定界符，保留题意；原文仍存于 original_content.code。"
+        }
+      ]
+    }
+  ]
+}

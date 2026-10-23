@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Python 样题 · 知识点映射与审核</title><style>
+:root{color-scheme:light;font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;color:#172033;background:#f3f5f8}
+*{box-sizing:border-box}body{margin:0}main{max-width:1060px;margin:auto;padding:40px 24px 72px}h1{font-size:30px;line-height:1.35;margin:8px 0 14px}h2{font-size:21px;margin:0}.eyebrow{color:#596779;font-size:13px;letter-spacing:.08em}.intro{line-height:1.8}.muted{color:#677489;font-size:13px}.stats{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0}.stats span{padding:12px 18px;border:1px solid #dde3ec;border-radius:12px;background:white}.stats b{font-size:23px;margin-right:7px}nav{display:flex;gap:7px;flex-wrap:wrap;margin:20px 0 28px}nav a{min-width:32px;padding:6px 9px;background:#fff;text-align:center;border:1px solid #dfe5ed;border-radius:7px;text-decoration:none}.card{background:#fff;border:1px solid #dfe5ed;border-radius:16px;padding:26px;margin:20px 0;scroll-margin-top:20px}.card-head{display:flex;gap:14px;align-items:center;flex-wrap:wrap}.status{font-size:12px;padding:4px 9px;border-radius:99px}.approved{background:#e7f4ec;color:#296144}.invalid{background:#fff0e9;color:#a04d28}.stars{display:inline-flex;gap:3px;margin-left:auto;white-space:nowrap}.star{font-size:23px;line-height:1}.gold{color:#d99a0b}.gray{color:#aeb7c3}.points{padding:12px 18px 12px 32px;background:#f6f8fb;border-radius:9px;font-size:14px;line-height:1.8}.question-text{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.8;font-size:15px;padding:10px 0 18px}.review-note{border-left:3px solid #cc9d52;padding:9px 14px;background:#fffaf2;font-size:14px;line-height:1.7}details{border-top:1px solid #e8ecf1;margin-top:16px;padding-top:14px;line-height:1.8;font-size:14px}summary{cursor:pointer;color:#445d88}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f5f9;border:1px solid #e4e9f0;border-radius:8px;padding:16px;line-height:1.65;font-size:13px}a{color:#365f9a}.refs{font-size:12px;overflow-wrap:anywhere}footer{color:#677489;font-size:13px;line-height:1.8;margin-top:26px}@media(max-width:600px){main{padding:24px 14px}.card{padding:19px}h1{font-size:25px}.stars{margin-left:0}}
+</style></head><body><main><div class="eyebrow">PYCOACH · INTERNAL REVIEW</div>
+<h1>Python 样题：知识点映射与审核</h1>
+<p class="intro">全国计算机等级考试（NCRE）二级 Python 语言程序设计 样题及参考答案<br>按 Python 官方教程章节组织知识点。难度始终显示五颗星：金黄色为当前等级，其余为灰色。</p>
+<p class="muted">这是内部审核页，折叠区包含参考答案。原题与原卷答案均保留；项目补充、纠正及题意约定另行标注。审核通过不会自动启用当前迭代器课程之外的题目。</p>
+<div class="stats"><span><b>36</b>题已映射</span><span><b>27</b>题通过</span><span><b>9</b>题隔离</span><span><b>6</b>题补充参考解</span></div>
+<nav aria-label="题号导航"><a href="#q1">1</a> <a href="#q2">2</a> <a href="#q3">3</a> <a href="#q4">4</a> <a href="#q5">5</a> <a href="#q6">6</a> <a href="#q7">7</a> <a href="#q8">8</a> <a href="#q9">9</a> <a href="#q10">10</a> <a href="#q11">11</a> <a href="#q12">12</a> <a href="#q13">13</a> <a href="#q14">14</a> <a href="#q15">15</a> <a href="#q16">16</a> <a href="#q17">17</a> <a href="#q18">18</a> <a href="#q19">19</a> <a href="#q20">20</a> <a href="#q21">21</a> <a href="#q22">22</a> <a href="#q23">23</a> <a href="#q24">24</a> <a href="#q25">25</a> <a href="#q26">26</a> <a href="#q27">27</a> <a href="#q28">28</a> <a href="#q29">29</a> <a href="#q30">30</a> <a href="#q31">31</a> <a href="#q32">32</a> <a href="#q33">33</a> <a href="#q34">34</a> <a href="#q35">35</a> <a href="#q36">36</a></nav><article class="card" id="q1"><div class="card-head"><h2>第 1 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 1 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 1 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=1">查看原卷</a></p><ul class="points"><li>IPO 模式 <span class="muted">补充专题 · 补充知识点</span></li></ul><div class="question-text">下面不是 IPO 模式的一部分的是
+
+A. Input
+
+B. Program
+
+C. Process
+
+D. Output</div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：B</p><p>B</p><p>IPO 分别为 Input、Process、Output；Program 不属于三个组成部分。</p><strong>核验资料</strong><ul class="refs"></ul></details></article><article class="card" id="q2"><div class="card-head"><h2>第 2 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 1 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 1 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=1">查看原卷</a></p><ul class="points"><li>真除法与整除 <span class="muted">3. Python 速览 · 3.1.1</span></li><li>数字与运算符 <span class="muted">3. Python 速览 · 3.1.1 · 前置背景</span></li></ul><div class="question-text">在 Python3.X 版本中语句输出正确的是
+
+A.
+
+```pycon
+&gt;&gt;&gt;3/2
+1.50
+```
+
+B.
+
+```pycon
+&gt;&gt;&gt;3/2
+1
+```
+
+C.
+
+```pycon
+&gt;&gt;&gt;3//2
+1
+```
+
+D.
+
+```pycon
+&gt;&gt;&gt;3//2
+1.5
+```</div><div class="review-note"><strong>审核说明</strong><ul><li>A与正确真除法结果数值等价，但本题比较交互式默认显示；保留原选项。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：C</p><p>C</p><p>3/2 是浮点数1.5，交互式表示不是1.50；3//2 是整数1。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/introduction.html#numbers" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/introduction.html#numbers</a></li></ul></details></article><article class="card" id="q3"><div class="card-head"><h2>第 3 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 2 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 1、2 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=1">查看原卷</a></p><ul class="points"><li>序列索引与切片 <span class="muted">3. Python 速览 · 3.1.2</span></li><li>eval() 表达式求值 <span class="muted">3. Python 速览 · 3.1.2 · 补充知识点</span></li><li>文本与字符串 <span class="muted">3. Python 速览 · 3.1.2 · 前置背景</span></li></ul><div class="question-text">下面语句输出正确的是
+
+```pycon
+&gt;&gt;&gt;TempStr = &quot;105C&quot;
+&gt;&gt;&gt;eval(TempStr[0:-1])
+```
+
+A. 105
+
+B. 105C
+
+C. C
+
+D. 1</div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：A</p><p>A</p><p>TempStr[0:-1] 去掉末尾C得到字符串105，eval 将其求值为整数105。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/introduction.html#text" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/introduction.html#text</a></li><li><a href="https://docs.python.org/3/library/functions.html#eval" target="_blank" rel="noreferrer">https://docs.python.org/3/library/functions.html#eval</a></li></ul></details></article><article class="card" id="q4"><div class="card-head"><h2>第 4 题</h2><span class="status invalid">原题隔离</span><span class="stars" role="img" aria-label="难度 1 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 2 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=2">查看原卷</a></p><ul class="points"><li>整数字面量与进制 <span class="muted">3. Python 速览 · 3.1.1 · 补充知识点</span></li></ul><div class="question-text">Python 语言中表示八进制的是
+
+A. 0b1708
+
+B. 0B1010
+
+C. 0B1019
+
+D. 0bC3F</div><div class="review-note"><strong>审核说明</strong><ul><li>原卷给B，但题干问八进制且四个选项均为0b/0B前缀。不能静默把八进制改成二进制。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">项目补充或纠正的参考解；原卷答案：B</p><p>按原题干没有正确选项。八进制前缀应为0o或0O；B的0B1010是有效二进制整数，其余0b选项还含非法二进制数字。</p><p>按原题干没有正确选项。八进制前缀应为0o或0O；B的0B1010是有效二进制整数，其余0b选项还含非法二进制数字。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/introduction.html#numbers" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/introduction.html#numbers</a></li><li><a href="https://docs.python.org/3/reference/lexical_analysis.html#integer-literals" target="_blank" rel="noreferrer">https://docs.python.org/3/reference/lexical_analysis.html#integer-literals</a></li></ul></details></article><article class="card" id="q5"><div class="card-head"><h2>第 5 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 2 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 2 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=2">查看原卷</a></p><ul class="points"><li>复数字面量与实部属性 <span class="muted">3. Python 速览 · 3.1.1 · 补充知识点</span></li><li>数字与运算符 <span class="muted">3. Python 速览 · 3.1.1 · 前置背景</span></li></ul><div class="question-text">1.23e-4+5.67e+8j.real 语句的输出结果正确的是
+
+A. 0.000123
+
+B. 1.23
+
+C. 5.67e+8
+
+D. 1.23e-4</div><div class="review-note"><strong>审核说明</strong><ul><li>D与A数值相等；若题意仅要求数学值，则有重复答案。按原题默认输出形式解释并保留说明。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：A</p><p>A</p><p>属性访问先作用于5.67e+8j，该纯虚数的real为0.0；再加1.23e-4得到0.000123。默认显示为A。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/introduction.html#numbers" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/introduction.html#numbers</a></li><li><a href="https://docs.python.org/3/library/stdtypes.html#numeric-types-int-float-complex" target="_blank" rel="noreferrer">https://docs.python.org/3/library/stdtypes.html#numeric-types-int-float-complex</a></li></ul></details></article><article class="card" id="q6"><div class="card-head"><h2>第 6 题</h2><span class="status invalid">原题隔离</span><span class="stars" role="img" aria-label="难度 1 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 2 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=2">查看原卷</a></p><ul class="points"><li>浮点数表示与有限精度 <span class="muted">15. 浮点算术：问题和限制 · 15</span></li><li>数字与运算符 <span class="muted">3. Python 速览 · 3.1.1 · 前置背景</span></li></ul><div class="question-text">下面对 Python 语言浮点数类型描述不正确的是
+
+A. 浮点数类型与数学中实数的概念一致
+
+B. 浮点数类型表示带有小数的类型
+
+C. Python 语言要求所有浮点数必须带有小数部分
+
+D. 小数部分不可以为 0</div><div class="review-note"><strong>审核说明</strong><ul><li>原卷给D；A、C有额外歧义/错误，不能把其当作严格唯一答案单选题自动计分。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">项目补充或纠正的参考解；原卷答案：D</p><p>D显然错误，因为小数部分可以为0，例如1.0。但A将浮点数与数学实数等同并不严格，C也可被1e3等无小数点浮点字面量反驳，因此原单选题没有严格唯一答案。</p><p>D显然错误，因为小数部分可以为0，例如1.0。但A将浮点数与数学实数等同并不严格，C也可被1e3等无小数点浮点字面量反驳，因此原单选题没有严格唯一答案。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/floatingpoint.html" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/floatingpoint.html</a></li><li><a href="https://docs.python.org/3/reference/lexical_analysis.html#floating-point-literals" target="_blank" rel="noreferrer">https://docs.python.org/3/reference/lexical_analysis.html#floating-point-literals</a></li></ul></details></article><article class="card" id="q7"><div class="card-head"><h2>第 7 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 1 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 2 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=2">查看原卷</a></p><ul class="points"><li>算术运算符 <span class="muted">3. Python 速览 · 3.1.1</span></li><li>数字与运算符 <span class="muted">3. Python 速览 · 3.1.1 · 前置背景</span></li></ul><div class="question-text">下面对 Python 语言内置操作符描述不正确的是
+
+A. x/y 表示 x 与 y 之商
+
+B. x//y 表示 x 与 y 之整数商，即不大于 x 与 y 之商的最大整数
+
+C. x%y 表示 x 与 y 之整数商，即不大于 x 与 y 之商的最大整数
+
+D. x%y 表示 x 与 y 之商的余数，也称为模运算</div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：C</p><p>C</p><p>%是取模/余数运算；//才对应向下取整的商。C把%描述为整除商，错误。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/introduction.html#numbers" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/introduction.html#numbers</a></li></ul></details></article><article class="card" id="q8"><div class="card-head"><h2>第 8 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 1 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 2、3 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=2">查看原卷</a></p><ul class="points"><li>一元正负号 <span class="muted">3. Python 速览 · 3.1.1 · 补充知识点</span></li><li>数字与运算符 <span class="muted">3. Python 速览 · 3.1.1 · 前置背景</span></li></ul><div class="question-text">在 Python 语言中，如果 x=3，则执行语句+x 的结果是
+
+A. 0
+
+B. 3
+
+C. 6
+
+D. 9</div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：B</p><p>B</p><p>对整数3应用一元正号+，数值仍为3。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/introduction.html#numbers" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/introduction.html#numbers</a></li></ul></details></article><article class="card" id="q9"><div class="card-head"><h2>第 9 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 2 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 3 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=3">查看原卷</a></p><ul class="points"><li>复数模长与 abs() <span class="muted">3. Python 速览 · 3.1.1 · 补充知识点</span></li><li>复数字面量与实部属性 <span class="muted">3. Python 速览 · 3.1.1 · 补充知识点 · 前置背景</span></li></ul><div class="question-text">下面语句输出正确的是
+
+```pycon
+&gt;&gt;&gt;abs(-3+4j)
+```
+
+A. 3
+
+B. 4
+
+C. 5
+
+D. 5.0</div><div class="review-note"><strong>审核说明</strong><ul><li>C与D数值相等；本题依据返回类型与默认显示选择D。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：D</p><p>D</p><p>复数-3+4j的模为sqrt(9+16)=5；abs对复数返回浮点模长，因此显示5.0。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/library/functions.html#abs" target="_blank" rel="noreferrer">https://docs.python.org/3/library/functions.html#abs</a></li><li><a href="https://docs.python.org/3/library/stdtypes.html#numeric-types-int-float-complex" target="_blank" rel="noreferrer">https://docs.python.org/3/library/stdtypes.html#numeric-types-int-float-complex</a></li></ul></details></article><article class="card" id="q10"><div class="card-head"><h2>第 10 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 2 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 3 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=3">查看原卷</a></p><ul class="points"><li>增强赋值与运算优先级 <span class="muted">3. Python 速览 · 3.1.1 · 补充知识点</span></li><li>数字与运算符 <span class="muted">3. Python 速览 · 3.1.1 · 前置背景</span></li></ul><div class="question-text">假设 x=1， x*=3+5**2 的运算结果是
+
+A. 13
+
+B. 14
+
+C. 28
+
+D. 29</div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：C</p><p>C</p><p>先算5**2=25，再算3+25=28，最后x*=28将x从1变为28。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/introduction.html#numbers" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/introduction.html#numbers</a></li><li><a href="https://docs.python.org/3/reference/simple_stmts.html#augmented-assignment-statements" target="_blank" rel="noreferrer">https://docs.python.org/3/reference/simple_stmts.html#augmented-assignment-statements</a></li></ul></details></article><article class="card" id="q11"><div class="card-head"><h2>第 11 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 2 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 3 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=3">查看原卷</a></p><ul class="points"><li>序列索引与切片 <span class="muted">3. Python 速览 · 3.1.2</span></li><li>文本与字符串 <span class="muted">3. Python 速览 · 3.1.2 · 前置背景</span></li></ul><div class="question-text">如果 name =“全国计算机等级考试二级 Python”下面输出错误的是
+
+A.
+
+```pycon
+&gt;&gt;&gt; print(name[0], name[8], name[-1])
+全 试
+```
+
+B.
+
+```pycon
+&gt;&gt;&gt;print(name[:])
+全国计算机等级考试二级 Python
+```
+
+C.
+
+```pycon
+&gt;&gt;&gt; print(name[11:])
+Python
+```
+
+D.
+
+```pycon
+&gt;&gt;&gt; print(name[:11])
+全国计算机等级考试二级
+```</div><div class="review-note"><strong>审核说明</strong><ul><li>C的name[11:]实际含一个前导空格，PDF显示空白不够明确；按原卷A保留，审核备注明确该空格，不修改原选项。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：A</p><p>A</p><p>name[0]为全，name[8]为试，name[-1]为n；print三个参数应显示全 试 n，A漏掉n。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/introduction.html#text" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/introduction.html#text</a></li></ul></details></article><article class="card" id="q12"><div class="card-head"><h2>第 12 题</h2><span class="status invalid">原题隔离</span><span class="stars" role="img" aria-label="难度 2 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 3、4 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=3">查看原卷</a></p><ul class="points"><li>字符串与序列比较 <span class="muted">5. 数据结构 · 5.8</span></li><li>文本与字符串 <span class="muted">3. Python 速览 · 3.1.2 · 前置背景</span></li></ul><div class="question-text">下列表达式错误的是
+
+A. ‘abcd’&lt;’ad’
+
+B. ‘abc’&lt;’abcd’
+
+C. “&lt;’a’
+
+D. ‘Hello’&gt;’hello’</div><div class="review-note"><strong>审核说明</strong><ul><li>原卷给D；C原图确为“&lt;’a’，不能无依据补成空字符串比较。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">项目补充或纠正的参考解；原卷答案：D</p><p>D在正常ASCII引号下为False，因为大写H的码点小于小写h。可是C原图引号缺损，无法确认其完整表达式或语法合法性，故不能认证原题只有一个错误选项。</p><p>D在正常ASCII引号下为False，因为大写H的码点小于小写h。可是C原图引号缺损，无法确认其完整表达式或语法合法性，故不能认证原题只有一个错误选项。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/datastructures.html#comparing-sequences-and-other-types" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/datastructures.html#comparing-sequences-and-other-types</a></li></ul></details></article><article class="card" id="q13"><div class="card-head"><h2>第 13 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 2 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 4 页 · 版本 3 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=4">查看原卷</a></p><ul class="points"><li>格式化输出 <span class="muted">7. 输入与输出 · 7.1</span></li><li>文本与字符串 <span class="muted">3. Python 速览 · 3.1.2 · 前置背景</span></li></ul><div class="question-text">下列程序运行结果正确的是
+
+```pycon
+&gt;&gt;&gt; s = &#x27;PYTHON&#x27;
+&gt;&gt;&gt; &quot;{0:3}&quot;.format(s)
+```
+
+A. ‘PYT’
+
+B. ‘PYTH’
+
+C. ‘PYTHON’
+
+D. ‘ PYTHON’</div><div class="review-note"><strong>审核说明</strong><ul><li>D引号内空格按原样保留。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：C</p><p>C</p><p>{0:3}表示最小字段宽度3，PYTHON长度6超过最小宽度，不会截断也无需填充，因此得到PYTHON。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/inputoutput.html#the-string-format-method" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/inputoutput.html#the-string-format-method</a></li><li><a href="https://docs.python.org/3/library/string.html#format-specification-mini-language" target="_blank" rel="noreferrer">https://docs.python.org/3/library/string.html#format-specification-mini-language</a></li></ul></details></article><article class="card" id="q14"><div class="card-head"><h2>第 14 题</h2><span class="status invalid">原题隔离</span><span class="stars" role="img" aria-label="难度 1 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 4 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=4">查看原卷</a></p><ul class="points"><li>程序基本控制结构 <span class="muted">4. 更多控制流工具 · 4 · 补充知识点</span></li></ul><div class="question-text">程序的基本结构包括
+
+A. 顺序结构
+
+B. 分支结构
+
+C. 循环结构
+
+D. 跳转结构</div><div class="review-note"><strong>审核说明</strong><ul><li>原题明确为单选，但有三个符合项，原卷只给C；不能强制选C。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">项目补充或纠正的参考解；原卷答案：C</p><p>顺序、分支、循环都是程序基本结构；A、B、C均符合题干的包括。</p><p>顺序、分支、循环都是程序基本结构；A、B、C均符合题干的包括。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/controlflow.html" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/controlflow.html</a></li></ul></details></article><article class="card" id="q15"><div class="card-head"><h2>第 15 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 1 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 4 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=4">查看原卷</a></p><ul class="points"><li>break 与 continue <span class="muted">4. 更多控制流工具 · 4.4</span></li><li>while 循环与边界 <span class="muted">3. Python 速览 · 3.2 · 前置背景</span></li></ul><div class="question-text">以下可以结束一个循环的保留字是
+
+A. If
+
+B. continue
+
+C. break
+
+D. exit</div><div class="review-note"><strong>审核说明</strong><ul><li>原卷参考答案15.B错误。保留source_answer=B，另存reviewed_answer=C并标明项目纠错；学生评分使用C。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">项目补充或纠正的参考解；原卷答案：B</p><p>C</p><p>break终止最近一层for或while循环；continue只结束本次迭代并进入下一次。exit也不是保留字。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/controlflow.html#break-and-continue-statements" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/controlflow.html#break-and-continue-statements</a></li><li><a href="https://docs.python.org/3/reference/simple_stmts.html#the-break-statement" target="_blank" rel="noreferrer">https://docs.python.org/3/reference/simple_stmts.html#the-break-statement</a></li></ul></details></article><article class="card" id="q16"><div class="card-head"><h2>第 16 题</h2><span class="status invalid">原题隔离</span><span class="stars" role="img" aria-label="难度 2 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 4 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=4">查看原卷</a></p><ul class="points"><li>if 条件分支 <span class="muted">4. 更多控制流工具 · 4.1</span></li></ul><div class="question-text">下面对分支结构描述不正确的是
+
+A. If 语句中语句块执行与否依赖于条件判断。
+
+B. if 语句中条件部分可以使用任何能够产生 True 和 False 的语句和函数。
+
+C. Python 通过 if、else 保留字来实现单分支、二分支和多分支结构。
+
+D. 多分支结构是二分支结构的扩展，用于设置同一个判断条件的多条执行路径。</div><div class="review-note"><strong>审核说明</strong><ul><li>原卷给C；B、C、D措辞导致不唯一，保留原卷答案作为来源材料，不自动计分。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">项目补充或纠正的参考解；原卷答案：C</p><p>原卷意图选C（多分支通常需elif），但B把条件表达式写成任何语句和函数，D把不同条件的多分支写成同一个条件的多条路径；并且if/else嵌套也能实现多分支，原表述无法严格唯一判错。</p><p>原卷意图选C（多分支通常需elif），但B把条件表达式写成任何语句和函数，D把不同条件的多分支写成同一个条件的多条路径；并且if/else嵌套也能实现多分支，原表述无法严格唯一判错。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/controlflow.html#if-statements" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/controlflow.html#if-statements</a></li><li><a href="https://docs.python.org/3/reference/compound_stmts.html#the-if-statement" target="_blank" rel="noreferrer">https://docs.python.org/3/reference/compound_stmts.html#the-if-statement</a></li></ul></details></article><article class="card" id="q17"><div class="card-head"><h2>第 17 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 1 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 4 页 · 版本 3 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=4">查看原卷</a></p><ul class="points"><li>函数定义 <span class="muted">4. 更多控制流工具 · 4.8</span></li></ul><div class="question-text">下面关于函数描述不正确的是
+
+A. 函数是一段具有特定功能的语句组。
+
+B. 函数是一段可重用的语句组。
+
+C. 函数通过函数名进行调用。
+
+D. 每次使用函数需要提供相同的参数作为输入。</div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：D</p><p>D</p><p>函数可以在不同调用中传入不同参数值，也可具有默认参数或无参数；不要求每次提供相同参数。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/controlflow.html#defining-functions" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/controlflow.html#defining-functions</a></li><li><a href="https://docs.python.org/3/tutorial/controlflow.html#more-on-defining-functions" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/controlflow.html#more-on-defining-functions</a></li></ul></details></article><article class="card" id="q18"><div class="card-head"><h2>第 18 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 1 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 5 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=5">查看原卷</a></p><ul class="points"><li>函数定义 <span class="muted">4. 更多控制流工具 · 4.8</span></li></ul><div class="question-text">Python 中定义函数的关键字是
+
+A. define
+
+B. return
+
+C. def
+
+D. function</div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：C</p><p>C</p><p>Python使用def语句定义函数；return用于返回，define与function不是函数定义关键字。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/controlflow.html#defining-functions" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/controlflow.html#defining-functions</a></li></ul></details></article><article class="card" id="q19"><div class="card-head"><h2>第 19 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 2 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 5 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=5">查看原卷</a></p><ul class="points"><li>递归与终止基例 <span class="muted">4. 更多控制流工具 · 4.8 · 补充知识点</span></li><li>函数定义 <span class="muted">4. 更多控制流工具 · 4.8 · 前置背景</span></li></ul><div class="question-text">关于递归描述不正确的是
+
+A. 函数定义中调用函数自身的方式称为递归。
+
+B. 递归只能存在一个基例。
+
+C. 默认情况下，当递归调用到 1000 层，Python 解释器将终止程序。
+
+D. 递归不是循环。</div><div class="review-note"><strong>审核说明</strong><ul><li>C措辞实现相关，不应作为跨实现精确定律。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：B</p><p>B</p><p>递归通常需要终止基例，但可以设置多个基例，例如斐波那契数列分别处理n=0和n=1。C的固定1000层及终止程序说法并不严谨：限制可配置，超限通常引发RecursionError，应作为实现相关说明保留。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/controlflow.html#defining-functions" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/controlflow.html#defining-functions</a></li><li><a href="https://docs.python.org/3/library/sys.html#sys.getrecursionlimit" target="_blank" rel="noreferrer">https://docs.python.org/3/library/sys.html#sys.getrecursionlimit</a></li></ul></details></article><article class="card" id="q20"><div class="card-head"><h2>第 20 题</h2><span class="status invalid">原题隔离</span><span class="stars" role="img" aria-label="难度 1 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 5 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=5">查看原卷</a></p><ul class="points"><li>序列、集合与映射分类 <span class="muted">5. 数据结构 · 5</span></li><li>元组与序列 <span class="muted">5. 数据结构 · 5.3 · 前置背景</span></li><li>集合与字典 <span class="muted">5. 数据结构 · 5.4,5.5 · 前置背景</span></li></ul><div class="question-text">下列不属于组合数据类型的是
+
+A. 序列类型
+
+B. 集合类型
+
+C. 字典类型
+
+D. 映射类型</div><div class="review-note"><strong>审核说明</strong><ul><li>原卷参考答案与题意冲突，单选无可靠唯一解。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">项目补充或纠正的参考解；原卷答案：C</p><p>原卷C；按严格题意不存在可靠的唯一正确选项。</p><p>dict本身就是组合容器并属于映射，序列、集合、映射也都是容器分类。原卷将字典作为不属于组合数据类型的答案混用了具体实现与分类层次，不能直接把C用于学生计分。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences</a></li><li><a href="https://docs.python.org/3/tutorial/datastructures.html#sets" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/datastructures.html#sets</a></li><li><a href="https://docs.python.org/3/tutorial/datastructures.html#dictionaries" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/datastructures.html#dictionaries</a></li></ul></details></article><article class="card" id="q21"><div class="card-head"><h2>第 21 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 1 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 5 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=5">查看原卷</a></p><ul class="points"><li>元组与序列 <span class="muted">5. 数据结构 · 5.3</span></li></ul><div class="question-text">下面对元组描述不正确的是
+
+A. 元组是一种集合类型。
+
+B. 元组一旦被创建就不能被修改。
+
+C. 一个元组可以作为另外一个元组的元素。
+
+D. Python 语言中元组可以采用逗号和圆括号来表示。</div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：A</p><p>A</p><p>tuple是不可变序列；set才是集合类型。元组可以嵌套，逗号是元组构造的关键。元组所引用的可变对象内部可以变化，不等于元组自身的元素引用可重新赋值。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences</a></li></ul></details></article><article class="card" id="q22"><div class="card-head"><h2>第 22 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 1 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 5 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=5">查看原卷</a></p><ul class="points"><li>列表长度与顶层元素 <span class="muted">3. Python 速览 · 3.1.3</span></li><li>列表基础 <span class="muted">3. Python 速览 · 3.1.3 · 前置背景</span></li></ul><div class="question-text">列表 ls=[[1,2,3],[[4,5],6],[7,8]]，则 len(ls)的值是
+
+A. 1
+
+B. 3
+
+C. 4
+
+D. 8</div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：B</p><p>B（3）</p><p>ls顶层包含[1,2,3]、[[4,5],6]、[7,8]三个元素，所以len(ls)=3。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/introduction.html#lists" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/introduction.html#lists</a></li></ul></details></article><article class="card" id="q23"><div class="card-head"><h2>第 23 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 2 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 5、6 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=5">查看原卷</a></p><ul class="points"><li>字典键的可哈希性 <span class="muted">5. 数据结构 · 5.5</span></li><li>列表基础 <span class="muted">3. Python 速览 · 3.1.3 · 前置背景</span></li><li>元组与序列 <span class="muted">5. 数据结构 · 5.3 · 前置背景</span></li></ul><div class="question-text">下面是错误的字典创建方式的是
+
+A. d = {1:[1,2], 3:[3,4]}
+
+B. d = {[1,2]:1, [3,4]:3}
+
+C. d = {(1,2):1, (3,4):3}
+
+D. d = {&#x27;张三&#x27;:1, &#x27;李四&#x27;:2}</div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：B</p><p>B</p><p>列表不可哈希，不能作为字典键。A的列表是值，可合法使用；C中的元组只含整数，可哈希；D的字符串键可哈希。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/datastructures.html#dictionaries" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/datastructures.html#dictionaries</a></li></ul></details></article><article class="card" id="q24"><div class="card-head"><h2>第 24 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 1 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 6 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=6">查看原卷</a></p><ul class="points"><li>文件读取方法与流类别 <span class="muted">7. 输入与输出 · 7.2.1</span></li><li>文件打开模式 <span class="muted">7. 输入与输出 · 7.2 · 前置背景</span></li></ul><div class="question-text">下列不属于 Python 对文件的读操作方法的是
+
+A. read
+
+B. readline
+
+C. readall
+
+D. readtext
+
+&gt; 项目补充说明：本题按Python标准I/O体系中提供的读取方法判断，包含原始二进制流的方法。</div><div class="review-note"><strong>审核说明</strong><ul><li>建议题目补充说明按标准I/O体系识别方法，不局限于文本文件对象。若不展示此澄清，保守保留draft。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：D</p><p>D</p><p>read、readline是文件读取方法；readall确实存在于原始二进制流RawIOBase体系，不能错误讲解成Python没有readall。readtext不是Python标准文件I/O接口的方法。若课程只讨论open返回的常见文本对象，则题目须补充对象范围。</p><strong>补充约定</strong><ul><li>本题按Python标准I/O体系中提供的读取方法判断，包含原始二进制流的方法。</li></ul><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/inputoutput.html#methods-of-file-objects" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/inputoutput.html#methods-of-file-objects</a></li><li><a href="https://docs.python.org/3/library/io.html#io.RawIOBase.readall" target="_blank" rel="noreferrer">https://docs.python.org/3/library/io.html#io.RawIOBase.readall</a></li></ul></details></article><article class="card" id="q25"><div class="card-head"><h2>第 25 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 1 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 6 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=6">查看原卷</a></p><ul class="points"><li>文件打开模式 <span class="muted">7. 输入与输出 · 7.2</span></li></ul><div class="question-text">下面对文件描述错误的是
+
+A. 文件是一个存储在辅助存储器上的数据序列。
+
+B. 文件中可以包含任何数据内容。
+
+C. 文本文件和二进制文件都是文件。
+
+D. 文本文件不能用二进制文件方式读入。</div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：D</p><p>D</p><p>文本文件在存储介质上同样由字节组成，可以用二进制模式读为bytes；文本模式会按编码进行解码。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files</a></li></ul></details></article><article class="card" id="q26"><div class="card-head"><h2>第 26 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 2 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 6 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=6">查看原卷</a></p><ul class="points"><li>嵌套序列索引 <span class="muted">3. Python 速览 · 3.1.3</span></li><li>列表基础 <span class="muted">3. Python 速览 · 3.1.3 · 前置背景</span></li><li>文本与字符串 <span class="muted">3. Python 速览 · 3.1.2 · 前置背景</span></li></ul><div class="question-text">假设 ls = [3.5, &quot;Python&quot;, [10, &quot;LIST&quot;], 3.6]，则执行 ls[2][-1][1]的结果为
+
+A. L
+
+B. I
+
+C. P
+
+D. Y</div><div class="review-note"><strong>审核说明</strong><ul><li>题干代码使用排版弯引号，学生可见版本应改成ASCII字符串引号并保留原文。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：B</p><p>B（I）</p><p>ls[2]取出[10,&#x27;LIST&#x27;]，[-1]取出字符串&#x27;LIST&#x27;，字符串索引1对应第二个字符&#x27;I&#x27;。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/introduction.html#text" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/introduction.html#text</a></li><li><a href="https://docs.python.org/3/tutorial/introduction.html#lists" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/introduction.html#lists</a></li></ul></details></article><article class="card" id="q27"><div class="card-head"><h2>第 27 题</h2><span class="status invalid">原题隔离</span><span class="stars" role="img" aria-label="难度 2 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 6 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=6">查看原卷</a></p><ul class="points"><li>turtle 移动与绝对朝向 <span class="muted">10. 标准库概览 · 10 · 补充知识点</span></li><li>函数定义 <span class="muted">4. 更多控制流工具 · 4.8 · 前置背景</span></li></ul><div class="question-text">不改变绘制方向的 Turtle 命令是
+
+A. turtle.fd()
+
+B. turtle.seth()
+
+C. turtle.right()
+
+D. turtle.circle()</div><div class="review-note"><strong>审核说明</strong><ul><li>朝向变化的时间范围不明确。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">项目补充或纠正的参考解；原卷答案：A</p><p>原卷A；按绘制过程理解时A。</p><p>fd沿当前方向前进，不转向。circle绘制过程中朝向变化，但完整一圈结束后的净朝向可以与开始相同。原题未区分过程与最终状态，不能凭最终朝向唯一排除D。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/stdlib.html" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/stdlib.html</a></li><li><a href="https://docs.python.org/3/library/turtle.html#turtle.forward" target="_blank" rel="noreferrer">https://docs.python.org/3/library/turtle.html#turtle.forward</a></li><li><a href="https://docs.python.org/3/library/turtle.html#turtle.circle" target="_blank" rel="noreferrer">https://docs.python.org/3/library/turtle.html#turtle.circle</a></li></ul></details></article><article class="card" id="q28"><div class="card-head"><h2>第 28 题</h2><span class="status invalid">原题隔离</span><span class="stars" role="img" aria-label="难度 2 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 6 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=6">查看原卷</a></p><ul class="points"><li>turtle 颜色与 RGB 模式 <span class="muted">10. 标准库概览 · 10 · 补充知识点</span></li><li>文本与字符串 <span class="muted">3. Python 速览 · 3.1.2 · 前置背景</span></li></ul><div class="question-text">在 Turtle 绘图中表示颜色值不正确的是
+
+A. “grey”
+
+B. (190, 190, 190)
+
+C. BEBEBE
+
+D. #BEBEBE</div><div class="review-note"><strong>审核说明</strong><ul><li>缺少colormode及颜色规格/代码表达式的说明。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">项目补充或纠正的参考解；原卷答案：C</p><p>原卷C；仅在按颜色规格、且RGB模式255解释时可唯一取C。</p><p>命名字符串grey和十六进制字符串#BEBEBE有效；数值三元组(190,190,190)要求colormode(255)，默认1.0模式下也无效。若把选项当完整Python表达式，未加引号的文本还会引出额外语法/名称问题。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/stdlib.html" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/stdlib.html</a></li><li><a href="https://docs.python.org/3/library/turtle.html#turtle.pencolor" target="_blank" rel="noreferrer">https://docs.python.org/3/library/turtle.html#turtle.pencolor</a></li><li><a href="https://docs.python.org/3/library/turtle.html#turtle.colormode" target="_blank" rel="noreferrer">https://docs.python.org/3/library/turtle.html#turtle.colormode</a></li></ul></details></article><article class="card" id="q29"><div class="card-head"><h2>第 29 题</h2><span class="status invalid">原题隔离</span><span class="stars" role="img" aria-label="难度 2 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 7 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=7">查看原卷</a></p><ul class="points"><li>随机种子与序列复现 <span class="muted">10. 标准库概览 · 10.6 · 补充知识点</span></li><li>模块导入 <span class="muted">6. 模块 · 6 · 前置背景</span></li></ul><div class="question-text">关于 random 库描述不正确的是
+
+A. 生成随机数之前必须要指定随机数种子。
+
+B. 设定相同种子，每次调用随机函数生成的随机数相同。
+
+C. 通过 from random import *可以引入 random 随机库。
+
+D. 通过 import random 可以引入 random 随机库。</div><div class="review-note"><strong>审核说明</strong><ul><li>选项B可能使单选出现第二个错误项。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">项目补充或纠正的参考解；原卷答案：A</p><p>原卷A；B按字面解读也不正确。</p><p>random会自行初始化生成器，无需学生手动指定种子。重新设相同种子通常可从同一起点复现同一随机序列，但一次设种子后的连续调用并不会都返回相同值。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/stdlib.html#mathematics" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/stdlib.html#mathematics</a></li><li><a href="https://docs.python.org/3/library/random.html#random.seed" target="_blank" rel="noreferrer">https://docs.python.org/3/library/random.html#random.seed</a></li><li><a href="https://docs.python.org/3/library/random.html#notes-on-reproducibility" target="_blank" rel="noreferrer">https://docs.python.org/3/library/random.html#notes-on-reproducibility</a></li></ul></details></article><article class="card" id="q30"><div class="card-head"><h2>第 30 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 1 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">multiple_choice · 原卷第 7 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=7">查看原卷</a></p><ul class="points"><li>标准库与第三方库 <span class="muted">10. 标准库概览 · 10 · 补充知识点</span></li><li>模块导入 <span class="muted">6. 模块 · 6 · 前置背景</span></li></ul><div class="question-text">下面不属于 Python 中开发用户界面的第三方库的是
+
+A. Turtle
+
+B. PyQt
+
+C. wxpython
+
+D. pygtk</div><details><summary>查看内部参考解与审核依据</summary><p class="muted">原卷答案，项目补充解析；原卷答案：A</p><p>A</p><p>turtle是Python标准库中的绘图模块，基于Tk图形界面；题目列出的PyQt、wxPython、PyGTK属于外部GUI工具包。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/stdlib.html" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/stdlib.html</a></li><li><a href="https://docs.python.org/3/library/turtle.html" target="_blank" rel="noreferrer">https://docs.python.org/3/library/turtle.html</a></li></ul></details></article><article class="card" id="q31"><div class="card-head"><h2>第 31 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 2 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">code_blank · 原卷第 7 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=7">查看原卷</a></p><ul class="points"><li>while 循环与边界 <span class="muted">3. Python 速览 · 3.2</span></li><li>多重赋值与状态推进 <span class="muted">3. Python 速览 · 3.2</span></li><li>数字与运算符 <span class="muted">3. Python 速览 · 3.1.1 · 前置背景</span></li></ul><div class="question-text">根据斐波那契数列的定义，F(0)=0，F(1)=1, F(n)=F(n-1)+F(n-2)(n&gt;=2），输出不大于 100 的序
+列元素，请补充横线处的代码。
+
+```python
+a, b = ____(1)____
+while ____(2)____:
+    print(a, end=&#x27; , &#x27;)
+    a, b = ____(3)____, ____(4)____
+```</div><div class="review-note"><strong>审核说明</strong><ul><li>原卷为交互式行号和排版引号，需保留原文并规范学生可见代码缩进与引号。</li><li>可接受等价循环条件a&lt;101；不强制逗号两侧空格或尾部分隔符。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">项目补充或纠正的参考解；原卷答案：原卷略去，未提供</p><p>(1) 0, 1；(2) a &lt;= 100；(3) b；(4) a + b</p><pre><code>a, b = 0, 1
+while a &lt;= 100:
+    print(a, end=&#x27;, &#x27;)
+    a, b = b, a + b</code></pre><p>每轮先输出当前a，再同时把(a,b)变为(b,a+b)；下一项144超过100，因此停止。按题给F(0)应包含开头0及两个1。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/introduction.html#first-steps-towards-programming" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/introduction.html#first-steps-towards-programming</a></li></ul></details></article><article class="card" id="q32"><div class="card-head"><h2>第 32 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 2 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">programming · 原卷第 7 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=7">查看原卷</a></p><ul class="points"><li>算术表达式与公式转写 <span class="muted">3. Python 速览 · 3.1.1</span></li><li>数字与运算符 <span class="muted">3. Python 速览 · 3.1.1 · 前置背景</span></li></ul><div class="question-text">请将下列数学表达式用 Python 程序写出来，并计算结果。
+
+$$
+x = \frac{(3^{4} + 5 - 6 \times 7)}{8}
+$$
+
+公式文字转写：x = (3的4次方 + 5 - 6乘7) / 8。</div><details><summary>查看内部参考解与审核依据</summary><p class="muted">项目补充或纠正的参考解；原卷答案：原卷略去，未提供</p><p>x = (3**4 + 5 - 6*7) / 8，结果5.5。</p><pre><code>x = (3**4 + 5 - 6 * 7) / 8
+print(x)</code></pre><p>视觉公式分子为3的4次方+5-6乘7，分母8。先算81+5-42=44，再算44/8=5.5。Python幂运算使用**而非^。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/introduction.html#numbers" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/introduction.html#numbers</a></li></ul></details></article><article class="card" id="q33"><div class="card-head"><h2>第 33 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 3 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">code_blank · 原卷第 7、8 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=7">查看原卷</a></p><ul class="points"><li>random.choice() 随机选择 <span class="muted">10. 标准库概览 · 10.6</span></li><li>for 与 range() <span class="muted">4. 更多控制流工具 · 4.2,4.3</span></li><li>模块导入 <span class="muted">6. 模块 · 6 · 前置背景</span></li><li>文本与字符串 <span class="muted">3. Python 速览 · 3.1.2 · 前置背景</span></li></ul><div class="question-text">随机密码生成。编写程序，在 26 个字母大小写和 9 个数字组成的列表中随机生成一个 8 位
+密码。
+
+```python
+#随机密码生成
+chars=[
+&#x27;0&#x27;,&#x27;1&#x27;,&#x27;2&#x27;,&#x27;3&#x27;,&#x27;4&#x27;,&#x27;5&#x27;,&#x27;6&#x27;,&#x27;7&#x27;,&#x27;8&#x27;,&#x27;9&#x27;,&#x27;a&#x27;,&#x27;b&#x27;,&#x27;c&#x27;,&#x27;d&#x27;,&#x27;e&#x27;,&#x27;f&#x27;,&#x27;g&#x27;,&#x27;h&#x27;,&#x27;i&#x27;,&#x27;j&#x27;,&#x27;k&#x27;,&#x27;l&#x27;,&#x27;m&#x27;,&#x27;n&#x27;,&#x27;o&#x27;,&#x27;p&#x27;,&#x27;q&#x27;,&#x27;r&#x27;,&#x27;s&#x27;,&#x27;t&#x27;,&#x27;u&#x27;,&#x27;v&#x27;,&#x27;w&#x27;,&#x27;x&#x27;
+,&#x27;y&#x27;,&#x27;z&#x27;,
+&#x27;A&#x27;,&#x27;B&#x27;,&#x27;C&#x27;,&#x27;D&#x27;,&#x27;E&#x27;,&#x27;F&#x27;,&#x27;G&#x27;,&#x27;H&#x27;,&#x27;I&#x27;,&#x27;J&#x27;,&#x27;K&#x27;,&#x27;L&#x27;,&#x27;M&#x27;,&#x27;N&#x27;,&#x27;O&#x27;,&#x27;P&#x27;,&#x27;Q&#x27;,&#x27;R&#x27;,&#x27;S&#x27;,&#x27;T&#x27;,&#x27;U&#x27;,&#x27;V&#x27;,&#x27;W&#x27;,&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;Z&#x27;,
+]
+from random import choice
+____(1)____
+____(2)____
+```
+
+&gt; 项目补充说明：本题按下方给定chars列表作答，其中包含0至9共10个数字；题干中的9个数字为原卷表述。</div><div class="review-note"><strong>审核说明</strong><ul><li>原题9个数字与给定字符表10个数字冲突。</li><li>接受任何从给定chars有放回选取8个字符的等价实现；不要求特定随机输出；无需限定每类字符至少出现一次。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">项目补充或纠正的参考解；原卷答案：原卷略去，未提供</p><p>(1) for _ in range(8):；(2)     print(choice(chars), end=&#x27;&#x27;)</p><pre><code>chars = list(&#x27;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&#x27;)
+from random import choice
+for _ in range(8):
+    print(choice(chars), end=&#x27;&#x27;)</code></pre><p>沿用原题提供的chars列表，使用choice每次抽一个字符、共抽8次；随机结果不应限定为某一个固定字符串。题干的9个数字与0至9共10个数字矛盾，本解答明确按给定字符表处理。</p><strong>补充约定</strong><ul><li>本题按下方给定chars列表作答，其中包含0至9共10个数字；题干中的9个数字为原卷表述。</li></ul><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/stdlib.html#mathematics" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/stdlib.html#mathematics</a></li><li><a href="https://docs.python.org/3/tutorial/controlflow.html#the-range-function" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/controlflow.html#the-range-function</a></li><li><a href="https://docs.python.org/3/library/random.html#random.choice" target="_blank" rel="noreferrer">https://docs.python.org/3/library/random.html#random.choice</a></li></ul></details></article><article class="card" id="q34"><div class="card-head"><h2>第 34 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 3 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">programming · 原卷第 8 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=8">查看原卷</a></p><ul class="points"><li>turtle 移动与绝对朝向 <span class="muted">10. 标准库概览 · 10 · 补充知识点</span></li><li>函数定义 <span class="muted">4. 更多控制流工具 · 4.8 · 前置背景</span></li></ul><div class="question-text">使用 turtle 库中的 turtle.fd()函数和 turtle.seth()函数绘制一个等边三角形，边长为 200，效果
+如下图所示。
+
+原卷图形：边长200的等边三角形，水平底边，顶点向上；绘制终点/海龟标记位于左下顶点。该文字描述为对原图的项目转述。</div><div class="review-note"><strong>审核说明</strong><ul><li>接受三段顺序调用或等价循环；需实际使用题目要求的fd和seth；允许平移图形位置。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">项目补充或纠正的参考解；原卷答案：原卷略去，未提供</p><p>依次设置朝向0、120、240度，每次前进200。</p><pre><code>import turtle
+for angle in (0, 120, 240):
+    turtle.seth(angle)
+    turtle.fd(200)
+turtle.done()</code></pre><p>默认standard坐标中，从左下顶点向右走200，再向120度走200到上顶点，再向240度走200回到左下顶点；与原图的向上等边三角形及终点一致。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/stdlib.html" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/stdlib.html</a></li><li><a href="https://docs.python.org/3/library/turtle.html#turtle.setheading" target="_blank" rel="noreferrer">https://docs.python.org/3/library/turtle.html#turtle.setheading</a></li><li><a href="https://docs.python.org/3/library/turtle.html#turtle.forward" target="_blank" rel="noreferrer">https://docs.python.org/3/library/turtle.html#turtle.forward</a></li></ul></details></article><article class="card" id="q35"><div class="card-head"><h2>第 35 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 2 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">programming · 原卷第 8 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=8">查看原卷</a></p><ul class="points"><li>字典创建与增删改 <span class="muted">5. 数据结构 · 5.5</span></li><li>文本与字符串 <span class="muted">3. Python 速览 · 3.1.2 · 前置背景</span></li></ul><div class="question-text">写出下列操作的代码：
+(1) 建立字典 D={&quot;数学&quot;:101, &quot;语文&quot;:202, &quot;英语&quot;:203, &quot;物理&quot;:204, &quot;生物&quot;:206}。
+(2) 向字典中添加键值对 &quot;化学&quot;:205。
+(3) 修改 &quot;数学&quot; 对应的值为201。
+(4) 删除 &quot;生物&quot; 对应的键值对。</div><div class="review-note"><strong>审核说明</strong><ul><li>原题引号混乱，现有学生版本已规范并记录。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">项目补充或纠正的参考解；原卷答案：原卷略去，未提供</p><p>创建D后依次D[&#x27;化学&#x27;]=205、D[&#x27;数学&#x27;]=201、del D[&#x27;生物&#x27;]。</p><pre><code>D = {&#x27;数学&#x27;: 101, &#x27;语文&#x27;: 202, &#x27;英语&#x27;: 203, &#x27;物理&#x27;: 204, &#x27;生物&#x27;: 206}
+D[&#x27;化学&#x27;] = 205
+D[&#x27;数学&#x27;] = 201
+del D[&#x27;生物&#x27;]</code></pre><p>字典下标赋值可新增不存在的键或修改已有键；del删除指定键值对，pop(&#x27;生物&#x27;)也可以实现最后一步。</p><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/datastructures.html#dictionaries" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/datastructures.html#dictionaries</a></li><li><a href="https://docs.python.org/3/tutorial/datastructures.html#the-del-statement" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/datastructures.html#the-del-statement</a></li></ul></details></article><article class="card" id="q36"><div class="card-head"><h2>第 36 题</h2><span class="status approved">审核通过</span><span class="stars" role="img" aria-label="难度 3 星，共 5 星"><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gold" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span><span class="star gray" aria-hidden="true">★</span></span></div><p class="muted">programming · 原卷第 8 页 · 版本 2 · <a href="../../%E4%BA%8C%E7%BA%A7Python%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E6%A0%B7%E9%A2%98%E5%8F%8A%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf#page=8">查看原卷</a></p><ul class="points"><li>for 与 range() <span class="muted">4. 更多控制流工具 · 4.2,4.3</span></li><li>算术表达式与公式转写 <span class="muted">3. Python 速览 · 3.1.1</span></li><li>格式化输出 <span class="muted">7. 输入与输出 · 7.1 · 前置背景</span></li></ul><div class="question-text">重量计算。月球上物体的体重是在地球上的 16.5%，假如你在地球上每年增长 0.5kg，编写
+程序输出未来 10 年你在地球和月球上的体重状况。
+
+&gt; 项目补充说明：补充约定：由用户输入当前地球体重（kg），输出未来第1至第10年的地球与月球体重。</div><div class="review-note"><strong>审核说明</strong><ul><li>缺少当前体重取得方式，需要在学生题面明确。</li><li>接受等价while循环、累计增长或直接公式；不强制两位小数，但数值和年份应正确。</li></ul></div><details><summary>查看内部参考解与审核依据</summary><p class="muted">项目补充或纠正的参考解；原卷答案：原卷略去，未提供</p><p>补充约定当前地球体重由用户输入；第year年地球体重w0+0.5*year，月球体重为其0.165倍，year取1至10。</p><pre><code>w0 = float(input(&#x27;请输入当前地球体重（kg）：&#x27;))
+for year in range(1, 11):
+    earth = w0 + 0.5 * year
+    moon = earth * 0.165
+    print(f&#x27;第{year}年：地球{earth:.2f}kg，月球{moon:.2f}kg&#x27;)</code></pre><p>未来10年按第1到第10年处理，不包含当前第0年；年度地球体重先增加，再乘16.5%。原卷未给初始体重，输入是项目明确补充的解题约定。</p><strong>补充约定</strong><ul><li>补充约定：由用户输入当前地球体重（kg），输出未来第1至第10年的地球与月球体重。</li></ul><strong>核验资料</strong><ul class="refs"><li><a href="https://docs.python.org/3/tutorial/controlflow.html#the-range-function" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/controlflow.html#the-range-function</a></li><li><a href="https://docs.python.org/3/tutorial/introduction.html#numbers" target="_blank" rel="noreferrer">https://docs.python.org/3/tutorial/introduction.html#numbers</a></li></ul></details></article>
+<footer>难度为项目教学标注，范围为 1 至 5。原卷未标明考试年份。所有代码均为文本参考材料，本页及导出脚本不会执行代码。</footer>
+</main></body></html>

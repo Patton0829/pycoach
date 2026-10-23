@@ -13,3 +13,11 @@ node_modules/
 dist/
 coverage/
 .coverage
+
+# Local model deployment details; publish sanitized examples instead.
+/model_apis/本地Embedding模型调用.md
+/model_apis/本地GLM模型调用.md
+/model_apis/本地Reranker模型调用.md
+
+# Local demo recording exceeds GitHub's regular Git file-size limit.
+/AI_Python_Coach.mp4

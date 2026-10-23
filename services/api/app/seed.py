@@ -3,13 +3,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Type, TypeVar
 
-from pydantic import BaseModel, TypeAdapter
+from pydantic import BaseModel, Field, TypeAdapter
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.database import SessionLocal
 from app.models.entities import (
+    CurriculumChapter,
     ErrorType,
     KnowledgeEdge,
     KnowledgeNode,
@@ -17,6 +18,7 @@ from app.models.entities import (
     LearnerErrorNode,
     LearnerKnowledgeNode,
 )
+from app.schemas.base import StrictModel
 from app.schemas.seed import (
     ErrorTypeSeed,
     KnowledgeEdgeSeed,
@@ -26,12 +28,34 @@ from app.schemas.seed import (
 
 SeedModel = TypeVar("SeedModel", bound=BaseModel)
 
+
+class TutorialChapterSeed(StrictModel):
+    id: str = Field(min_length=1, max_length=120)
+    course_id: str = Field(min_length=1, max_length=120)
+    title: str = Field(min_length=1, max_length=200)
+    sort_order: int
+    reference_url: str | None = Field(default=None, max_length=500)
+
+
+class TutorialNodeMetadata(StrictModel):
+    chapter_id: str = Field(min_length=1, max_length=120)
+    reference_url: str = Field(min_length=1, max_length=500)
+    reference_section: str = Field(min_length=1, max_length=40)
+    is_supplementary: bool = False
+
+
+class TutorialCatalog(StrictModel):
+    source_index_url: str
+    chapters: list[TutorialChapterSeed]
+    node_metadata: dict[str, TutorialNodeMetadata]
+
+
 DEMO_KNOWLEDGE_STATE: Dict[str, tuple[float, str]] = {
-    "python.list": (0.82, "mastered"),
-    "python.iterable": (0.48, "learning"),
-    "python.iterator": (0.38, "learning"),
-    "python.iterator.iter": (0.72, "learning"),
-    "python.iterator.next": (0.42, "learning"),
+    "python.list": (0.0, "not_started"),
+    "python.iterable": (0.0, "not_started"),
+    "python.iterator": (0.0, "not_started"),
+    "python.iterator.iter": (0.0, "not_started"),
+    "python.iterator.next": (0.0, "not_started"),
 }
 
 DEMO_ERROR_STATE: Dict[str, tuple[float, str]] = {
@@ -48,6 +72,32 @@ def load_seed_list(
     with path.open(encoding="utf-8") as seed_file:
         raw_data = json.load(seed_file)
     return TypeAdapter(list[schema]).validate_python(raw_data)
+
+
+def load_tutorial_catalog(curriculum_dir: Path) -> TutorialCatalog | None:
+    """Load official section references for project-defined knowledge granularity."""
+    catalog_path = curriculum_dir.parent / "python_tutorial_catalog.json"
+    if not catalog_path.is_file():
+        return None
+    return TutorialCatalog.model_validate_json(catalog_path.read_text(encoding="utf-8"))
+
+
+def seed_tutorial_catalog(
+    database: Session, curriculum_dir: Path,
+) -> dict[str, TutorialNodeMetadata]:
+    catalog = load_tutorial_catalog(curriculum_dir)
+    if catalog is None:
+        return {}
+    for definition in catalog.chapters:
+        chapter = database.get(CurriculumChapter, definition.id)
+        values = definition.model_dump(exclude={"id"})
+        if chapter is None:
+            database.add(CurriculumChapter(id=definition.id, **values))
+        else:
+            for field, value in values.items():
+                setattr(chapter, field, value)
+    database.flush()
+    return catalog.node_metadata
 
 
 def seed_database(database: Session, curriculum_dir: Path) -> SeedResult:
@@ -67,9 +117,12 @@ def seed_database(database: Session, curriculum_dir: Path) -> SeedResult:
         ErrorTypeSeed,
     )
 
+    node_metadata = seed_tutorial_catalog(database, curriculum_dir)
     for item in knowledge_nodes:
         node = database.get(KnowledgeNode, item.id)
         values = item.model_dump(exclude={"id"})
+        if item.id in node_metadata:
+            values.update(node_metadata[item.id].model_dump())
         if node is None:
             database.add(KnowledgeNode(id=item.id, **values))
         else:

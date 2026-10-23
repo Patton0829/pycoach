@@ -1,0 +1,1206 @@
+{
+  "source_sha256": "a0f6a19967464aba6bbb5150d4311311672179c963f631eeed6745e7f4956fd8",
+  "taxonomy_source": "https://docs.python.org/3/tutorial/index.html",
+  "review_policy": "逐题核对原卷；保留原始答案，项目补充答案及纠错单独标注。审核通过不等于启用当前迭代器课程。",
+  "questions": [
+    {
+      "question_number": 1,
+      "difficulty": 1,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.supplement.ipo",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "识别 IPO 三部分，指出 Program 不属于其中。"
+        }
+      ],
+      "reference_answer": "B",
+      "reference_code": null,
+      "explanation": "IPO 分别为 Input、Process、Output；Program 不属于三个组成部分。",
+      "correct_option": "B",
+      "source_correct_option": "B",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": []
+    },
+    {
+      "question_number": 2,
+      "difficulty": 1,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch3.division",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "区分 3/2 的浮点显示 1.5 与 3//2 的整数结果 1。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.numbers",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "C",
+      "reference_code": null,
+      "explanation": "3/2 是浮点数1.5，交互式表示不是1.50；3//2 是整数1。",
+      "correct_option": "C",
+      "source_correct_option": "C",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [
+        "A与正确真除法结果数值等价，但本题比较交互式默认显示；保留原选项。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/introduction.html#numbers"
+      ]
+    },
+    {
+      "question_number": 3,
+      "difficulty": 2,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch3.sequence_indexing",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "解释 [0:-1] 去掉末尾 C 后得到字符串 105。"
+        },
+        {
+          "knowledge_node_id": "python.supplement.eval",
+          "role": "assessed",
+          "is_primary": false,
+          "assessment_criterion": "说明 eval 对数字字符串求值得到整数 105。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.text",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "A",
+      "reference_code": null,
+      "explanation": "TempStr[0:-1] 去掉末尾C得到字符串105，eval 将其求值为整数105。",
+      "correct_option": "A",
+      "source_correct_option": "A",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/introduction.html#text",
+        "https://docs.python.org/3/library/functions.html#eval"
+      ]
+    },
+    {
+      "question_number": 4,
+      "difficulty": 1,
+      "status": "invalid",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch3.integer_literals",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "识别八进制前缀 0o/0O；本原题没有正确选项，禁止计分。"
+        }
+      ],
+      "reference_answer": "按原题干没有正确选项。八进制前缀应为0o或0O；B的0B1010是有效二进制整数，其余0b选项还含非法二进制数字。",
+      "reference_code": null,
+      "explanation": "按原题干没有正确选项。八进制前缀应为0o或0O；B的0B1010是有效二进制整数，其余0b选项还含非法二进制数字。",
+      "correct_option": null,
+      "source_correct_option": "B",
+      "answer_origin": "project_annotation",
+      "notes": [
+        "原卷给B，但题干问八进制且四个选项均为0b/0B前缀。不能静默把八进制改成二进制。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/introduction.html#numbers",
+        "https://docs.python.org/3/reference/lexical_analysis.html#integer-literals"
+      ]
+    },
+    {
+      "question_number": 5,
+      "difficulty": 2,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch3.complex_attributes",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "识别纯虚数的实部为 0，结合科学计数法得出显示结果。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.numbers",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "A",
+      "reference_code": null,
+      "explanation": "属性访问先作用于5.67e+8j，该纯虚数的real为0.0；再加1.23e-4得到0.000123。默认显示为A。",
+      "correct_option": "A",
+      "source_correct_option": "A",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [
+        "D与A数值相等；若题意仅要求数学值，则有重复答案。按原题默认输出形式解释并保留说明。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/introduction.html#numbers",
+        "https://docs.python.org/3/library/stdtypes.html#numeric-types-int-float-complex"
+      ]
+    },
+    {
+      "question_number": 6,
+      "difficulty": 1,
+      "status": "invalid",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch15.float_representation",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "辨别浮点数有限精度与科学计数法；原题多项有问题，禁止唯一判分。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.numbers",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "D显然错误，因为小数部分可以为0，例如1.0。但A将浮点数与数学实数等同并不严格，C也可被1e3等无小数点浮点字面量反驳，因此原单选题没有严格唯一答案。",
+      "reference_code": null,
+      "explanation": "D显然错误，因为小数部分可以为0，例如1.0。但A将浮点数与数学实数等同并不严格，C也可被1e3等无小数点浮点字面量反驳，因此原单选题没有严格唯一答案。",
+      "correct_option": null,
+      "source_correct_option": "D",
+      "answer_origin": "project_annotation",
+      "notes": [
+        "原卷给D；A、C有额外歧义/错误，不能把其当作严格唯一答案单选题自动计分。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/floatingpoint.html",
+        "https://docs.python.org/3/reference/lexical_analysis.html#floating-point-literals"
+      ]
+    },
+    {
+      "question_number": 7,
+      "difficulty": 1,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch3.arithmetic_operators",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "辨别 /、// 与 % 的运算意义。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.numbers",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "C",
+      "reference_code": null,
+      "explanation": "%是取模/余数运算；//才对应向下取整的商。C把%描述为整除商，错误。",
+      "correct_option": "C",
+      "source_correct_option": "C",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/introduction.html#numbers"
+      ]
+    },
+    {
+      "question_number": 8,
+      "difficulty": 1,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch3.unary_operators",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "说明 +x 是一元正号而不是自增。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.numbers",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "B",
+      "reference_code": null,
+      "explanation": "对整数3应用一元正号+，数值仍为3。",
+      "correct_option": "B",
+      "source_correct_option": "B",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/introduction.html#numbers"
+      ]
+    },
+    {
+      "question_number": 9,
+      "difficulty": 2,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch3.complex_modulus",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "依据 3、4 分量求模长 5.0，区分数值等价与显示形式。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.complex_attributes",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "D",
+      "reference_code": null,
+      "explanation": "复数-3+4j的模为sqrt(9+16)=5；abs对复数返回浮点模长，因此显示5.0。",
+      "correct_option": "D",
+      "source_correct_option": "D",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [
+        "C与D数值相等；本题依据返回类型与默认显示选择D。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/library/functions.html#abs",
+        "https://docs.python.org/3/library/stdtypes.html#numeric-types-int-float-complex"
+      ]
+    },
+    {
+      "question_number": 10,
+      "difficulty": 2,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch3.assignment_precedence",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "先计算 3+5**2=28，再由 x*=28 得到 28。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.numbers",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "C",
+      "reference_code": null,
+      "explanation": "先算5**2=25，再算3+25=28，最后x*=28将x从1变为28。",
+      "correct_option": "C",
+      "source_correct_option": "C",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/introduction.html#numbers",
+        "https://docs.python.org/3/reference/simple_stmts.html#augmented-assignment-statements"
+      ]
+    },
+    {
+      "question_number": 11,
+      "difficulty": 2,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch3.sequence_indexing",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "追踪负索引及切片，识别 A 项缺少最后一个 n。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.text",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "A",
+      "reference_code": null,
+      "explanation": "name[0]为全，name[8]为试，name[-1]为n；print三个参数应显示全 试 n，A漏掉n。",
+      "correct_option": "A",
+      "source_correct_option": "A",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [
+        "C的name[11:]实际含一个前导空格，PDF显示空白不够明确；按原卷A保留，审核备注明确该空格，不修改原选项。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/introduction.html#text"
+      ]
+    },
+    {
+      "question_number": 12,
+      "difficulty": 2,
+      "status": "invalid",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch5.sequence_comparison",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "根据字典序比较字符串；C 项引号破损，因此原题无法可靠判分。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.text",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "D在正常ASCII引号下为False，因为大写H的码点小于小写h。可是C原图引号缺损，无法确认其完整表达式或语法合法性，故不能认证原题只有一个错误选项。",
+      "reference_code": null,
+      "explanation": "D在正常ASCII引号下为False，因为大写H的码点小于小写h。可是C原图引号缺损，无法确认其完整表达式或语法合法性，故不能认证原题只有一个错误选项。",
+      "correct_option": null,
+      "source_correct_option": "D",
+      "answer_origin": "project_annotation",
+      "notes": [
+        "原卷给D；C原图确为“<’a’，不能无依据补成空字符串比较。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/datastructures.html#comparing-sequences-and-other-types"
+      ]
+    },
+    {
+      "question_number": 13,
+      "difficulty": 2,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch7.fstrings_format",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "解释 format 的最小字段宽度不会截断长度超过宽度的字符串，PYTHON 仍完整显示。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.text",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "C",
+      "reference_code": null,
+      "explanation": "{0:3}表示最小字段宽度3，PYTHON长度6超过最小宽度，不会截断也无需填充，因此得到PYTHON。",
+      "correct_option": "C",
+      "source_correct_option": "C",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [
+        "D引号内空格按原样保留。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/inputoutput.html#the-string-format-method",
+        "https://docs.python.org/3/library/string.html#format-specification-mini-language"
+      ],
+      "revision": 3
+    },
+    {
+      "question_number": 14,
+      "difficulty": 1,
+      "status": "invalid",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.supplement.control_structures",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "识别顺序、分支、循环均为基本结构；原题无唯一单选答案。"
+        }
+      ],
+      "reference_answer": "顺序、分支、循环都是程序基本结构；A、B、C均符合题干的包括。",
+      "reference_code": null,
+      "explanation": "顺序、分支、循环都是程序基本结构；A、B、C均符合题干的包括。",
+      "correct_option": null,
+      "source_correct_option": "C",
+      "answer_origin": "project_annotation",
+      "notes": [
+        "原题明确为单选，但有三个符合项，原卷只给C；不能强制选C。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/controlflow.html"
+      ]
+    },
+    {
+      "question_number": 15,
+      "difficulty": 1,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch4.break_continue",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "指出 break 结束循环，continue 只跳转到下一次迭代。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.while",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "C",
+      "reference_code": null,
+      "explanation": "break终止最近一层for或while循环；continue只结束本次迭代并进入下一次。exit也不是保留字。",
+      "correct_option": "C",
+      "source_correct_option": "B",
+      "answer_origin": "project_annotation",
+      "notes": [
+        "原卷参考答案15.B错误。保留source_answer=B，另存reviewed_answer=C并标明项目纠错；学生评分使用C。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/controlflow.html#break-and-continue-statements",
+        "https://docs.python.org/3/reference/simple_stmts.html#the-break-statement"
+      ]
+    },
+    {
+      "question_number": 16,
+      "difficulty": 2,
+      "status": "invalid",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch4.if",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "区分 if/elif/else 与条件真值；原题措辞不支持可靠唯一判分。"
+        }
+      ],
+      "reference_answer": "原卷意图选C（多分支通常需elif），但B把条件表达式写成任何语句和函数，D把不同条件的多分支写成同一个条件的多条路径；并且if/else嵌套也能实现多分支，原表述无法严格唯一判错。",
+      "reference_code": null,
+      "explanation": "原卷意图选C（多分支通常需elif），但B把条件表达式写成任何语句和函数，D把不同条件的多分支写成同一个条件的多条路径；并且if/else嵌套也能实现多分支，原表述无法严格唯一判错。",
+      "correct_option": null,
+      "source_correct_option": "C",
+      "answer_origin": "project_annotation",
+      "notes": [
+        "原卷给C；B、C、D措辞导致不唯一，保留原卷答案作为来源材料，不自动计分。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/controlflow.html#if-statements",
+        "https://docs.python.org/3/reference/compound_stmts.html#the-if-statement"
+      ]
+    },
+    {
+      "question_number": 17,
+      "difficulty": 1,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch4.functions",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "说明函数每次调用可以接收不同的实参值，不要求每次都提供相同输入。"
+        }
+      ],
+      "reference_answer": "D",
+      "reference_code": null,
+      "explanation": "函数可以在不同调用中传入不同参数值，也可具有默认参数或无参数；不要求每次提供相同参数。",
+      "correct_option": "D",
+      "source_correct_option": "D",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/controlflow.html#defining-functions",
+        "https://docs.python.org/3/tutorial/controlflow.html#more-on-defining-functions"
+      ],
+      "revision": 3
+    },
+    {
+      "question_number": 18,
+      "difficulty": 1,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch4.functions",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "指出定义函数使用 def 关键字。"
+        }
+      ],
+      "reference_answer": "C",
+      "reference_code": null,
+      "explanation": "Python使用def语句定义函数；return用于返回，define与function不是函数定义关键字。",
+      "correct_option": "C",
+      "source_correct_option": "C",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/controlflow.html#defining-functions"
+      ]
+    },
+    {
+      "question_number": 19,
+      "difficulty": 2,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.supplement.recursion",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "说明递归可以具有多个终止基例，而非只能具有一个。"
+        },
+        {
+          "knowledge_node_id": "python.ch4.functions",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "B",
+      "reference_code": null,
+      "explanation": "递归通常需要终止基例，但可以设置多个基例，例如斐波那契数列分别处理n=0和n=1。C的固定1000层及终止程序说法并不严谨：限制可配置，超限通常引发RecursionError，应作为实现相关说明保留。",
+      "correct_option": "B",
+      "source_correct_option": "B",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [
+        "C措辞实现相关，不应作为跨实现精确定律。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/controlflow.html#defining-functions",
+        "https://docs.python.org/3/library/sys.html#sys.getrecursionlimit"
+      ]
+    },
+    {
+      "question_number": 20,
+      "difficulty": 1,
+      "status": "invalid",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch5.container_categories",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "区分抽象容器分类与 dict 具体实现；原题不能唯一判分。"
+        },
+        {
+          "knowledge_node_id": "python.ch5.tuples_sequences",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        },
+        {
+          "knowledge_node_id": "python.ch5.sets_dicts",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "原卷C；按严格题意不存在可靠的唯一正确选项。",
+      "reference_code": null,
+      "explanation": "dict本身就是组合容器并属于映射，序列、集合、映射也都是容器分类。原卷将字典作为不属于组合数据类型的答案混用了具体实现与分类层次，不能直接把C用于学生计分。",
+      "correct_option": null,
+      "source_correct_option": "C",
+      "answer_origin": "project_annotation",
+      "notes": [
+        "原卷参考答案与题意冲突，单选无可靠唯一解。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences",
+        "https://docs.python.org/3/tutorial/datastructures.html#sets",
+        "https://docs.python.org/3/tutorial/datastructures.html#dictionaries"
+      ]
+    },
+    {
+      "question_number": 21,
+      "difficulty": 1,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch5.tuples_sequences",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "识别 tuple 是不可变序列而不是 set 集合类型。"
+        }
+      ],
+      "reference_answer": "A",
+      "reference_code": null,
+      "explanation": "tuple是不可变序列；set才是集合类型。元组可以嵌套，逗号是元组构造的关键。元组所引用的可变对象内部可以变化，不等于元组自身的元素引用可重新赋值。",
+      "correct_option": "A",
+      "source_correct_option": "A",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences"
+      ]
+    },
+    {
+      "question_number": 22,
+      "difficulty": 1,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch3.list_length",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "只统计列表的三个顶层元素，不累加嵌套元素。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.lists",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "B（3）",
+      "reference_code": null,
+      "explanation": "ls顶层包含[1,2,3]、[[4,5],6]、[7,8]三个元素，所以len(ls)=3。",
+      "correct_option": "B",
+      "source_correct_option": "B",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/introduction.html#lists"
+      ]
+    },
+    {
+      "question_number": 23,
+      "difficulty": 2,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch5.dictionary_keys",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "说明列表不可哈希，不能作为字典键；只含可哈希项的元组可以。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.lists",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        },
+        {
+          "knowledge_node_id": "python.ch5.tuples_sequences",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "B",
+      "reference_code": null,
+      "explanation": "列表不可哈希，不能作为字典键。A的列表是值，可合法使用；C中的元组只含整数，可哈希；D的字符串键可哈希。",
+      "correct_option": "B",
+      "source_correct_option": "B",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/datastructures.html#dictionaries"
+      ]
+    },
+    {
+      "question_number": 24,
+      "difficulty": 1,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch7.file_read_methods",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "按标准 I/O 体系识别 read/readline/readall，指出 readtext 不是标准接口。"
+        },
+        {
+          "knowledge_node_id": "python.ch7.open_modes",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "D",
+      "reference_code": null,
+      "explanation": "read、readline是文件读取方法；readall确实存在于原始二进制流RawIOBase体系，不能错误讲解成Python没有readall。readtext不是Python标准文件I/O接口的方法。若课程只讨论open返回的常见文本对象，则题目须补充对象范围。",
+      "correct_option": "D",
+      "source_correct_option": "D",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [
+        "建议题目补充说明按标准I/O体系识别方法，不局限于文本文件对象。若不展示此澄清，保守保留draft。"
+      ],
+      "assumptions": [
+        "本题按Python标准I/O体系中提供的读取方法判断，包含原始二进制流的方法。"
+      ],
+      "student_clarification": "本题按Python标准I/O体系中提供的读取方法判断，包含原始二进制流的方法。",
+      "references": [
+        "https://docs.python.org/3/tutorial/inputoutput.html#methods-of-file-objects",
+        "https://docs.python.org/3/library/io.html#io.RawIOBase.readall"
+      ]
+    },
+    {
+      "question_number": 25,
+      "difficulty": 1,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch7.open_modes",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "说明文本文件也可以按二进制模式读取原始字节。"
+        }
+      ],
+      "reference_answer": "D",
+      "reference_code": null,
+      "explanation": "文本文件在存储介质上同样由字节组成，可以用二进制模式读为bytes；文本模式会按编码进行解码。",
+      "correct_option": "D",
+      "source_correct_option": "D",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files"
+      ]
+    },
+    {
+      "question_number": 26,
+      "difficulty": 2,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch3.nested_indexing",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "逐层得到 [10,LIST]、LIST、I，正确处理负索引。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.lists",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        },
+        {
+          "knowledge_node_id": "python.ch3.text",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "B（I）",
+      "reference_code": null,
+      "explanation": "ls[2]取出[10,'LIST']，[-1]取出字符串'LIST'，字符串索引1对应第二个字符'I'。",
+      "correct_option": "B",
+      "source_correct_option": "B",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [
+        "题干代码使用排版弯引号，学生可见版本应改成ASCII字符串引号并保留原文。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/introduction.html#text",
+        "https://docs.python.org/3/tutorial/introduction.html#lists"
+      ]
+    },
+    {
+      "question_number": 27,
+      "difficulty": 2,
+      "status": "invalid",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.supplement.turtle_movement",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "区分绘制过程朝向与结束后净朝向，原题未限定时间范围。"
+        },
+        {
+          "knowledge_node_id": "python.ch4.functions",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "原卷A；按绘制过程理解时A。",
+      "reference_code": null,
+      "explanation": "fd沿当前方向前进，不转向。circle绘制过程中朝向变化，但完整一圈结束后的净朝向可以与开始相同。原题未区分过程与最终状态，不能凭最终朝向唯一排除D。",
+      "correct_option": null,
+      "source_correct_option": "A",
+      "answer_origin": "project_annotation",
+      "notes": [
+        "朝向变化的时间范围不明确。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/stdlib.html",
+        "https://docs.python.org/3/library/turtle.html#turtle.forward",
+        "https://docs.python.org/3/library/turtle.html#turtle.circle"
+      ]
+    },
+    {
+      "question_number": 28,
+      "difficulty": 2,
+      "status": "invalid",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.supplement.turtle_colors",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "判断颜色表示及 colormode 约束，原题上下文不充分。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.text",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "原卷C；仅在按颜色规格、且RGB模式255解释时可唯一取C。",
+      "reference_code": null,
+      "explanation": "命名字符串grey和十六进制字符串#BEBEBE有效；数值三元组(190,190,190)要求colormode(255)，默认1.0模式下也无效。若把选项当完整Python表达式，未加引号的文本还会引出额外语法/名称问题。",
+      "correct_option": null,
+      "source_correct_option": "C",
+      "answer_origin": "project_annotation",
+      "notes": [
+        "缺少colormode及颜色规格/代码表达式的说明。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/stdlib.html",
+        "https://docs.python.org/3/library/turtle.html#turtle.pencolor",
+        "https://docs.python.org/3/library/turtle.html#turtle.colormode"
+      ]
+    },
+    {
+      "question_number": 29,
+      "difficulty": 2,
+      "status": "invalid",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch10.random_seed",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "区分重新设同一种子复现序列与连续调用返回相同值，原题 B 项有歧义。"
+        },
+        {
+          "knowledge_node_id": "python.ch6.imports",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "原卷A；B按字面解读也不正确。",
+      "reference_code": null,
+      "explanation": "random会自行初始化生成器，无需学生手动指定种子。重新设相同种子通常可从同一起点复现同一随机序列，但一次设种子后的连续调用并不会都返回相同值。",
+      "correct_option": null,
+      "source_correct_option": "A",
+      "answer_origin": "project_annotation",
+      "notes": [
+        "选项B可能使单选出现第二个错误项。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/stdlib.html#mathematics",
+        "https://docs.python.org/3/library/random.html#random.seed",
+        "https://docs.python.org/3/library/random.html#notes-on-reproducibility"
+      ]
+    },
+    {
+      "question_number": 30,
+      "difficulty": 1,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.supplement.library_categories",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "指出 turtle 是标准库而非题目所称第三方 GUI 库。"
+        },
+        {
+          "knowledge_node_id": "python.ch6.imports",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "A",
+      "reference_code": null,
+      "explanation": "turtle是Python标准库中的绘图模块，基于Tk图形界面；题目列出的PyQt、wxPython、PyGTK属于外部GUI工具包。",
+      "correct_option": "A",
+      "source_correct_option": "A",
+      "answer_origin": "provided_pdf_reference_answers",
+      "notes": [],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/stdlib.html",
+        "https://docs.python.org/3/library/turtle.html"
+      ]
+    },
+    {
+      "question_number": 31,
+      "difficulty": 2,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch3.while",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "循环输出包含 0、两个 1，直到 89；边界不遗漏不大于 100 的项。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.parallel_assignment",
+          "role": "assessed",
+          "is_primary": false,
+          "assessment_criterion": "用 a,b=b,a+b 同时推进相邻两项，避免顺序赋值覆盖旧值。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.numbers",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "(1) 0, 1；(2) a <= 100；(3) b；(4) a + b",
+      "reference_code": "a, b = 0, 1\nwhile a <= 100:\n    print(a, end=', ')\n    a, b = b, a + b",
+      "explanation": "每轮先输出当前a，再同时把(a,b)变为(b,a+b)；下一项144超过100，因此停止。按题给F(0)应包含开头0及两个1。",
+      "correct_option": null,
+      "source_correct_option": null,
+      "answer_origin": "project_annotation",
+      "notes": [
+        "原卷为交互式行号和排版引号，需保留原文并规范学生可见代码缩进与引号。",
+        "可接受等价循环条件a<101；不强制逗号两侧空格或尾部分隔符。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/introduction.html#first-steps-towards-programming"
+      ]
+    },
+    {
+      "question_number": 32,
+      "difficulty": 2,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch3.arithmetic_expressions",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "正确表达 (3**4+5-6*7)/8，并说明结果 5.5。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.numbers",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "x = (3**4 + 5 - 6*7) / 8，结果5.5。",
+      "reference_code": "x = (3**4 + 5 - 6 * 7) / 8\nprint(x)",
+      "explanation": "视觉公式分子为3的4次方+5-6乘7，分母8。先算81+5-42=44，再算44/8=5.5。Python幂运算使用**而非^。",
+      "correct_option": null,
+      "source_correct_option": null,
+      "answer_origin": "project_annotation",
+      "notes": [],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/introduction.html#numbers"
+      ]
+    },
+    {
+      "question_number": 33,
+      "difficulty": 3,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch10.random_choice",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "每次从题给 chars 中有放回选择一个字符，允许重复。"
+        },
+        {
+          "knowledge_node_id": "python.ch4.for_range",
+          "role": "assessed",
+          "is_primary": false,
+          "assessment_criterion": "执行恰好八次选择并连续输出八个字符。"
+        },
+        {
+          "knowledge_node_id": "python.ch6.imports",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        },
+        {
+          "knowledge_node_id": "python.ch3.text",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "(1) for _ in range(8):；(2)     print(choice(chars), end='')",
+      "reference_code": "chars = list('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')\nfrom random import choice\nfor _ in range(8):\n    print(choice(chars), end='')",
+      "explanation": "沿用原题提供的chars列表，使用choice每次抽一个字符、共抽8次；随机结果不应限定为某一个固定字符串。题干的9个数字与0至9共10个数字矛盾，本解答明确按给定字符表处理。",
+      "correct_option": null,
+      "source_correct_option": null,
+      "answer_origin": "project_annotation",
+      "notes": [
+        "原题9个数字与给定字符表10个数字冲突。",
+        "接受任何从给定chars有放回选取8个字符的等价实现；不要求特定随机输出；无需限定每类字符至少出现一次。"
+      ],
+      "assumptions": [
+        "本题按下方给定chars列表作答，其中包含0至9共10个数字；题干中的9个数字为原卷表述。"
+      ],
+      "student_clarification": "本题按下方给定chars列表作答，其中包含0至9共10个数字；题干中的9个数字为原卷表述。",
+      "references": [
+        "https://docs.python.org/3/tutorial/stdlib.html#mathematics",
+        "https://docs.python.org/3/tutorial/controlflow.html#the-range-function",
+        "https://docs.python.org/3/library/random.html#random.choice"
+      ]
+    },
+    {
+      "question_number": 34,
+      "difficulty": 3,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.supplement.turtle_movement",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "使用 fd 和 seth 绘制边长 200 的向上等边三角形并闭合。"
+        },
+        {
+          "knowledge_node_id": "python.ch4.functions",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "依次设置朝向0、120、240度，每次前进200。",
+      "reference_code": "import turtle\nfor angle in (0, 120, 240):\n    turtle.seth(angle)\n    turtle.fd(200)\nturtle.done()",
+      "explanation": "默认standard坐标中，从左下顶点向右走200，再向120度走200到上顶点，再向240度走200回到左下顶点；与原图的向上等边三角形及终点一致。",
+      "correct_option": null,
+      "source_correct_option": null,
+      "answer_origin": "project_annotation",
+      "notes": [
+        "接受三段顺序调用或等价循环；需实际使用题目要求的fd和seth；允许平移图形位置。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/stdlib.html",
+        "https://docs.python.org/3/library/turtle.html#turtle.setheading",
+        "https://docs.python.org/3/library/turtle.html#turtle.forward"
+      ]
+    },
+    {
+      "question_number": 35,
+      "difficulty": 2,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch5.dictionary_operations",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "正确创建字典、增加化学、修改数学、删除生物且保留其他项。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.text",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "创建D后依次D['化学']=205、D['数学']=201、del D['生物']。",
+      "reference_code": "D = {'数学': 101, '语文': 202, '英语': 203, '物理': 204, '生物': 206}\nD['化学'] = 205\nD['数学'] = 201\ndel D['生物']",
+      "explanation": "字典下标赋值可新增不存在的键或修改已有键；del删除指定键值对，pop('生物')也可以实现最后一步。",
+      "correct_option": null,
+      "source_correct_option": null,
+      "answer_origin": "project_annotation",
+      "notes": [
+        "原题引号混乱，现有学生版本已规范并记录。"
+      ],
+      "assumptions": [],
+      "student_clarification": null,
+      "references": [
+        "https://docs.python.org/3/tutorial/datastructures.html#dictionaries",
+        "https://docs.python.org/3/tutorial/datastructures.html#the-del-statement"
+      ]
+    },
+    {
+      "question_number": 36,
+      "difficulty": 3,
+      "status": "approved",
+      "knowledge_targets": [
+        {
+          "knowledge_node_id": "python.ch4.for_range",
+          "role": "assessed",
+          "is_primary": true,
+          "assessment_criterion": "输出未来第 1 到第 10 年，恰好十行。"
+        },
+        {
+          "knowledge_node_id": "python.ch3.arithmetic_expressions",
+          "role": "assessed",
+          "is_primary": false,
+          "assessment_criterion": "先计算 w0+0.5*year，再乘 0.165 得到相应月球体重。"
+        },
+        {
+          "knowledge_node_id": "python.ch7.fstrings_format",
+          "role": "prerequisite",
+          "is_primary": false,
+          "assessment_criterion": ""
+        }
+      ],
+      "reference_answer": "补充约定当前地球体重由用户输入；第year年地球体重w0+0.5*year，月球体重为其0.165倍，year取1至10。",
+      "reference_code": "w0 = float(input('请输入当前地球体重（kg）：'))\nfor year in range(1, 11):\n    earth = w0 + 0.5 * year\n    moon = earth * 0.165\n    print(f'第{year}年：地球{earth:.2f}kg，月球{moon:.2f}kg')",
+      "explanation": "未来10年按第1到第10年处理，不包含当前第0年；年度地球体重先增加，再乘16.5%。原卷未给初始体重，输入是项目明确补充的解题约定。",
+      "correct_option": null,
+      "source_correct_option": null,
+      "answer_origin": "project_annotation",
+      "notes": [
+        "缺少当前体重取得方式，需要在学生题面明确。",
+        "接受等价while循环、累计增长或直接公式；不强制两位小数，但数值和年份应正确。"
+      ],
+      "assumptions": [
+        "补充约定：由用户输入当前地球体重（kg），输出未来第1至第10年的地球与月球体重。"
+      ],
+      "student_clarification": "补充约定：由用户输入当前地球体重（kg），输出未来第1至第10年的地球与月球体重。",
+      "references": [
+        "https://docs.python.org/3/tutorial/controlflow.html#the-range-function",
+        "https://docs.python.org/3/tutorial/introduction.html#numbers"
+      ]
+    }
+  ]
+}

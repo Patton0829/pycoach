@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.graphs import router as graphs_router
+from app.api.exams import router as exams_router
 from app.api.messages import router as messages_router
 from app.api.sessions import router as sessions_router
 from app.api.websockets import router as websockets_router
@@ -17,6 +18,7 @@ app.add_middleware(
 app.include_router(sessions_router)
 app.include_router(messages_router)
 app.include_router(graphs_router)
+app.include_router(exams_router)
 app.include_router(websockets_router)
 
 

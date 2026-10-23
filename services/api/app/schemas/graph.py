@@ -1,12 +1,14 @@
-from typing import List
+from typing import List, Optional
 
 from app.schemas.base import StrictModel
+from app.schemas.assessment import AssessmentMetrics
 
 
-class KnowledgeNodeSummary(StrictModel):
+class KnowledgeNodeSummary(AssessmentMetrics):
     node_id: str
     name: str
     display_status: str
+    chapter_id: Optional[str] = None
 
 
 class ErrorNodeSummary(StrictModel):

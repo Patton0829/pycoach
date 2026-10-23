@@ -15,3 +15,4 @@
 11. 如果题干要求“下列/下面/哪项/哪个选项”，student_content.markdown 必须列出可选择的选项。
 12. 如果 critic_summary.chapter_question_blueprint 存在，必须优先遵守其中的 slot、question_type、difficulty、target_knowledge_node_ids、target_error_ids、pedagogical_strategy、cognitive_goal 和 prompt_brief。
 13. chapter_question_blueprint 的 quality_checks 是出题自检清单；不要把这些内部检查写进 student_content。
+14. personal_knowledge_graph 的 mastery 是 C/max(20,N) 阶段评估分。少于20题时同时查看 accuracy、sample_coverage 和 evaluated_question_count：样本不足不等于能力低，不能仅因题量少就持续给低难度题。

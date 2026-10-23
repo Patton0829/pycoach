@@ -30,6 +30,8 @@ async def create_session(
         return await orchestrator.create_session(request)
     except SessionNotFoundError as error:
         raise HTTPException(status_code=404, detail=str(error)) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
 
 
 @router.get("/{session_id}", response_model=SessionResponse)

@@ -1,6 +1,6 @@
 from typing import Optional, Sequence
 
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
 from app.models.entities import (
@@ -31,6 +31,10 @@ class GraphRepository:
                 (LearnerKnowledgeNode.knowledge_node_id == KnowledgeNode.id)
                 & (LearnerKnowledgeNode.learner_id == learner_id),
             )
+            .where(or_(
+                KnowledgeNode.runtime_enabled.is_(True),
+                LearnerKnowledgeNode.evaluated_question_count > 0,
+            ))
             .order_by(KnowledgeNode.difficulty, KnowledgeNode.id)
         )
         return self.database.execute(statement).all()

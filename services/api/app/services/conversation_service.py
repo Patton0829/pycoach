@@ -54,6 +54,7 @@ def to_critic_context_message(
     message: ConversationMessage,
 ) -> CriticConversationMessage:
     return CriticConversationMessage(
+        message_id=UUID(message.id),
         role=message.role,
         content_markdown=message.content_markdown,
         critic_intent=message.critic_intent,

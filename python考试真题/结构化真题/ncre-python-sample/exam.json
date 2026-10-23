@@ -1,0 +1,2690 @@
+{
+  "schema_version": "pycoach.exam-rag.v1",
+  "document": {
+    "id": "31a16a56-e947-505e-948a-a7075fd42ea0",
+    "title": "全国计算机等级考试（NCRE）二级 Python 语言程序设计 样题及参考答案",
+    "document_type": "sample_exam",
+    "exam_year": null,
+    "file_path": "python考试真题/二级Python语言程序设计——样题及参考答案.pdf",
+    "sha256": "a0f6a19967464aba6bbb5150d4311311672179c963f631eeed6745e7f4956fd8",
+    "page_count": 9
+  },
+  "exam_year_note": "原卷未标明考试年份；PDF创建时间不作为考试年份。",
+  "processing_notes": [
+    "用户提供的样题，未据文件名推断为某年正式真题。",
+    "original_content保留文本原貌，raw_extracted_text保留文本层证据（可含原始不可读字符）。",
+    "student_content只含题面；source答案、质量复核与教学难度分别存储。",
+    "全卷均为离线draft资料，未批准为当前迭代器课程正式题。"
+  ],
+  "questions": [
+    {
+      "question_id": "ncre-python-sample-q001",
+      "question_number": 1,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "下面不是 IPO 模式的一部分的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "Input"
+          },
+          {
+            "label": "B",
+            "text": "Program"
+          },
+          {
+            "label": "C",
+            "text": "Process"
+          },
+          {
+            "label": "D",
+            "text": "Output"
+          }
+        ]
+      },
+      "raw_extracted_text": "下面不是 IPO 模式的一部分的是\nA）Input\nB）Program\nC）Process\nD）Output",
+      "student_content": {
+        "markdown": "下面不是 IPO 模式的一部分的是\n\nA. Input\n\nB. Program\n\nC. Process\n\nD. Output",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          1
+        ],
+        "stem_pdf_pages": [
+          1
+        ],
+        "options_pdf_pages": [
+          1
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "B",
+        "source_text": "1.B",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 1.B；原卷未提供解析。",
+      "topic_tags": [
+        "IPO 模式",
+        "输入处理输出"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "识别一个基础概念。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [],
+      "retrieval_ready": true,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q002",
+      "question_number": 2,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "在 Python3.X 版本中语句输出正确的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": ">>>3/2\n1.50"
+          },
+          {
+            "label": "B",
+            "text": ">>>3/2\n1"
+          },
+          {
+            "label": "C",
+            "text": ">>>3//2\n1"
+          },
+          {
+            "label": "D",
+            "text": ">>>3//2\n1.5"
+          }
+        ]
+      },
+      "raw_extracted_text": "在 Python3.X 版本中语句输出正确的是\nA）\n>>>3/2\n1.50\nB）\n>>>3/2\n1\nC）\n>>>3//2\n1\nD）\n>>>3//2\n1.5",
+      "student_content": {
+        "markdown": "在 Python3.X 版本中语句输出正确的是\n\nA.\n\n```pycon\n>>>3/2\n1.50\n```\n\nB.\n\n```pycon\n>>>3/2\n1\n```\n\nC.\n\n```pycon\n>>>3//2\n1\n```\n\nD.\n\n```pycon\n>>>3//2\n1.5\n```",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          1
+        ],
+        "stem_pdf_pages": [
+          1
+        ],
+        "options_pdf_pages": [
+          1
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "C",
+        "source_text": "2.C",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 2.C；原卷未提供解析。",
+      "topic_tags": [
+        "Python 3",
+        "真除法 /",
+        "整除 //",
+        "交互式输出"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "比较两个基础运算符与显示形式。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "display_form_matters",
+          "severity": "advisory",
+          "description": "A项1.50与1.5数值相等，本题按交互式解释器默认显示区分；不改原选项。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": true,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q003",
+      "question_number": 3,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "下面语句输出正确的是",
+        "code": ">>>TempStr = “105C”\n>>>eval(TempStr[0:-1])",
+        "options": [
+          {
+            "label": "A",
+            "text": "105"
+          },
+          {
+            "label": "B",
+            "text": "105C"
+          },
+          {
+            "label": "C",
+            "text": "C"
+          },
+          {
+            "label": "D",
+            "text": "1"
+          }
+        ]
+      },
+      "raw_extracted_text": "下面语句输出正确的是\n>>>TempStr = “105C”\n>>>eval(TempStr[0:-1])\nA）105\nB）105C\nC）C\nD）1",
+      "student_content": {
+        "markdown": "下面语句输出正确的是\n\n```pycon\n>>>TempStr = \"105C\"\n>>>eval(TempStr[0:-1])\n```\n\nA. 105\n\nB. 105C\n\nC. C\n\nD. 1",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          1,
+          2
+        ],
+        "stem_pdf_pages": [
+          1
+        ],
+        "options_pdf_pages": [
+          2
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "A",
+        "source_text": "3.A",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 3.A；原卷未提供解析。",
+      "topic_tags": [
+        "字符串切片",
+        "负索引",
+        "eval()"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "先进行切片，再判断表达式求值。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [],
+      "retrieval_ready": true,
+      "normalizations": [
+        {
+          "field": "student_content.markdown: code",
+          "before": ">>>TempStr = “105C”\n>>>eval(TempStr[0:-1])",
+          "after": ">>>TempStr = \"105C\"\n>>>eval(TempStr[0:-1])",
+          "reason": "将视觉确认的成对排版引号规范为代码定界符；原始文本保持不变。"
+        }
+      ],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q004",
+      "question_number": 4,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "Python 语言中表示八进制的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "0b1708"
+          },
+          {
+            "label": "B",
+            "text": "0B1010"
+          },
+          {
+            "label": "C",
+            "text": "0B1019"
+          },
+          {
+            "label": "D",
+            "text": "0bC3F"
+          }
+        ]
+      },
+      "raw_extracted_text": "Python 语言中表示八进制的是\nA）0b1708\nB）0B1010\nC）0B1019\nD）0bC3F",
+      "student_content": {
+        "markdown": "Python 语言中表示八进制的是\n\nA. 0b1708\n\nB. 0B1010\n\nC. 0B1019\n\nD. 0bC3F",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          2
+        ],
+        "stem_pdf_pages": [
+          2
+        ],
+        "options_pdf_pages": [
+          2
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "B",
+        "source_text": "4.B",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 4.B；原卷未提供解析。",
+      "topic_tags": [
+        "整数进制",
+        "二进制",
+        "八进制",
+        "字面量前缀"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "识别整数进制前缀；源卷存在冲突。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "stem_option_radix_conflict",
+          "severity": "blocking",
+          "description": "题干问八进制，但选项都使用0b/0B前缀；原卷答案为B。保留冲突，不将题干静默改成二进制。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": false,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q005",
+      "question_number": 5,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "1.23e-4+5.67e+8j.real 语句的输出结果正确的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "0.000123"
+          },
+          {
+            "label": "B",
+            "text": "1.23"
+          },
+          {
+            "label": "C",
+            "text": "5.67e+8"
+          },
+          {
+            "label": "D",
+            "text": "1.23e-4"
+          }
+        ]
+      },
+      "raw_extracted_text": "1.23e-4+5.67e+8j.real 语句的输出结果正确的是\nA）0.000123\nB）1.23\nC）5.67e+8\nD）1.23e-4",
+      "student_content": {
+        "markdown": "1.23e-4+5.67e+8j.real 语句的输出结果正确的是\n\nA. 0.000123\n\nB. 1.23\n\nC. 5.67e+8\n\nD. 1.23e-4",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          2
+        ],
+        "stem_pdf_pages": [
+          2
+        ],
+        "options_pdf_pages": [
+          2
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "A",
+        "source_text": "5.A",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 5.A；原卷未提供解析。",
+      "topic_tags": [
+        "科学计数法",
+        "复数",
+        "real 属性",
+        "浮点数显示"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "结合复数实部、运算优先级与默认显示。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "display_form_matters",
+          "severity": "advisory",
+          "description": "A项0.000123与D项1.23e-4数值相等；原卷按默认输出形式给A。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": true,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q006",
+      "question_number": 6,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "下面对 Python 语言浮点数类型描述不正确的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "浮点数类型与数学中实数的概念一致"
+          },
+          {
+            "label": "B",
+            "text": "浮点数类型表示带有小数的类型"
+          },
+          {
+            "label": "C",
+            "text": "Python 语言要求所有浮点数必须带有小数部分"
+          },
+          {
+            "label": "D",
+            "text": "小数部分不可以为 0"
+          }
+        ]
+      },
+      "raw_extracted_text": "下面对 Python 语言浮点数类型描述不正确的是\nA）浮点数类型与数学中实数的概念一致\nB）浮点数类型表示带有小数的类型\nC）Python 语言要求所有浮点数必须带有小数部分\nD）小数部分不可以为 0",
+      "student_content": {
+        "markdown": "下面对 Python 语言浮点数类型描述不正确的是\n\nA. 浮点数类型与数学中实数的概念一致\n\nB. 浮点数类型表示带有小数的类型\n\nC. Python 语言要求所有浮点数必须带有小数部分\n\nD. 小数部分不可以为 0",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          2
+        ],
+        "stem_pdf_pages": [
+          2
+        ],
+        "options_pdf_pages": [
+          2
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "D",
+        "source_text": "6.D",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 6.D；原卷未提供解析。",
+      "topic_tags": [
+        "浮点数",
+        "小数部分",
+        "科学计数法",
+        "有限精度"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "基础类型概念；源卷表述需要复核。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "float_description_ambiguity",
+          "severity": "blocking",
+          "description": "A把有限精度浮点数与数学实数概念等同，C声称所有浮点数必须带小数部分；按严格语义可能不止一项有问题，原卷仅给D。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": false,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q007",
+      "question_number": 7,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "下面对 Python 语言内置操作符描述不正确的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "x/y 表示 x 与 y 之商"
+          },
+          {
+            "label": "B",
+            "text": "x//y 表示 x 与 y 之整数商，即不大于 x 与 y 之商的最大整数"
+          },
+          {
+            "label": "C",
+            "text": "x%y 表示 x 与 y 之整数商，即不大于 x 与 y 之商的最大整数"
+          },
+          {
+            "label": "D",
+            "text": "x%y 表示 x 与 y 之商的余数，也称为模运算"
+          }
+        ]
+      },
+      "raw_extracted_text": "下面对 Python 语言内置操作符描述不正确的是\nA）x/y 表示 x 与 y 之商\nB）x//y 表示 x 与 y 之整数商，即不大于 x 与 y 之商的最大整数\nC）x%y 表示 x 与 y 之整数商，即不大于 x 与 y 之商的最大整数\nD）x%y 表示 x 与 y 之商的余数，也称为模运算",
+      "student_content": {
+        "markdown": "下面对 Python 语言内置操作符描述不正确的是\n\nA. x/y 表示 x 与 y 之商\n\nB. x//y 表示 x 与 y 之整数商，即不大于 x 与 y 之商的最大整数\n\nC. x%y 表示 x 与 y 之整数商，即不大于 x 与 y 之商的最大整数\n\nD. x%y 表示 x 与 y 之商的余数，也称为模运算",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          2
+        ],
+        "stem_pdf_pages": [
+          2
+        ],
+        "options_pdf_pages": [
+          2
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "C",
+        "source_text": "7.C",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 7.C；原卷未提供解析。",
+      "topic_tags": [
+        "算术运算符",
+        "真除法 /",
+        "整除 //",
+        "取模 %"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "区分基础算术运算。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [],
+      "retrieval_ready": true,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q008",
+      "question_number": 8,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "在 Python 语言中，如果 x=3，则执行语句+x 的结果是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "0"
+          },
+          {
+            "label": "B",
+            "text": "3"
+          },
+          {
+            "label": "C",
+            "text": "6"
+          },
+          {
+            "label": "D",
+            "text": "9"
+          }
+        ]
+      },
+      "raw_extracted_text": "在 Python 语言中，如果 x=3，则执行语句+x 的结果是\nA）0\nB）3\nC）6\nD）9",
+      "student_content": {
+        "markdown": "在 Python 语言中，如果 x=3，则执行语句+x 的结果是\n\nA. 0\n\nB. 3\n\nC. 6\n\nD. 9",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          2,
+          3
+        ],
+        "stem_pdf_pages": [
+          2
+        ],
+        "options_pdf_pages": [
+          2,
+          3
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "B",
+        "source_text": "8.B",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 8.B；原卷未提供解析。",
+      "topic_tags": [
+        "一元运算符",
+        "正号",
+        "数值表达式"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "判断一元正号的结果。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [],
+      "retrieval_ready": true,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q009",
+      "question_number": 9,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "下面语句输出正确的是",
+        "code": ">>>abs(-3+4j)",
+        "options": [
+          {
+            "label": "A",
+            "text": "3"
+          },
+          {
+            "label": "B",
+            "text": "4"
+          },
+          {
+            "label": "C",
+            "text": "5"
+          },
+          {
+            "label": "D",
+            "text": "5.0"
+          }
+        ]
+      },
+      "raw_extracted_text": "下面语句输出正确的是\n>>>abs(-3+4j)\nA）3\nB）4\nC）5\nD）5.0",
+      "student_content": {
+        "markdown": "下面语句输出正确的是\n\n```pycon\n>>>abs(-3+4j)\n```\n\nA. 3\n\nB. 4\n\nC. 5\n\nD. 5.0",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          3
+        ],
+        "stem_pdf_pages": [
+          3
+        ],
+        "options_pdf_pages": [
+          3
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "D",
+        "source_text": "9.D",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 9.D；原卷未提供解析。",
+      "topic_tags": [
+        "复数",
+        "abs()",
+        "模长",
+        "浮点数显示"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "由复数实部与虚部判断模长及显示。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "display_form_matters",
+          "severity": "advisory",
+          "description": "选项5与5.0数值相等，原卷按返回类型及显示形式给D。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": true,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q010",
+      "question_number": 10,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "假设 x=1， x*=3+5**2 的运算结果是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "13"
+          },
+          {
+            "label": "B",
+            "text": "14"
+          },
+          {
+            "label": "C",
+            "text": "28"
+          },
+          {
+            "label": "D",
+            "text": "29"
+          }
+        ]
+      },
+      "raw_extracted_text": "假设 x=1， x*=3+5**2 的运算结果是\nA）13\nB）14\nC）28\nD）29",
+      "student_content": {
+        "markdown": "假设 x=1， x*=3+5**2 的运算结果是\n\nA. 13\n\nB. 14\n\nC. 28\n\nD. 29",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          3
+        ],
+        "stem_pdf_pages": [
+          3
+        ],
+        "options_pdf_pages": [
+          3
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "C",
+        "source_text": "10.C",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 10.C；原卷未提供解析。",
+      "topic_tags": [
+        "增强赋值",
+        "运算优先级",
+        "幂运算 **"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "先计算幂与加法，再应用增强赋值。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [],
+      "retrieval_ready": true,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q011",
+      "question_number": 11,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "如果 name =“全国计算机等级考试二级 Python”下面输出错误的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": ">>> print(name[0], name[8], name[-1])\n全 试"
+          },
+          {
+            "label": "B",
+            "text": ">>>print(name[:])\n全国计算机等级考试二级 Python"
+          },
+          {
+            "label": "C",
+            "text": ">>> print(name[11:])\nPython"
+          },
+          {
+            "label": "D",
+            "text": ">>> print(name[:11])\n全国计算机等级考试二级"
+          }
+        ]
+      },
+      "raw_extracted_text": "如果 name =“全国计算机等级考试二级 Python”下面输出错误的是\nA）\n>>> print(name[0], name[8], name[-1])\n全 试\nB）\n>>>print(name[:])\n全国计算机等级考试二级 Python\nC）\n>>> print(name[11:])\nPython\nD）\n>>> print(name[:11])\n全国计算机等级考试二级",
+      "student_content": {
+        "markdown": "如果 name =“全国计算机等级考试二级 Python”下面输出错误的是\n\nA.\n\n```pycon\n>>> print(name[0], name[8], name[-1])\n全 试\n```\n\nB.\n\n```pycon\n>>>print(name[:])\n全国计算机等级考试二级 Python\n```\n\nC.\n\n```pycon\n>>> print(name[11:])\nPython\n```\n\nD.\n\n```pycon\n>>> print(name[:11])\n全国计算机等级考试二级\n```",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          3
+        ],
+        "stem_pdf_pages": [
+          3
+        ],
+        "options_pdf_pages": [
+          3
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "A",
+        "source_text": "11.A",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 11.A；原卷未提供解析。",
+      "topic_tags": [
+        "字符串索引",
+        "负索引",
+        "字符串切片",
+        "print()"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "核对中文、空格与英文混合字符串的位置。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "whitespace_layout",
+          "severity": "advisory",
+          "description": "A项原图确实缺少最后一个n，原卷答案A有依据；C/D中的首尾空格在PDF排版中不清晰，保留文本层及物理页定位。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": true,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q012",
+      "question_number": 12,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "下列表达式错误的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "‘abcd’<’ad’"
+          },
+          {
+            "label": "B",
+            "text": "‘abc’<’abcd’"
+          },
+          {
+            "label": "C",
+            "text": "“<’a’"
+          },
+          {
+            "label": "D",
+            "text": "‘Hello’>’hello’"
+          }
+        ]
+      },
+      "raw_extracted_text": "下列表达式错误的是\nA）‘abcd’<’ad’\nB）‘abc’<’abcd’\nC）“<’a’\nD）‘Hello’>’hello’",
+      "student_content": {
+        "markdown": "下列表达式错误的是\n\nA. ‘abcd’<’ad’\n\nB. ‘abc’<’abcd’\n\nC. “<’a’\n\nD. ‘Hello’>’hello’",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          3,
+          4
+        ],
+        "stem_pdf_pages": [
+          3
+        ],
+        "options_pdf_pages": [
+          3,
+          4
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "D",
+        "source_text": "12.D",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 12.D；原卷未提供解析。",
+      "topic_tags": [
+        "字符串比较",
+        "字典序",
+        "大小写",
+        "引号"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "涉及比较语义及源卷引号缺损。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "damaged_quote_not_repaired",
+          "severity": "blocking",
+          "description": "C项原图为“<’a’，引号缺损或混排，无法确认是否为空字符串比较；不补造缺失引号。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": false,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q013",
+      "question_number": 13,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "下列程序运行结果正确的是",
+        "code": ">>> s = ‘PYTHON’\n>>> “{0:3}”.format(s)",
+        "options": [
+          {
+            "label": "A",
+            "text": "‘PYT’"
+          },
+          {
+            "label": "B",
+            "text": "‘PYTH’"
+          },
+          {
+            "label": "C",
+            "text": "‘PYTHON’"
+          },
+          {
+            "label": "D",
+            "text": "‘ PYTHON’"
+          }
+        ]
+      },
+      "raw_extracted_text": "下列程序运行结果正确的是\n>>> s = ‘PYTHON’\n>>> “{0:3}”.format(s)\nA）‘PYT’\nB）‘PYTH’\nC）‘PYTHON’\nD）‘ PYTHON’",
+      "student_content": {
+        "markdown": "下列程序运行结果正确的是\n\n```pycon\n>>> s = 'PYTHON'\n>>> \"{0:3}\".format(s)\n```\n\nA. ‘PYT’\n\nB. ‘PYTH’\n\nC. ‘PYTHON’\n\nD. ‘ PYTHON’",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          4
+        ],
+        "stem_pdf_pages": [
+          4
+        ],
+        "options_pdf_pages": [
+          4
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "C",
+        "source_text": "13.C",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 13.C；原卷未提供解析。",
+      "topic_tags": [
+        "字符串格式化",
+        "format()",
+        "最小字段宽度"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "区分最小宽度与截断长度。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "option_spacing_layout",
+          "severity": "advisory",
+          "description": "D项引号内的排版空格按文本层保留，原卷答案为C；可回查第4页原图。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": true,
+      "normalizations": [
+        {
+          "field": "student_content.markdown: code",
+          "before": ">>> s = ‘PYTHON’\n>>> “{0:3}”.format(s)",
+          "after": ">>> s = 'PYTHON'\n>>> \"{0:3}\".format(s)",
+          "reason": "将视觉确认的成对排版引号规范为代码定界符；原始文本保持不变。"
+        }
+      ],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q014",
+      "question_number": 14,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "程序的基本结构包括",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "顺序结构"
+          },
+          {
+            "label": "B",
+            "text": "分支结构"
+          },
+          {
+            "label": "C",
+            "text": "循环结构"
+          },
+          {
+            "label": "D",
+            "text": "跳转结构"
+          }
+        ]
+      },
+      "raw_extracted_text": "程序的基本结构包括\nA）顺序结构\nB）分支结构\nC）循环结构\nD）跳转结构",
+      "student_content": {
+        "markdown": "程序的基本结构包括\n\nA. 顺序结构\n\nB. 分支结构\n\nC. 循环结构\n\nD. 跳转结构",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          4
+        ],
+        "stem_pdf_pages": [
+          4
+        ],
+        "options_pdf_pages": [
+          4
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "C",
+        "source_text": "14.C",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 14.C；原卷未提供解析。",
+      "topic_tags": [
+        "程序基本结构",
+        "顺序结构",
+        "分支结构",
+        "循环结构"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "基础结构识别；单选题意存在歧义。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "multiple_valid_options",
+          "severity": "blocking",
+          "description": "题干问基本结构“包括”，A顺序、B分支、C循环均符合，而题型为单选且原卷仅给C。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": false,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q015",
+      "question_number": 15,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "以下可以结束一个循环的保留字是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "If"
+          },
+          {
+            "label": "B",
+            "text": "continue"
+          },
+          {
+            "label": "C",
+            "text": "break"
+          },
+          {
+            "label": "D",
+            "text": "exit"
+          }
+        ]
+      },
+      "raw_extracted_text": "以下可以结束一个循环的保留字是\nA）If\nB）continue\nC）break\nD）exit",
+      "student_content": {
+        "markdown": "以下可以结束一个循环的保留字是\n\nA. If\n\nB. continue\n\nC. break\n\nD. exit",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          4
+        ],
+        "stem_pdf_pages": [
+          4
+        ],
+        "options_pdf_pages": [
+          4
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "B",
+        "source_text": "15.B",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 15.B；原卷未提供解析。",
+      "topic_tags": [
+        "循环控制",
+        "break",
+        "continue",
+        "保留字"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "区分终止循环与开始下一次迭代。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "reference_answer_conflict",
+          "severity": "blocking",
+          "description": "题干问结束一个循环，原卷给B continue；continue通常进入下一次迭代，结束整个循环的是C break。原卷答案仍保留B，不当作可直接使用的正确答案。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": false,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q016",
+      "question_number": 16,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "下面对分支结构描述不正确的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "If 语句中语句块执行与否依赖于条件判断。"
+          },
+          {
+            "label": "B",
+            "text": "if 语句中条件部分可以使用任何能够产生 True 和 False 的语句和函数。"
+          },
+          {
+            "label": "C",
+            "text": "Python 通过 if、else 保留字来实现单分支、二分支和多分支结构。"
+          },
+          {
+            "label": "D",
+            "text": "多分支结构是二分支结构的扩展，用于设置同一个判断条件的多条执行路径。"
+          }
+        ]
+      },
+      "raw_extracted_text": "下面对分支结构描述不正确的是\nA）If 语句中语句块执行与否依赖于条件判断。\nB）if 语句中条件部分可以使用任何能够产生 True 和 False 的语句和函数。\nC）Python 通过 if、else 保留字来实现单分支、二分支和多分支结构。\nD）多分支结构是二分支结构的扩展，用于设置同一个判断条件的多条执行路径。",
+      "student_content": {
+        "markdown": "下面对分支结构描述不正确的是\n\nA. If 语句中语句块执行与否依赖于条件判断。\n\nB. if 语句中条件部分可以使用任何能够产生 True 和 False 的语句和函数。\n\nC. Python 通过 if、else 保留字来实现单分支、二分支和多分支结构。\n\nD. 多分支结构是二分支结构的扩展，用于设置同一个判断条件的多条执行路径。",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          4
+        ],
+        "stem_pdf_pages": [
+          4
+        ],
+        "options_pdf_pages": [
+          4
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "C",
+        "source_text": "16.C",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 16.C；原卷未提供解析。",
+      "topic_tags": [
+        "分支结构",
+        "if",
+        "elif",
+        "else",
+        "条件表达式"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "比较分支结构相关描述的准确性。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "conditional_wording_ambiguity",
+          "severity": "blocking",
+          "description": "B以“语句和函数”描述条件，C遗漏elif，D以“同一个判断条件”描述多分支；存在多种解读，原卷给C，需复核单选唯一性。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": false,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q017",
+      "question_number": 17,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "下面关于函数描述不正确的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "函数是一段具有特定功能的语句组。"
+          },
+          {
+            "label": "B",
+            "text": "函数是一段可重用的语句组。"
+          },
+          {
+            "label": "C",
+            "text": "函数通过函数名进行调用。"
+          },
+          {
+            "label": "D",
+            "text": "每次使用函数需要提供相同的参数作为输入。"
+          }
+        ]
+      },
+      "raw_extracted_text": "下面关于函数描述不正确的是\nA）函数是一段具有特定功能的语句组。\nB）函数是一段可重用的语句组。\nC）函数通过函数名进行调用。\nD）每次使用函数需要提供相同的参数作为输入。",
+      "student_content": {
+        "markdown": "下面关于函数描述不正确的是\n\nA. 函数是一段具有特定功能的语句组。\n\nB. 函数是一段可重用的语句组。\n\nC. 函数通过函数名进行调用。\n\nD. 每次使用函数需要提供相同的参数作为输入。",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          4
+        ],
+        "stem_pdf_pages": [
+          4
+        ],
+        "options_pdf_pages": [
+          4
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "D",
+        "source_text": "17.D",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 17.D；原卷未提供解析。",
+      "topic_tags": [
+        "函数",
+        "代码复用",
+        "参数",
+        "函数调用"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "识别函数定义与调用的基本概念。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [],
+      "retrieval_ready": true,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q018",
+      "question_number": 18,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "Python 中定义函数的关键字是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "define"
+          },
+          {
+            "label": "B",
+            "text": "return"
+          },
+          {
+            "label": "C",
+            "text": "def"
+          },
+          {
+            "label": "D",
+            "text": "function"
+          }
+        ]
+      },
+      "raw_extracted_text": "Python 中定义函数的关键字是\nA）define\nB）return\nC）def\nD）function",
+      "student_content": {
+        "markdown": "Python 中定义函数的关键字是\n\nA. define\n\nB. return\n\nC. def\n\nD. function",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          5
+        ],
+        "stem_pdf_pages": [
+          5
+        ],
+        "options_pdf_pages": [
+          5
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "C",
+        "source_text": "18.C",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 18.C；原卷未提供解析。",
+      "topic_tags": [
+        "函数定义",
+        "def",
+        "关键字"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "识别函数定义关键字。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [],
+      "retrieval_ready": true,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q019",
+      "question_number": 19,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "关于递归描述不正确的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "函数定义中调用函数自身的方式称为递归。"
+          },
+          {
+            "label": "B",
+            "text": "递归只能存在一个基例。"
+          },
+          {
+            "label": "C",
+            "text": "默认情况下，当递归调用到 1000 层，Python 解释器将终止程序。"
+          },
+          {
+            "label": "D",
+            "text": "递归不是循环。"
+          }
+        ]
+      },
+      "raw_extracted_text": "关于递归描述不正确的是\nA）函数定义中调用函数自身的方式称为递归。\nB）递归只能存在一个基例。\nC）默认情况下，当递归调用到 1000 层，Python 解释器将终止程序。\nD）递归不是循环。",
+      "student_content": {
+        "markdown": "关于递归描述不正确的是\n\nA. 函数定义中调用函数自身的方式称为递归。\n\nB. 递归只能存在一个基例。\n\nC. 默认情况下，当递归调用到 1000 层，Python 解释器将终止程序。\n\nD. 递归不是循环。",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          5
+        ],
+        "stem_pdf_pages": [
+          5
+        ],
+        "options_pdf_pages": [
+          5
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "B",
+        "source_text": "19.B",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 19.B；原卷未提供解析。",
+      "topic_tags": [
+        "递归",
+        "基例",
+        "递归深度",
+        "异常"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "辨别递归的基例与实现边界。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "implementation_specific_claim",
+          "severity": "advisory",
+          "description": "C关于1000层及解释器终止的表述依赖实现和运行设置；原卷答案B有依据，不能把C原文当作跨实现的精确定律。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": true,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q020",
+      "question_number": 20,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "下列不属于组合数据类型的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "序列类型"
+          },
+          {
+            "label": "B",
+            "text": "集合类型"
+          },
+          {
+            "label": "C",
+            "text": "字典类型"
+          },
+          {
+            "label": "D",
+            "text": "映射类型"
+          }
+        ]
+      },
+      "raw_extracted_text": "下列不属于组合数据类型的是\nA）序列类型\nB）集合类型\nC）字典类型\nD）映射类型",
+      "student_content": {
+        "markdown": "下列不属于组合数据类型的是\n\nA. 序列类型\n\nB. 集合类型\n\nC. 字典类型\n\nD. 映射类型",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          5
+        ],
+        "stem_pdf_pages": [
+          5
+        ],
+        "options_pdf_pages": [
+          5
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "C",
+        "source_text": "20.C",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 20.C；原卷未提供解析。",
+      "topic_tags": [
+        "组合数据类型",
+        "序列",
+        "集合",
+        "映射",
+        "字典"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "涉及类型分类层级。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "taxonomy_ambiguity",
+          "severity": "blocking",
+          "description": "原卷给C字典类型，但字典本身属于组合数据类型并实现映射；题目可能混用分类层级，需复核。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": false,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q021",
+      "question_number": 21,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "下面对元组描述不正确的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "元组是一种集合类型。"
+          },
+          {
+            "label": "B",
+            "text": "元组一旦被创建就不能被修改。"
+          },
+          {
+            "label": "C",
+            "text": "一个元组可以作为另外一个元组的元素。"
+          },
+          {
+            "label": "D",
+            "text": "Python 语言中元组可以采用逗号和圆括号来表示。"
+          }
+        ]
+      },
+      "raw_extracted_text": "下面对元组描述不正确的是\nA）元组是一种集合类型。\nB）元组一旦被创建就不能被修改。\nC）一个元组可以作为另外一个元组的元素。\nD）Python 语言中元组可以采用逗号和圆括号来表示。",
+      "student_content": {
+        "markdown": "下面对元组描述不正确的是\n\nA. 元组是一种集合类型。\n\nB. 元组一旦被创建就不能被修改。\n\nC. 一个元组可以作为另外一个元组的元素。\n\nD. Python 语言中元组可以采用逗号和圆括号来表示。",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          5
+        ],
+        "stem_pdf_pages": [
+          5
+        ],
+        "options_pdf_pages": [
+          5
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "A",
+        "source_text": "21.A",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 21.A；原卷未提供解析。",
+      "topic_tags": [
+        "元组",
+        "序列",
+        "不可变性",
+        "嵌套容器"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "识别元组的基本性质。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [],
+      "retrieval_ready": true,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q022",
+      "question_number": 22,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "列表 ls=[[1,2,3],[[4,5],6],[7,8]]，则 len(ls)的值是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "1"
+          },
+          {
+            "label": "B",
+            "text": "3"
+          },
+          {
+            "label": "C",
+            "text": "4"
+          },
+          {
+            "label": "D",
+            "text": "8"
+          }
+        ]
+      },
+      "raw_extracted_text": "列表 ls=[[1,2,3],[[4,5],6],[7,8]]，则 len(ls)的值是\nA）1\nB）3\nC）4\nD）8",
+      "student_content": {
+        "markdown": "列表 ls=[[1,2,3],[[4,5],6],[7,8]]，则 len(ls)的值是\n\nA. 1\n\nB. 3\n\nC. 4\n\nD. 8",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          5
+        ],
+        "stem_pdf_pages": [
+          5
+        ],
+        "options_pdf_pages": [
+          5
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "B",
+        "source_text": "22.B",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 22.B；原卷未提供解析。",
+      "topic_tags": [
+        "列表",
+        "嵌套列表",
+        "len()",
+        "顶层元素"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "统计嵌套列表的顶层元素。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [],
+      "retrieval_ready": true,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q023",
+      "question_number": 23,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "下面是错误的字典创建方式的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "d = {1:[1,2], 3:[3,4]}"
+          },
+          {
+            "label": "B",
+            "text": "d = {[1,2]:1, [3,4]:3}"
+          },
+          {
+            "label": "C",
+            "text": "d = {(1,2):1, (3,4):3}"
+          },
+          {
+            "label": "D",
+            "text": "d = {'张三':1, '李四':2}"
+          }
+        ]
+      },
+      "raw_extracted_text": "下面是错误的字典创建方式的是\nA）d = {1:[1,2], 3:[3,4]}\nB）d = {[1,2]:1, [3,4]:3}\nC）d = {(1,2):1, (3,4):3}\nD）d = {'张三':1, '李四':2}",
+      "student_content": {
+        "markdown": "下面是错误的字典创建方式的是\n\nA. d = {1:[1,2], 3:[3,4]}\n\nB. d = {[1,2]:1, [3,4]:3}\n\nC. d = {(1,2):1, (3,4):3}\n\nD. d = {'张三':1, '李四':2}",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          5,
+          6
+        ],
+        "stem_pdf_pages": [
+          5
+        ],
+        "options_pdf_pages": [
+          5,
+          6
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "B",
+        "source_text": "23.B",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 23.B；原卷未提供解析。",
+      "topic_tags": [
+        "字典",
+        "键",
+        "可哈希性",
+        "列表",
+        "元组"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "比较不同类型作为字典键的可行性。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [],
+      "retrieval_ready": true,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q024",
+      "question_number": 24,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "下列不属于 Python 对文件的读操作方法的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "read"
+          },
+          {
+            "label": "B",
+            "text": "readline"
+          },
+          {
+            "label": "C",
+            "text": "readall"
+          },
+          {
+            "label": "D",
+            "text": "readtext"
+          }
+        ]
+      },
+      "raw_extracted_text": "下列不属于 Python 对文件的读操作方法的是\nA）read\nB）readline\nC）readall\nD）readtext",
+      "student_content": {
+        "markdown": "下列不属于 Python 对文件的读操作方法的是\n\nA. read\n\nB. readline\n\nC. readall\n\nD. readtext",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          6
+        ],
+        "stem_pdf_pages": [
+          6
+        ],
+        "options_pdf_pages": [
+          6
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "D",
+        "source_text": "24.D",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 24.D；原卷未提供解析。",
+      "topic_tags": [
+        "文件读取",
+        "read()",
+        "readline()",
+        "readall()",
+        "文件对象类型"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "文件方法识别依赖具体对象类型。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "file_object_context_missing",
+          "severity": "blocking",
+          "description": "原卷给D readtext。readall在原始二进制文件对象上可以存在，常见文本/缓冲文件对象的方法又不同；题目未限定文件对象，保守隔离待复核，不能直接宣称readall不存在。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": false,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q025",
+      "question_number": 25,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "下面对文件描述错误的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "文件是一个存储在辅助存储器上的数据序列。"
+          },
+          {
+            "label": "B",
+            "text": "文件中可以包含任何数据内容。"
+          },
+          {
+            "label": "C",
+            "text": "文本文件和二进制文件都是文件。"
+          },
+          {
+            "label": "D",
+            "text": "文本文件不能用二进制文件方式读入。"
+          }
+        ]
+      },
+      "raw_extracted_text": "下面对文件描述错误的是\nA）文件是一个存储在辅助存储器上的数据序列。\nB）文件中可以包含任何数据内容。\nC）文本文件和二进制文件都是文件。\nD）文本文件不能用二进制文件方式读入。",
+      "student_content": {
+        "markdown": "下面对文件描述错误的是\n\nA. 文件是一个存储在辅助存储器上的数据序列。\n\nB. 文件中可以包含任何数据内容。\n\nC. 文本文件和二进制文件都是文件。\n\nD. 文本文件不能用二进制文件方式读入。",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          6
+        ],
+        "stem_pdf_pages": [
+          6
+        ],
+        "options_pdf_pages": [
+          6
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "D",
+        "source_text": "25.D",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 25.D；原卷未提供解析。",
+      "topic_tags": [
+        "文件",
+        "文本模式",
+        "二进制模式",
+        "数据存储"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "区分文件内容与读入方式。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [],
+      "retrieval_ready": true,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q026",
+      "question_number": 26,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "假设 ls = [3.5, “Python”, [10, “LIST”], 3.6]，则执行 ls[2][-1][1]的结果为",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "L"
+          },
+          {
+            "label": "B",
+            "text": "I"
+          },
+          {
+            "label": "C",
+            "text": "P"
+          },
+          {
+            "label": "D",
+            "text": "Y"
+          }
+        ]
+      },
+      "raw_extracted_text": "假设 ls = [3.5, “Python”, [10, “LIST”], 3.6]，则执行 ls[2][-1][1]的结果为\nA）L\nB）I\nC）P\nD）Y",
+      "student_content": {
+        "markdown": "假设 ls = [3.5, “Python”, [10, “LIST”], 3.6]，则执行 ls[2][-1][1]的结果为\n\nA. L\n\nB. I\n\nC. P\n\nD. Y",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          6
+        ],
+        "stem_pdf_pages": [
+          6
+        ],
+        "options_pdf_pages": [
+          6
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "B",
+        "source_text": "26.B",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 26.B；原卷未提供解析。",
+      "topic_tags": [
+        "嵌套索引",
+        "列表",
+        "字符串",
+        "负索引"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "依次完成三层索引。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [],
+      "retrieval_ready": true,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q027",
+      "question_number": 27,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "不改变绘制方向的 Turtle 命令是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "turtle.fd()"
+          },
+          {
+            "label": "B",
+            "text": "turtle.seth()"
+          },
+          {
+            "label": "C",
+            "text": "turtle.right()"
+          },
+          {
+            "label": "D",
+            "text": "turtle.circle()"
+          }
+        ]
+      },
+      "raw_extracted_text": "不改变绘制方向的 Turtle 命令是\nA）turtle.fd()\nB）turtle.seth()\nC）turtle.right()\nD）turtle.circle()",
+      "student_content": {
+        "markdown": "不改变绘制方向的 Turtle 命令是\n\nA. turtle.fd()\n\nB. turtle.seth()\n\nC. turtle.right()\n\nD. turtle.circle()",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          6
+        ],
+        "stem_pdf_pages": [
+          6
+        ],
+        "options_pdf_pages": [
+          6
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "A",
+        "source_text": "27.A",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 27.A；原卷未提供解析。",
+      "topic_tags": [
+        "turtle",
+        "fd()",
+        "seth()",
+        "right()",
+        "circle()",
+        "方向"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "区分移动命令与方向变化。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "heading_timeframe_ambiguity",
+          "severity": "blocking",
+          "description": "原卷给A。circle绘制过程中改变方向，完整圆结束后可恢复方向；“不改变绘制方向”未区分过程与最终状态。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": false,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q028",
+      "question_number": 28,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "在 Turtle 绘图中表示颜色值不正确的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "“grey”"
+          },
+          {
+            "label": "B",
+            "text": "(190, 190, 190)"
+          },
+          {
+            "label": "C",
+            "text": "BEBEBE"
+          },
+          {
+            "label": "D",
+            "text": "#BEBEBE"
+          }
+        ]
+      },
+      "raw_extracted_text": "在 Turtle 绘图中表示颜色值不正确的是\nA）“grey”\nB）(190, 190, 190)\nC）BEBEBE\nD）#BEBEBE",
+      "student_content": {
+        "markdown": "在 Turtle 绘图中表示颜色值不正确的是\n\nA. “grey”\n\nB. (190, 190, 190)\n\nC. BEBEBE\n\nD. #BEBEBE",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          6
+        ],
+        "stem_pdf_pages": [
+          6
+        ],
+        "options_pdf_pages": [
+          6
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "C",
+        "source_text": "28.C",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 28.C；原卷未提供解析。",
+      "topic_tags": [
+        "turtle",
+        "颜色",
+        "colormode",
+        "RGB",
+        "十六进制颜色"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "颜色表示依赖颜色模式与字符串表示。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "color_mode_context_missing",
+          "severity": "blocking",
+          "description": "原卷给C；RGB值(190,190,190)依赖colormode(255)，十六进制颜色作为代码字符串还涉及引号，原题缺少上下文。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": false,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q029",
+      "question_number": 29,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "关于 random 库描述不正确的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "生成随机数之前必须要指定随机数种子。"
+          },
+          {
+            "label": "B",
+            "text": "设定相同种子，每次调用随机函数生成的随机数相同。"
+          },
+          {
+            "label": "C",
+            "text": "通过 from random import *可以引入 random 随机库。"
+          },
+          {
+            "label": "D",
+            "text": "通过 import random 可以引入 random 随机库。"
+          }
+        ]
+      },
+      "raw_extracted_text": "关于 random 库描述不正确的是\nA）生成随机数之前必须要指定随机数种子。\nB）设定相同种子，每次调用随机函数生成的随机数相同。\nC）通过 from random import *可以引入 random 随机库。\nD）通过 import random 可以引入 random 随机库。",
+      "student_content": {
+        "markdown": "关于 random 库描述不正确的是\n\nA. 生成随机数之前必须要指定随机数种子。\n\nB. 设定相同种子，每次调用随机函数生成的随机数相同。\n\nC. 通过 from random import *可以引入 random 随机库。\n\nD. 通过 import random 可以引入 random 随机库。",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          7
+        ],
+        "stem_pdf_pages": [
+          7
+        ],
+        "options_pdf_pages": [
+          7
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "A",
+        "source_text": "29.A",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 29.A；原卷未提供解析。",
+      "topic_tags": [
+        "random",
+        "随机种子",
+        "随机序列",
+        "import"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "区分序列重现和连续随机调用。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "seed_sequence_wording_ambiguity",
+          "severity": "blocking",
+          "description": "原卷给A；B的“每次调用随机函数生成的随机数相同”可能混淆重设同一种子后复现序列与同一序列内每次结果相同。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": false,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q030",
+      "question_number": 30,
+      "source_section": "一、单项选择题",
+      "question_type": "multiple_choice",
+      "original_content": {
+        "stem": "下面不属于 Python 中开发用户界面的第三方库的是",
+        "code": null,
+        "options": [
+          {
+            "label": "A",
+            "text": "Turtle"
+          },
+          {
+            "label": "B",
+            "text": "PyQt"
+          },
+          {
+            "label": "C",
+            "text": "wxpython"
+          },
+          {
+            "label": "D",
+            "text": "pygtk"
+          }
+        ]
+      },
+      "raw_extracted_text": "下面不属于 Python 中开发用户界面的第三方库的是\nA）Turtle\nB）PyQt\nC）wxpython\nD）pygtk",
+      "student_content": {
+        "markdown": "下面不属于 Python 中开发用户界面的第三方库的是\n\nA. Turtle\n\nB. PyQt\n\nC. wxpython\n\nD. pygtk",
+        "input_hint": "输入选项字母，也可以说明理由。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          7
+        ],
+        "stem_pdf_pages": [
+          7
+        ],
+        "options_pdf_pages": [
+          7
+        ],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": {
+        "origin": "provided_pdf_reference_answers",
+        "correct_option": "A",
+        "source_text": "30.A",
+        "explanation": null
+      },
+      "answer_status": "provided",
+      "answer_source_note": "第9页原卷参考答案 30.A；原卷未提供解析。",
+      "topic_tags": [
+        "标准库",
+        "第三方库",
+        "图形用户界面",
+        "turtle",
+        "PyQt"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "辨别标准库与第三方界面库。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [],
+      "retrieval_ready": true,
+      "normalizations": [],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q031",
+      "question_number": 31,
+      "source_section": "二、基本操作题",
+      "question_type": "code_blank",
+      "original_content": {
+        "stem": "根据斐波那契数列的定义，F(0)=0，F(1)=1, F(n)=F(n-1)+F(n-2)(n>=2），输出不大于 100 的序\n列元素，请补充横线处的代码。",
+        "code": "1. >>> a,b = ____(1)____\n2. >>> while ____(2)____:\n3. print(a, end = ‘ , ’)\n4. a, b = __(3)__ , _ (4)__",
+        "options": []
+      },
+      "raw_extracted_text": "根据斐波那契数列的定义，F(0)=0，F(1)=1, F(n)=F(n-1)+F(n-2)(n>=2），输出不大于 100 的序\n列元素，请补充横线处的代码。\n1. >>> a,b = ____(1)____\n2. >>> while ____(2)____:\n3. print(a, end = ‘ , ’)\n4. a, b = __(3)__ , _ (4)__",
+      "student_content": {
+        "markdown": "根据斐波那契数列的定义，F(0)=0，F(1)=1, F(n)=F(n-1)+F(n-2)(n>=2），输出不大于 100 的序\n列元素，请补充横线处的代码。\n\n```python\na, b = ____(1)____\nwhile ____(2)____:\n    print(a, end=' , ')\n    a, b = ____(3)____, ____(4)____\n```",
+        "input_hint": "按原题要求输入代码或说明。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          7
+        ],
+        "stem_pdf_pages": [
+          7
+        ],
+        "options_pdf_pages": [],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": null,
+      "answer_status": "not_provided",
+      "answer_source_note": "第9页对应题型的参考答案为‘（略）’，没有提供本题答案。",
+      "topic_tags": [
+        "斐波那契数列",
+        "while",
+        "多重赋值",
+        "循环边界"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "根据递推关系填补初始化与更新代码。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [],
+      "retrieval_ready": true,
+      "normalizations": [
+        {
+          "field": "student_content.markdown: code",
+          "before": "1. >>> a,b = ____(1)____\n2. >>> while ____(2)____:\n3. print(a, end = ‘ , ’)\n4. a, b = __(3)__ , _ (4)__",
+          "after": "a, b = ____(1)____\nwhile ____(2)____:\n    print(a, end=' , ')\n    a, b = ____(3)____, ____(4)____",
+          "reason": "按第7页代码框恢复循环体缩进；移除行号和交互提示符，统一占位空白，规范排版引号；没有填写答案。"
+        }
+      ],
+      "assets": [
+        {
+          "pdf_page": 7,
+          "role": "code_layout",
+          "path": "assets/source-page-7.png",
+          "sha256": "b5b73401a640fe7f387265c19d9555878cacfa82a972121375be280bacd9814c",
+          "description": "第31题代码框原始缩进和四个填空位置，见整页渲染图。"
+        }
+      ]
+    },
+    {
+      "question_id": "ncre-python-sample-q032",
+      "question_number": 32,
+      "source_section": "二、基本操作题",
+      "question_type": "programming",
+      "original_content": {
+        "stem": "请将下列数学表达式用 Python 程序写出来，并计算结果。",
+        "code": null,
+        "options": []
+      },
+      "raw_extracted_text": "请将下列数学表达式用 Python 程序写出来，并计算结果。\nx = \u0000\u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000\n\u0000",
+      "student_content": {
+        "markdown": "请将下列数学表达式用 Python 程序写出来，并计算结果。\n\n$$\nx = \\frac{(3^{4} + 5 - 6 \\times 7)}{8}\n$$\n\n公式文字转写：x = (3的4次方 + 5 - 6乘7) / 8。",
+        "input_hint": "按原题要求输入代码或说明。"
+      },
+      "formula_latex": "x = \\frac{(3^{4} + 5 - 6 \\times 7)}{8}",
+      "source_locations": {
+        "question_pdf_pages": [
+          7
+        ],
+        "stem_pdf_pages": [
+          7
+        ],
+        "options_pdf_pages": [],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": null,
+      "answer_status": "not_provided",
+      "answer_source_note": "第9页对应题型的参考答案为‘（略）’，没有提供本题答案。",
+      "topic_tags": [
+        "数学表达式",
+        "幂运算",
+        "运算优先级",
+        "Python 表达式"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "将视觉公式准确转写为程序表达式。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [],
+      "retrieval_ready": true,
+      "normalizations": [
+        {
+          "field": "formula_latex",
+          "before": "x = \u0000\u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000\n\u0000",
+          "after": "x = \\frac{(3^{4} + 5 - 6 \\times 7)}{8}",
+          "reason": "第7页公式的文本层为不可读字符；按渲染图人工转写并核对指数4与分母8。"
+        }
+      ],
+      "assets": [
+        {
+          "pdf_page": 7,
+          "role": "formula",
+          "path": "assets/source-page-7.png",
+          "sha256": "b5b73401a640fe7f387265c19d9555878cacfa82a972121375be280bacd9814c",
+          "description": "第32题公式原图：分子为(3的4次方+5-6乘7)，分母为8。"
+        }
+      ]
+    },
+    {
+      "question_id": "ncre-python-sample-q033",
+      "question_number": 33,
+      "source_section": "二、基本操作题",
+      "question_type": "code_blank",
+      "original_content": {
+        "stem": "随机密码生成。编写程序，在 26 个字母大小写和 9 个数字组成的列表中随机生成一个 8 位\n密码。",
+        "code": "#随机密码生成\nchars=[\n'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x'\n,'y','z',\n'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',\n]\nfrom random import choice\n____(1)____\n____(2)____",
+        "options": []
+      },
+      "raw_extracted_text": "随机密码生成。编写程序，在 26 个字母大小写和 9 个数字组成的列表中随机生成一个 8 位\n密码。\n#随机密码生成\nchars=[\n'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x'\n,'y','z',\n'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',\n]\nfrom random import choice\n____(1)____\n____(2)____",
+      "student_content": {
+        "markdown": "随机密码生成。编写程序，在 26 个字母大小写和 9 个数字组成的列表中随机生成一个 8 位\n密码。\n\n```python\n#随机密码生成\nchars=[\n'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x'\n,'y','z',\n'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',\n]\nfrom random import choice\n____(1)____\n____(2)____\n```",
+        "input_hint": "按原题要求输入代码或说明。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          7,
+          8
+        ],
+        "stem_pdf_pages": [
+          7,
+          8
+        ],
+        "options_pdf_pages": [],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": null,
+      "answer_status": "not_provided",
+      "answer_source_note": "第9页对应题型的参考答案为‘（略）’，没有提供本题答案。",
+      "topic_tags": [
+        "随机密码",
+        "random.choice()",
+        "字符串",
+        "循环",
+        "字符集合"
+      ],
+      "difficulty": 3,
+      "difficulty_reason": "在给定字符集合中逐次选择并构造密码。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "digit_count_conflict",
+          "severity": "blocking",
+          "description": "题干写9个数字，给定字符表却包含0到9共10个数字；保留两处原文，不静默修改数量。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": false,
+      "normalizations": [],
+      "assets": [
+        {
+          "pdf_page": 7,
+          "role": "code_layout",
+          "path": "assets/source-page-7.png",
+          "sha256": "b5b73401a640fe7f387265c19d9555878cacfa82a972121375be280bacd9814c",
+          "description": "第33题字符表和题干。"
+        },
+        {
+          "pdf_page": 8,
+          "role": "code_layout",
+          "path": "assets/source-page-8.png",
+          "sha256": "424774c0fba5bc3669edeeeee7cc8188e23c9bc2ba5672303b814927582d50e2",
+          "description": "第33题续页：from random import choice及两个填空。"
+        }
+      ]
+    },
+    {
+      "question_id": "ncre-python-sample-q034",
+      "question_number": 34,
+      "source_section": "三、简单应用题",
+      "question_type": "programming",
+      "original_content": {
+        "stem": "使用 turtle 库中的 turtle.fd()函数和 turtle.seth()函数绘制一个等边三角形，边长为 200，效果\n如下图所示。",
+        "code": null,
+        "options": []
+      },
+      "raw_extracted_text": "使用 turtle 库中的 turtle.fd()函数和 turtle.seth()函数绘制一个等边三角形，边长为 200，效果\n如下图所示。",
+      "student_content": {
+        "markdown": "使用 turtle 库中的 turtle.fd()函数和 turtle.seth()函数绘制一个等边三角形，边长为 200，效果\n如下图所示。\n\n原卷图形：边长200的等边三角形，水平底边，顶点向上；绘制终点/海龟标记位于左下顶点。该文字描述为对原图的项目转述。",
+        "input_hint": "按原题要求输入代码或说明。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          8
+        ],
+        "stem_pdf_pages": [
+          8
+        ],
+        "options_pdf_pages": [],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": null,
+      "answer_status": "not_provided",
+      "answer_source_note": "第9页对应题型的参考答案为‘（略）’，没有提供本题答案。",
+      "topic_tags": [
+        "turtle",
+        "fd()",
+        "seth()",
+        "等边三角形",
+        "绘图"
+      ],
+      "difficulty": 3,
+      "difficulty_reason": "结合边长与方向控制完成指定图形。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [],
+      "retrieval_ready": true,
+      "normalizations": [],
+      "assets": [
+        {
+          "pdf_page": 8,
+          "role": "figure",
+          "path": "assets/source-page-8.png",
+          "sha256": "424774c0fba5bc3669edeeeee7cc8188e23c9bc2ba5672303b814927582d50e2",
+          "description": "边长200的等边三角形，水平底边，顶点向上；绘制终点/海龟标记位于左下顶点。该文字描述为对原图的项目转述。"
+        }
+      ]
+    },
+    {
+      "question_id": "ncre-python-sample-q035",
+      "question_number": 35,
+      "source_section": "三、简单应用题",
+      "question_type": "programming",
+      "original_content": {
+        "stem": "写出下列操作的代码：\n(1) 建立字典 D={“数学”:101, “语文”:202, “英语”:203, “物理”:204, “生物”:206}。\n(2) 向字典中添加键值对””化学”:205”。\n(3) 修改”数学”对应的值为 201。\n(4) 删除”生物”对应的键值对。",
+        "code": null,
+        "options": []
+      },
+      "raw_extracted_text": "写出下列操作的代码：\n(1) 建立字典 D={“数学”:101, “语文”:202, “英语”:203, “物理”:204, “生物”:206}。\n(2) 向字典中添加键值对””化学”:205”。\n(3) 修改”数学”对应的值为 201。\n(4) 删除”生物”对应的键值对。",
+      "student_content": {
+        "markdown": "写出下列操作的代码：\n(1) 建立字典 D={\"数学\":101, \"语文\":202, \"英语\":203, \"物理\":204, \"生物\":206}。\n(2) 向字典中添加键值对 \"化学\":205。\n(3) 修改 \"数学\" 对应的值为201。\n(4) 删除 \"生物\" 对应的键值对。",
+        "input_hint": "按原题要求输入代码或说明。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          8
+        ],
+        "stem_pdf_pages": [
+          8
+        ],
+        "options_pdf_pages": [],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": null,
+      "answer_status": "not_provided",
+      "answer_source_note": "第9页对应题型的参考答案为‘（略）’，没有提供本题答案。",
+      "topic_tags": [
+        "字典",
+        "创建",
+        "添加键值对",
+        "修改",
+        "删除"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "顺序完成四种字典基本操作。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [],
+      "retrieval_ready": true,
+      "normalizations": [
+        {
+          "field": "student_content.markdown: stem",
+          "before": "写出下列操作的代码：\n(1) 建立字典 D={“数学”:101, “语文”:202, “英语”:203, “物理”:204, “生物”:206}。\n(2) 向字典中添加键值对””化学”:205”。\n(3) 修改”数学”对应的值为 201。\n(4) 删除”生物”对应的键值对。",
+          "after": "写出下列操作的代码：\n(1) 建立字典 D={\"数学\":101, \"语文\":202, \"英语\":203, \"物理\":204, \"生物\":206}。\n(2) 向字典中添加键值对 \"化学\":205。\n(3) 修改 \"数学\" 对应的值为201。\n(4) 删除 \"生物\" 对应的键值对。",
+          "reason": "按第8页四个操作要求规范混乱的排版引号，保留各科目和数字；原始混排题干保存在original_content和raw_extracted_text。"
+        }
+      ],
+      "assets": []
+    },
+    {
+      "question_id": "ncre-python-sample-q036",
+      "question_number": 36,
+      "source_section": "四、综合应用题",
+      "question_type": "programming",
+      "original_content": {
+        "stem": "重量计算。月球上物体的体重是在地球上的 16.5%，假如你在地球上每年增长 0.5kg，编写\n程序输出未来 10 年你在地球和月球上的体重状况。",
+        "code": null,
+        "options": []
+      },
+      "raw_extracted_text": "重量计算。月球上物体的体重是在地球上的 16.5%，假如你在地球上每年增长 0.5kg，编写\n程序输出未来 10 年你在地球和月球上的体重状况。",
+      "student_content": {
+        "markdown": "重量计算。月球上物体的体重是在地球上的 16.5%，假如你在地球上每年增长 0.5kg，编写\n程序输出未来 10 年你在地球和月球上的体重状况。",
+        "input_hint": "按原题要求输入代码或说明。"
+      },
+      "formula_latex": null,
+      "source_locations": {
+        "question_pdf_pages": [
+          8
+        ],
+        "stem_pdf_pages": [
+          8
+        ],
+        "options_pdf_pages": [],
+        "answer_pdf_pages": [
+          9
+        ]
+      },
+      "answer": null,
+      "answer_status": "not_provided",
+      "answer_source_note": "第9页对应题型的参考答案为‘（略）’，没有提供本题答案。",
+      "topic_tags": [
+        "循环",
+        "重量计算",
+        "百分比",
+        "年增长",
+        "输入参数"
+      ],
+      "difficulty": 3,
+      "difficulty_reason": "结合逐年增长与比例计算未来十年的数据。",
+      "annotation_origin": "project_annotation",
+      "review_status": "draft",
+      "runtime_curriculum_eligible": false,
+      "runtime_knowledge_node_ids": [],
+      "quality_issues": [
+        {
+          "code": "initial_weight_unspecified",
+          "severity": "blocking",
+          "description": "题目未给当前地球体重或输入约定；任何补充解答都需要显式说明初始体重的取得方式。原卷没有提供答案。",
+          "origin": "project_annotation"
+        }
+      ],
+      "retrieval_ready": false,
+      "normalizations": [],
+      "assets": []
+    }
+  ]
+}

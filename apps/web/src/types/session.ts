@@ -1,11 +1,34 @@
 export type MessageRole = "questioner" | "student" | "critic" | "system";
 
+export interface ExamPaperSummary {
+  id: string;
+  title: string;
+  document_type: "sample_exam" | "past_exam";
+  exam_year: number | null;
+  available_question_count: number;
+  excluded_question_count: number;
+  question_types: string[];
+}
+
+export interface QuestionMetadata {
+  difficulty: number;
+  knowledge_points: { id: string; name: string }[];
+  source: {
+    title: string;
+    document_type: "sample_exam" | "past_exam";
+    exam_year: number | null;
+    question_number: string;
+    pdf_pages: number[];
+  } | null;
+}
+
 export interface TimelineMessage {
   id: string;
   role: MessageRole;
   contentMarkdown: string;
   createdAt?: string;
   deliveryStatus?: "sending" | "streaming" | "sent" | "failed";
+  questionMetadata?: QuestionMetadata | null;
 }
 
 export interface GraphNode {
@@ -19,6 +42,7 @@ export interface ApiMessage {
   role: MessageRole;
   content_markdown: string;
   created_at: string;
+  question_metadata?: QuestionMetadata | null;
 }
 
 export interface KnowledgeNodeSummary {
@@ -37,6 +61,7 @@ export interface CurrentQuestion {
   question_id: string;
   markdown: string;
   input_hint: string | null;
+  question_metadata?: QuestionMetadata | null;
 }
 
 export interface ChapterQuestionSetSummary {
@@ -89,6 +114,7 @@ export type SessionSocketEvent =
         question_id: string;
         markdown: string;
         input_hint: string | null;
+        question_metadata?: QuestionMetadata | null;
       };
     }
   | {
@@ -150,6 +176,7 @@ export function toTimelineMessage(message: ApiMessage): TimelineMessage {
     contentMarkdown: message.content_markdown,
     createdAt: message.created_at,
     deliveryStatus: "sent",
+    questionMetadata: message.question_metadata,
   };
 }
 

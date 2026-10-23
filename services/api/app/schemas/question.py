@@ -10,6 +10,7 @@ QuestionType = Literal[
     "code_blank",
     "output_prediction",
     "short_explanation",
+    "programming",
 ]
 
 
@@ -48,6 +49,10 @@ class PersonalKnowledgeState(StrictModel):
         "mastered",
         "needs_review",
     ]
+    evaluated_question_count: int = Field(default=0, ge=0)
+    correct_question_count: int = Field(default=0, ge=0)
+    accuracy: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+    sample_coverage: float = Field(default=0.0, ge=0.0, le=1.0)
 
 
 class LearnerErrorState(StrictModel):

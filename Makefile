@@ -1,4 +1,4 @@
-.PHONY: api-dev web-dev seed test test-api test-web build-web smoke stream-smoke
+.PHONY: api-dev web-dev seed migrate test test-api test-web build-web smoke stream-smoke
 
 api-dev:
 	cd services/api && python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
@@ -8,6 +8,9 @@ web-dev:
 
 seed:
 	PYTHONPATH=services/api python -m app.seed
+
+migrate:
+	cd services/api && python -m alembic upgrade head
 
 test: test-api test-web
 

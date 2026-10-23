@@ -7,7 +7,12 @@
 alembic==1.16.5
 fastapi==0.115.12
 httpx==0.28.1
+langchain==1.4.6
+langchain-core==1.6.12
+langchain-openai==1.1.14
+langgraph==1.2.16
 psycopg[binary]==3.2.9
+PyMySQL[rsa]==1.1.2
 pydantic==2.12.5
 SQLAlchemy==2.0.41
 uvicorn[standard]==0.34.3

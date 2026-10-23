@@ -8,6 +8,7 @@ from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
 from app.agents.critic import Critic
+from app.agents.workflow import StructuredAgentWorkflow
 from app.llm.base import LLMProvider, LLMProviderError
 from app.repositories.question_review_repository import QuestionReviewRepository
 from app.schemas.critic import (
@@ -54,36 +55,35 @@ class CriticQuestionReviewService:
         self,
         context: QuestionReviewContext,
     ) -> QuestionReviewExecution:
-        validation_feedback: Optional[str] = None
-        last_error: Optional[str] = None
+        async def invoke(validation_feedback: Optional[str]) -> QuestionReview:
+            return await self.critic.run(
+                self.system_prompt,
+                context.model_dump_json(indent=2),
+                QuestionReview,
+                validation_feedback=validation_feedback,
+            )
 
-        for attempt in range(2):
-            try:
-                review = await self.critic.run(
-                    self.system_prompt,
-                    context.model_dump_json(indent=2),
-                    QuestionReview,
-                    validation_feedback=validation_feedback,
-                )
-                return QuestionReviewExecution(
-                    status="completed",
-                    review=review,
-                    retry_count=attempt,
-                )
-            except (ValidationError, JSONDecodeError, LLMProviderError) as error:
-                last_error = str(error)
-                validation_feedback = last_error
-                logger.warning(
-                    "Critic question review rejected on attempt %s: %s",
-                    attempt + 1,
-                    error,
-                )
+        async def rejected(error: str, attempt: int) -> None:
+            logger.warning("Critic question review rejected on attempt %s: %s", attempt, error)
 
-        logger.error("Critic question review failed validation twice")
+        execution = await StructuredAgentWorkflow(
+            role="critic",
+            schema=QuestionReview,
+            invoke=invoke,
+            retry_exceptions=(ValidationError, JSONDecodeError, LLMProviderError),
+            on_rejected=rejected,
+        ).run()
+        if execution.used_fallback:
+            logger.error("Critic question review failed validation twice")
+            return QuestionReviewExecution(
+                status="failed",
+                retry_count=execution.retry_count,
+                error=execution.error or "Unknown review validation error",
+            )
         return QuestionReviewExecution(
-            status="failed",
-            retry_count=1,
-            error=last_error or "Unknown review validation error",
+            status="completed",
+            review=execution.value,
+            retry_count=execution.retry_count,
         )
 
     async def review_and_persist(
@@ -194,89 +194,83 @@ class CriticConversationService:
         on_delta: Optional[Callable[[str], Awaitable[None]]] = None,
         on_reset: Optional[Callable[[], Awaitable[None]]] = None,
     ) -> CriticTurnExecution:
-        validation_feedback: Optional[str] = None
-        last_error: Optional[str] = None
+        async def invoke(validation_feedback: Optional[str]) -> CriticTurnResult:
+            return await self.critic.run(
+                self.turn_prompt,
+                context.model_dump_json(indent=2),
+                CriticTurnResult,
+                validation_feedback=validation_feedback,
+                on_delta=on_delta,
+            )
 
-        for attempt in range(2):
-            try:
-                result = await self.critic.run(
-                    self.turn_prompt,
-                    context.model_dump_json(indent=2),
-                    CriticTurnResult,
-                    validation_feedback=validation_feedback,
-                    on_delta=on_delta,
-                )
-                self._validate_turn_for_state(context, result)
-                return CriticTurnExecution(
-                    status="completed",
-                    result=result,
-                    retry_count=attempt,
-                )
-            except (
-                ValidationError,
-                JSONDecodeError,
-                ValueError,
-                LLMProviderError,
-            ) as error:
-                if on_delta is not None and on_reset is not None:
-                    await on_reset()
-                last_error = str(error)
-                validation_feedback = last_error
-                logger.warning(
-                    "Critic turn rejected on attempt %s: %s",
-                    attempt + 1,
-                    error,
-                )
+        async def rejected(error: str, attempt: int) -> None:
+            if on_delta is not None and on_reset is not None:
+                await on_reset()
+            logger.warning("Critic turn rejected on attempt %s: %s", attempt, error)
 
-        logger.error("Critic turn failed validation twice")
+        execution = await StructuredAgentWorkflow(
+            role="critic",
+            schema=CriticTurnResult,
+            invoke=invoke,
+            retry_exceptions=(ValidationError, JSONDecodeError, ValueError, LLMProviderError),
+            validate=lambda result: self._validate_turn_for_state(context, result),
+            fallback=self._safe_failure_result,
+            on_rejected=rejected,
+        ).run()
+        if execution.used_fallback:
+            logger.error("Critic turn failed validation twice")
         return CriticTurnExecution(
-            status="failed",
-            result=self._safe_failure_result(),
-            retry_count=1,
-            error=last_error or "Unknown Critic turn validation error",
+            status="failed" if execution.used_fallback else "completed",
+            result=execution.value,
+            retry_count=execution.retry_count,
+            error=(execution.error or "Unknown Critic turn validation error")
+            if execution.used_fallback else None,
         )
 
     async def summarize_discussion(
         self,
         context: DiscussionSummaryContext,
     ) -> DiscussionSummaryExecution:
-        validation_feedback: Optional[str] = None
-        last_error: Optional[str] = None
+        async def invoke(validation_feedback: Optional[str]) -> DiscussionSummary:
+            return await self.critic.run(
+                self.summary_prompt,
+                context.model_dump_json(indent=2),
+                DiscussionSummary,
+                validation_feedback=validation_feedback,
+            )
 
-        for attempt in range(2):
-            try:
-                summary = await self.critic.run(
-                    self.summary_prompt,
-                    context.model_dump_json(indent=2),
-                    DiscussionSummary,
-                    validation_feedback=validation_feedback,
-                )
-                if summary.question_id != context.question_packet.question_id:
-                    raise ValueError("summary question_id does not match current question")
-                return DiscussionSummaryExecution(
-                    status="completed",
-                    summary=summary,
-                    retry_count=attempt,
-                )
-            except (
-                ValidationError,
-                JSONDecodeError,
-                ValueError,
-                LLMProviderError,
-            ) as error:
-                last_error = str(error)
-                validation_feedback = last_error
-                logger.warning(
-                    "Critic discussion summary rejected on attempt %s: %s",
-                    attempt + 1,
-                    error,
-                )
+        def validate(summary: DiscussionSummary) -> None:
+            if summary.question_id != context.question_packet.question_id:
+                raise ValueError("summary question_id does not match current question")
+            target_nodes = set(context.question_packet.knowledge_node_ids)
+            assessed_nodes = {item.node_id for item in summary.knowledge_assessments}
+            if not assessed_nodes.issubset(target_nodes):
+                raise ValueError("knowledge assessment contains a non-target knowledge node")
+            if context.assessment_basis_message_id and assessed_nodes != target_nodes:
+                raise ValueError("each target node requires an explicit final assessment")
 
-        logger.error("Critic discussion summary failed validation twice")
+        async def rejected(error: str, attempt: int) -> None:
+            logger.warning("Critic discussion summary rejected on attempt %s: %s", attempt, error)
+
+        execution = await StructuredAgentWorkflow(
+            role="critic",
+            schema=DiscussionSummary,
+            invoke=invoke,
+            retry_exceptions=(ValidationError, JSONDecodeError, ValueError, LLMProviderError),
+            validate=validate,
+            on_rejected=rejected,
+        ).run()
+        if execution.used_fallback:
+            logger.error("Critic discussion summary failed validation twice")
+            return DiscussionSummaryExecution(
+                status="failed",
+                retry_count=execution.retry_count,
+                error=execution.error or "Unknown discussion summary validation error",
+            )
         return DiscussionSummaryExecution(
-            status="failed",
-            retry_count=1,
-            error=last_error or "Unknown discussion summary validation error",
+            status="completed",
+            summary=execution.value,
+            retry_count=execution.retry_count,
         )
 
     def _validate_turn_for_state(

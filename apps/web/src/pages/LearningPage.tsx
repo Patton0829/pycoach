@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ChatComposer } from "../components/ChatComposer";
 import { ConversationTimeline } from "../components/ConversationTimeline";
 import { ErrorGraph } from "../components/ErrorGraph";
+import { ExamPracticeIntro } from "../components/ExamPracticeIntro";
 import { PersonalKnowledgeGraph } from "../components/PersonalKnowledgeGraph";
 import { useLearningSession } from "../hooks/useLearningSession";
 
@@ -16,7 +17,7 @@ type AssessmentOption = {
   title: string;
   displayTitle: string;
   meta: string;
-  kind: "foundation" | "chapter" | "challenge";
+  kind: "foundation" | "chapter" | "challenge" | "exam";
   loadingLead: string;
   loadingTokens: string[];
   visualSteps: string[];
@@ -31,6 +32,17 @@ const foundationOption = {
   loadingLead: "正在从第 3-9 章抽取知识点，组装一套能看出你真实水平的诊断题。",
   loadingTokens: ["I", "love", "Python", "list", "dict", "class"],
   visualSteps: ["read()", "think()", "practice()"],
+} satisfies AssessmentOption;
+
+const examOption = {
+  moduleId: "python_exam_practice",
+  title: "真题测试",
+  displayTitle: "真题测试",
+  meta: "已审核试卷 / 自适应选题",
+  kind: "exam",
+  loadingLead: "正在结合你的知识点掌握情况，从已审核试卷中选择题目。",
+  loadingTokens: ["知识点", "难度", "原卷来源"],
+  visualSteps: ["读取画像", "匹配真题", "开始练习"],
 } satisfies AssessmentOption;
 
 const chapterTestOptions = [
@@ -116,6 +128,7 @@ const challengeOptions = chapterTestOptions.map((option) => ({
 
 const assessmentOptions = [
   foundationOption,
+  examOption,
   ...chapterTestOptions,
   ...challengeOptions,
 ] satisfies AssessmentOption[];
@@ -181,6 +194,7 @@ type ActiveView =
   | "foundationIntro"
   | "chapters"
   | "challenge"
+  | "exam"
   | "knowledge"
   | "errors"
   | "about";
@@ -274,7 +288,11 @@ function PreparingAssessment({ option }: { option: AssessmentOption }) {
       <div className="preparing-copy">
         <span>{isFoundation ? "I love Python" : option.title}</span>
         <strong>
-          {isFoundation ? "正在生成综合能力诊断" : `正在生成${option.title}题目`}
+          {isFoundation
+            ? "正在生成综合能力诊断"
+            : option.kind === "exam"
+              ? "正在准备真题测试"
+              : `正在生成${option.title}题目`}
         </strong>
         <p>{option.loadingLead}</p>
         <div className="preparing-token-list" aria-hidden="true">
@@ -650,6 +668,8 @@ export function LearningPage() {
           ? "关于 AI Python Coach"
           : activeView === "foundationIntro"
             ? foundationOption.displayTitle
+          : activeView === "exam"
+            ? examOption.displayTitle
           : preparingOption != null
             ? preparingOption.displayTitle
             : activeView === "chapters"
@@ -660,11 +680,11 @@ export function LearningPage() {
                   ? activeSessionTitle
                   : "请选择测试";
 
-  async function handleStart(moduleId: string) {
+  async function handleStart(moduleId: string, sourceDocumentId?: string) {
     setPreparingModuleId(moduleId);
     setActiveView("learning");
     try {
-      await startSession(moduleId);
+      await startSession(moduleId, sourceDocumentId);
     } finally {
       setPreparingModuleId(null);
     }
@@ -702,6 +722,10 @@ export function LearningPage() {
       challengeOptions.some(
         (option) => option.moduleId === chapterQuestionSet?.chapter_id,
       ));
+  const isExamActive =
+    activeView === "exam" ||
+    preparingModuleId === examOption.moduleId ||
+    (activeView === "learning" && chapterQuestionSet?.chapter_id === examOption.moduleId);
 
   return (
     <main className="shell">
@@ -744,6 +768,15 @@ export function LearningPage() {
             >
               <span>Python 单题闯关</span>
               <small>单题闯关</small>
+            </button>
+            <button
+              type="button"
+              className={navButtonClass(isExamActive)}
+              onClick={() => setActiveView("exam")}
+              aria-label="查看真题测试"
+            >
+              <span>真题测试</span>
+              <small>{examOption.meta}</small>
             </button>
             <button
               type="button"
@@ -801,6 +834,8 @@ export function LearningPage() {
               <small>
                 {isActiveChallengeSession
                   ? "单题闯关"
+                  : chapterQuestionSet.chapter_id === examOption.moduleId
+                    ? "真题测试"
                   : learnerLevelLabels[chapterQuestionSet.learner_level]}
               </small>
             </div>
@@ -857,6 +892,13 @@ export function LearningPage() {
                 ))}
               </div>
             </section>
+          ) : activeView === "exam" ? (
+            <ExamPracticeIntro
+              onStart={(sourceDocumentId) => void handleStart(examOption.moduleId, sourceDocumentId)}
+              onContinue={handleContinue}
+              canContinue={canContinueModule(examOption.moduleId)}
+              disabled={isLoading}
+            />
           ) : activeView === "knowledge" ? (
             <div className="graph-detail">
               <PersonalKnowledgeGraph nodes={knowledgeNodes} />

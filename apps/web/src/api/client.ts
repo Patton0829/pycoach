@@ -1,5 +1,6 @@
 import type {
   ErrorNodeSummary,
+  ExamPaperSummary,
   KnowledgeNodeSummary,
   LearningSessionResponse,
   MessageAcceptedResponse,
@@ -34,6 +35,7 @@ async function requestJson<T>(
 
 export function createLearningSession(
   moduleId: string,
+  sourceDocumentId?: string,
 ): Promise<LearningSessionResponse> {
   return requestJson("/api/sessions", {
     method: "POST",
@@ -41,8 +43,13 @@ export function createLearningSession(
     body: JSON.stringify({
       learner_id: DEMO_LEARNER_ID,
       module: moduleId,
+      ...(sourceDocumentId ? { source_document_id: sourceDocumentId } : {}),
     }),
   });
+}
+
+export function getExamPapers(): Promise<ExamPaperSummary[]> {
+  return requestJson("/api/exams");
 }
 
 export function getLearningSession(

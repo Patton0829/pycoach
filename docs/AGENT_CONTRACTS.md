@@ -1,5 +1,7 @@
 # Agent 契约
 
+两个角色使用 LangChain `ChatPromptTemplate` + LCEL 调用链，输出边界重新执行 Pydantic 2 校验。Questioner 出题以及 Critic 审题、对话、总结均由 LangGraph `StructuredAgentWorkflow` 执行模型调用、验证、一次修复重试和最终回退。图中只有 `questioner` 或 `critic` 节点调用模型，其他节点执行确定性代码；会话状态与最终图谱提交仍由现有编排器控制。
+
 ## Questioner
 
 输入为全局图谱、个人图谱、错误图谱、近期题目与尝试、Critic 总结、教学策略和候选题约束。输出必须符合 `QuestionPacket`。

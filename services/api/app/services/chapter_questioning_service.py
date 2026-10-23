@@ -18,6 +18,7 @@ from app.schemas.chapter_plan import (
 from app.schemas.question import CandidateConstraints, QuestionType
 
 DEFAULT_ASSESSMENT_ID = "python_iterator"
+EXAM_ASSESSMENT_ID = "python_exam_practice"
 ITERATOR_TITLE = "Python 迭代器"
 ITERATOR_TARGET_QUESTION_COUNT = 10
 FOUNDATION_TARGET_QUESTION_COUNT = 35
@@ -416,7 +417,7 @@ ITERATOR_PROMPT_BRIEFS = {
 
 
 def is_supported_assessment_module(module_id: str) -> bool:
-    return module_id in ASSESSMENT_SPECS
+    return module_id in ASSESSMENT_SPECS or module_id == EXAM_ASSESSMENT_ID
 
 
 def list_assessment_options() -> list[dict]:
@@ -428,7 +429,12 @@ def list_assessment_options() -> list[dict]:
             "mode": spec.mode,
         }
         for spec in (ASSESSMENT_SPECS[module_id] for module_id in ASSESSMENT_DISPLAY_ORDER)
-    ]
+    ] + [{
+        "module_id": EXAM_ASSESSMENT_ID,
+        "title": "真题测试",
+        "target_question_count": None,
+        "mode": "exam",
+    }]
 
 
 def assessment_spec(module_id: str) -> AssessmentSpec:
@@ -587,6 +593,8 @@ class ChapterQuestioningService:
     def is_single_challenge_complete(self, session_id: str) -> bool:
         record = self.get_question_set_for_session(session_id)
         if record is None:
+            return False
+        if record.chapter_id == EXAM_ASSESSMENT_ID:
             return False
         spec = assessment_spec(record.chapter_id)
         if spec.mode != "single_challenge":

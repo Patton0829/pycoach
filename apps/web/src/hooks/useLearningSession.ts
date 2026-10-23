@@ -86,6 +86,20 @@ export function useLearningSession() {
     const roundMessages = selectCurrentRoundMessages(
       session.messages.map(toTimelineMessage),
     );
+    const currentQuestionMetadata = session.current_question?.question_metadata;
+    if (
+      currentQuestionMetadata
+      && roundMessages[0]?.role === "questioner"
+      && (
+        roundMessages[0].id === session.current_question?.question_id
+        || roundMessages[0].contentMarkdown === session.current_question?.markdown
+      )
+    ) {
+      roundMessages[0] = {
+        ...roundMessages[0],
+        questionMetadata: roundMessages[0].questionMetadata ?? currentQuestionMetadata,
+      };
+    }
     setSessionId(session.session_id);
     setState(session.state);
     if (!SUBMITTING_STATES.includes(session.state)) {
@@ -291,6 +305,7 @@ export function useLearningSession() {
               id: event.payload.question_id,
               role: "questioner",
               contentMarkdown: event.payload.markdown,
+              questionMetadata: event.payload.question_metadata,
               deliveryStatus: "sent",
             },
           ]);
@@ -381,14 +396,14 @@ export function useLearningSession() {
   );
 
   const startSession = useCallback(
-    async (moduleId: string) => {
+    async (moduleId: string, sourceDocumentId?: string) => {
       window.localStorage.removeItem(SESSION_STORAGE_KEY);
       clearSessionView();
       setIsLoading(true);
       setError(null);
       setStatusText("正在准备测试…");
       try {
-        const session = await createLearningSession(moduleId);
+        const session = await createLearningSession(moduleId, sourceDocumentId);
         applySession(session);
         setStatusText("题目已准备好");
       } catch (reason) {

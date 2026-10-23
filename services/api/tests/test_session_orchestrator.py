@@ -243,7 +243,9 @@ class SessionOrchestratorTests(unittest.TestCase):
                         LearnerKnowledgeNode.knowledge_node_id == first_node_id,
                     )
                 )
-                self.assertLess(mastery.mastery, first_mastery_before)
+                self.assertEqual(mastery.mastery, 0)
+                self.assertEqual(mastery.evaluated_question_count, 1)
+                self.assertEqual(mastery.correct_question_count, 0)
                 if first_error_id:
                     error = database.scalar(
                         select(LearnerErrorNode).where(

@@ -93,6 +93,14 @@ class KnowledgeGraphUpdate(StrictModel):
     reason: str
 
 
+class KnowledgeAssessment(StrictModel):
+    """Final judgement of the first answer for one explicitly assessed node."""
+
+    node_id: str
+    outcome: Literal["correct", "incorrect", "partial", "unassessable"]
+    reason: str = Field(min_length=1)
+
+
 class ErrorGraphUpdate(StrictModel):
     error_id: str
     action: Literal["activate", "strengthen", "weaken", "resolve", "relapse", "none"]
@@ -101,6 +109,7 @@ class ErrorGraphUpdate(StrictModel):
 
 
 class CriticConversationMessage(StrictModel):
+    message_id: Optional[UUID] = None
     role: Literal["questioner", "student", "critic", "system"]
     content_markdown: str = Field(min_length=1)
     critic_intent: Optional[Intent] = None
@@ -219,15 +228,23 @@ class DiscussionSummary(StrictModel):
     final_knowledge_updates: List[KnowledgeGraphUpdate]
     final_error_updates: List[ErrorGraphUpdate]
     next_question_guidance: Dict[str, Any]
+    knowledge_assessments: List[KnowledgeAssessment] = Field(default_factory=list, max_length=2)
 
     @model_validator(mode="after")
     def validate_summary_updates(self) -> "DiscussionSummary":
+        node_ids = [item.node_id for item in self.knowledge_assessments]
+        if len(set(node_ids)) != len(node_ids):
+            raise ValueError("knowledge_assessments must contain unique knowledge nodes")
         if self.final_verdict in {
             "critic_uncertain",
             "invalid_question",
             "not_applicable",
         } and (self.final_knowledge_updates or self.final_error_updates):
             raise ValueError("unreliable final verdict cannot update graphs")
+        if self.final_verdict in {
+            "critic_uncertain", "invalid_question", "not_applicable", "student_uncertain",
+        } and any(item.outcome != "unassessable" for item in self.knowledge_assessments):
+            raise ValueError("unreliable final verdict cannot produce assessed results")
         if self.diagnosis_changed and self.original_verdict == self.final_verdict:
             raise ValueError("diagnosis_changed requires a different final verdict")
         return self
@@ -239,6 +256,8 @@ class DiscussionSummaryContext(StrictModel):
     conversation_history: List[CriticConversationMessage]
     turn_results: List[CriticTurnResult]
     provisional_candidate_question: Optional[QuestionPacket] = None
+    assessment_basis_message_id: Optional[UUID] = None
+    assessment_assistance: Literal["none", "hint", "answer_visible"] = "none"
 
 
 class DiscussionSummaryExecution(StrictModel):

@@ -1,8 +1,17 @@
 import json
 import re
-from typing import Any, Dict, List, Sequence, Type
+from contextlib import aclosing
+from typing import Any, AsyncIterator, Dict, List, Optional, Sequence, Type
 
 import httpx
+from langchain_openai import ChatOpenAI
+from openai import (
+    APIStatusError,
+    APITimeoutError,
+    ContentFilterFinishReasonError,
+    LengthFinishReasonError,
+    OpenAIError,
+)
 
 from app.llm.base import (
     LLMProvider,
@@ -65,6 +74,7 @@ class OpenAICompatibleLLMProvider(LLMProvider):
         *,
         timeout_seconds: float = 75,
         extra_body: str = "",
+        http_async_client: Optional[httpx.AsyncClient] = None,
     ) -> None:
         if not base_url or not api_key or not model:
             raise ValueError("LLM_BASE_URL, LLM_API_KEY and LLM_MODEL are required")
@@ -75,47 +85,41 @@ class OpenAICompatibleLLMProvider(LLMProvider):
         self.model = model
         self.timeout_seconds = timeout_seconds
         self.extra_body = self._parse_extra_body(extra_body)
+        self.chat_model = ChatOpenAI(
+            model=model,
+            api_key=api_key,
+            base_url=self.base_url,
+            temperature=0.2,
+            timeout=timeout_seconds,
+            # LangGraph owns the two-attempt repair policy. SDK retries would
+            # multiply requests and make retry_count misleading.
+            max_retries=0,
+            extra_body=self.extra_body,
+            http_async_client=http_async_client,
+            stream_usage=False,
+            use_responses_api=False,
+        )
 
     async def generate_structured(
         self,
         messages: List[Dict[str, str]],
         schema: Type[SchemaT],
     ) -> SchemaT:
-        payload = {
-            "model": self.model,
-            "messages": messages,
-            "response_format": {"type": "json_object"},
-            "temperature": 0.2,
-        }
-        payload.update(self.extra_body)
-        headers = {"Authorization": f"Bearer {self.api_key}"}
         try:
-            async with httpx.AsyncClient(timeout=self.timeout_seconds) as client:
-                response = await client.post(
-                    f"{self.base_url}/chat/completions",
-                    headers=headers,
-                    json=payload,
-                )
-                response.raise_for_status()
-        except httpx.TimeoutException as error:
-            raise LLMProviderError(
-                f"LLM request timed out after {self.timeout_seconds:g} seconds"
-            ) from error
-        except httpx.HTTPStatusError as error:
-            raise LLMProviderError(
-                f"LLM provider returned HTTP {error.response.status_code}"
-            ) from error
-        except httpx.HTTPError as error:
-            raise LLMProviderError("LLM provider request failed") from error
+            structured_model = self.chat_model.with_structured_output(
+                schema, method="json_mode", include_raw=True,
+            )
+            response = await structured_model.ainvoke(messages)
+        except (OpenAIError, httpx.HTTPError) as error:
+            raise self._provider_error(error) from error
+        except (KeyError, IndexError, TypeError, AttributeError) as error:
+            raise LLMProviderError("LLM provider returned an unexpected response shape") from error
 
-        try:
-            content = response.json()["choices"][0]["message"]["content"]
-        except (KeyError, IndexError, TypeError, ValueError) as error:
-            raise LLMProviderError(
-                "LLM provider returned an unexpected response shape"
-            ) from error
+        content = response["raw"].content
         if not isinstance(content, str) or not content.strip():
             raise LLMProviderError("LLM provider returned empty message content")
+        # LangChain's parser accepts repaired/partial JSON. Keep our existing
+        # stricter boundary: only a complete JSON document may drive a turn.
         return schema.model_validate(json.loads(content))
 
     async def generate_structured_stream(
@@ -127,68 +131,21 @@ class OpenAICompatibleLLMProvider(LLMProvider):
     ) -> SchemaT:
         if not visible_path:
             raise ValueError("visible_path must not be empty")
-        payload = {
-            "model": self.model,
-            "messages": messages,
-            "response_format": {"type": "json_object"},
-            "temperature": 0.2,
-            "stream": True,
-        }
-        payload.update(self.extra_body)
-        headers = {"Authorization": f"Bearer {self.api_key}"}
         content = ""
         visible_content = ""
 
-        try:
-            async with httpx.AsyncClient(timeout=self.timeout_seconds) as client:
-                async with client.stream(
-                    "POST",
-                    f"{self.base_url}/chat/completions",
-                    headers=headers,
-                    json=payload,
-                ) as response:
-                    response.raise_for_status()
-                    async for line in response.aiter_lines():
-                        if not line.startswith("data:"):
-                            continue
-                        data = line[5:].strip()
-                        if not data or data == "[DONE]":
-                            continue
-                        try:
-                            event = json.loads(data)
-                            choices = event.get("choices", [])
-                        except (
-                            json.JSONDecodeError,
-                            TypeError,
-                        ) as error:
-                            raise LLMProviderError(
-                                "LLM provider returned malformed stream data"
-                            ) from error
-                        if not choices:
-                            continue
-                        delta = choices[0].get("delta", {}).get("content")
-                        if not delta:
-                            continue
-                        content += delta
-                        current_visible = extract_partial_json_string_field(
-                            content,
-                            visible_path[-1],
-                        )
-                        if current_visible.startswith(visible_content):
-                            new_text = current_visible[len(visible_content) :]
-                            if new_text:
-                                visible_content = current_visible
-                                await on_delta(new_text)
-        except httpx.TimeoutException as error:
-            raise LLMProviderError(
-                f"LLM request timed out after {self.timeout_seconds:g} seconds"
-            ) from error
-        except httpx.HTTPStatusError as error:
-            raise LLMProviderError(
-                f"LLM provider returned HTTP {error.response.status_code}"
-            ) from error
-        except httpx.HTTPError as error:
-            raise LLMProviderError("LLM provider request failed") from error
+        async with aclosing(self._stream_content(messages)) as stream:
+            async for delta in stream:
+                content += delta
+                current_visible = extract_partial_json_string_field(
+                    content,
+                    visible_path[-1],
+                )
+                if current_visible.startswith(visible_content):
+                    new_text = current_visible[len(visible_content) :]
+                    if new_text:
+                        visible_content = current_visible
+                        await on_delta(new_text)
 
         if not content.strip():
             raise LLMProviderError("LLM provider returned empty streamed content")
@@ -198,6 +155,59 @@ class OpenAICompatibleLLMProvider(LLMProvider):
             raise LLMProviderError(
                 "LLM provider returned invalid streamed JSON"
             ) from error
+
+    async def _stream_content(self, messages: List[Dict[str, str]]) -> AsyncIterator[str]:
+        # Isolate transport errors from application callback failures. A failed
+        # websocket callback must not be mistaken for malformed model output.
+        # Own the SDK stream context directly: LangChain's nested astream
+        # generators do not synchronously close their children on early exit.
+        try:
+            response = await self.chat_model.async_client.create(
+                model=self.model,
+                messages=messages,
+                response_format={"type": "json_object"},
+                temperature=0.2,
+                stream=True,
+                extra_body=self.extra_body,
+            )
+            async with response:
+                async for chunk in response:
+                    if not chunk.choices:
+                        continue
+                    choice = chunk.choices[0]
+                    if choice.finish_reason == "length":
+                        raise LLMProviderError(
+                            "LLM provider truncated the response before completion"
+                        )
+                    if choice.finish_reason == "content_filter":
+                        raise LLMProviderError("LLM provider could not complete the response")
+                    delta = choice.delta.content
+                    if not delta:
+                        continue
+                    if not isinstance(delta, str):
+                        raise LLMProviderError("LLM provider returned non-text streamed content")
+                    yield delta
+        except (OpenAIError, httpx.HTTPError) as error:
+            raise self._provider_error(error) from error
+        except (json.JSONDecodeError, KeyError, IndexError, TypeError, AttributeError) as error:
+            raise LLMProviderError("LLM provider returned malformed stream data") from error
+
+    def _provider_error(self, error: Exception) -> LLMProviderError:
+        if isinstance(error, LengthFinishReasonError):
+            return LLMProviderError("LLM provider truncated the response before completion")
+        if isinstance(error, ContentFilterFinishReasonError):
+            return LLMProviderError("LLM provider could not complete the response")
+        if isinstance(error, (APITimeoutError, httpx.TimeoutException)):
+            return LLMProviderError(
+                f"LLM request timed out after {self.timeout_seconds:g} seconds"
+            )
+        if isinstance(error, APIStatusError):
+            return LLMProviderError(f"LLM provider returned HTTP {error.status_code}")
+        if isinstance(error, httpx.HTTPStatusError):
+            return LLMProviderError(
+                f"LLM provider returned HTTP {error.response.status_code}"
+            )
+        return LLMProviderError("LLM provider request failed")
 
     @staticmethod
     def _parse_extra_body(raw_value: str) -> Dict[str, Any]:

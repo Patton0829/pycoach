@@ -1,0 +1,396 @@
+{
+  "source_index_url": "https://docs.python.org/3/tutorial/index.html",
+  "chapters": [
+    {
+      "id": "python_tutorial.ch01",
+      "course_id": "python",
+      "title": "1. 课前甜点",
+      "sort_order": 1,
+      "reference_url": "https://docs.python.org/3/tutorial/appetite.html"
+    },
+    {
+      "id": "python_tutorial.ch02",
+      "course_id": "python",
+      "title": "2. 使用 Python 的解释器",
+      "sort_order": 2,
+      "reference_url": "https://docs.python.org/3/tutorial/interpreter.html"
+    },
+    {
+      "id": "python_tutorial.ch03",
+      "course_id": "python",
+      "title": "3. Python 速览",
+      "sort_order": 3,
+      "reference_url": "https://docs.python.org/3/tutorial/introduction.html"
+    },
+    {
+      "id": "python_tutorial.ch04",
+      "course_id": "python",
+      "title": "4. 更多控制流工具",
+      "sort_order": 4,
+      "reference_url": "https://docs.python.org/3/tutorial/controlflow.html"
+    },
+    {
+      "id": "python_tutorial.ch05",
+      "course_id": "python",
+      "title": "5. 数据结构",
+      "sort_order": 5,
+      "reference_url": "https://docs.python.org/3/tutorial/datastructures.html"
+    },
+    {
+      "id": "python_tutorial.ch06",
+      "course_id": "python",
+      "title": "6. 模块",
+      "sort_order": 6,
+      "reference_url": "https://docs.python.org/3/tutorial/modules.html"
+    },
+    {
+      "id": "python_tutorial.ch07",
+      "course_id": "python",
+      "title": "7. 输入与输出",
+      "sort_order": 7,
+      "reference_url": "https://docs.python.org/3/tutorial/inputoutput.html"
+    },
+    {
+      "id": "python_tutorial.ch08",
+      "course_id": "python",
+      "title": "8. 错误和异常",
+      "sort_order": 8,
+      "reference_url": "https://docs.python.org/3/tutorial/errors.html"
+    },
+    {
+      "id": "python_tutorial.ch09",
+      "course_id": "python",
+      "title": "9. 类",
+      "sort_order": 9,
+      "reference_url": "https://docs.python.org/3/tutorial/classes.html"
+    },
+    {
+      "id": "python_tutorial.ch10",
+      "course_id": "python",
+      "title": "10. 标准库概览",
+      "sort_order": 10,
+      "reference_url": "https://docs.python.org/3/tutorial/stdlib.html"
+    },
+    {
+      "id": "python_tutorial.ch11",
+      "course_id": "python",
+      "title": "11. 标准库概览 --- 第二部分",
+      "sort_order": 11,
+      "reference_url": "https://docs.python.org/3/tutorial/stdlib2.html"
+    },
+    {
+      "id": "python_tutorial.ch12",
+      "course_id": "python",
+      "title": "12. 虚拟环境和包",
+      "sort_order": 12,
+      "reference_url": "https://docs.python.org/3/tutorial/venv.html"
+    },
+    {
+      "id": "python_tutorial.ch13",
+      "course_id": "python",
+      "title": "13. 接下来？",
+      "sort_order": 13,
+      "reference_url": "https://docs.python.org/3/tutorial/whatnow.html"
+    },
+    {
+      "id": "python_tutorial.ch14",
+      "course_id": "python",
+      "title": "14. 交互式编辑和编辑历史",
+      "sort_order": 14,
+      "reference_url": "https://docs.python.org/3/tutorial/interactive.html"
+    },
+    {
+      "id": "python_tutorial.ch15",
+      "course_id": "python",
+      "title": "15. 浮点算术：问题和限制",
+      "sort_order": 15,
+      "reference_url": "https://docs.python.org/3/tutorial/floatingpoint.html"
+    },
+    {
+      "id": "python_tutorial.ch16",
+      "course_id": "python",
+      "title": "16. 附录",
+      "sort_order": 16,
+      "reference_url": "https://docs.python.org/3/tutorial/appendix.html"
+    },
+    {
+      "id": "python_supplementary",
+      "course_id": "python",
+      "title": "补充专题",
+      "sort_order": 100,
+      "reference_url": null
+    }
+  ],
+  "node_metadata": {
+    "python.list": {
+      "chapter_id": "python_tutorial.ch03",
+      "reference_url": "https://docs.python.org/3/tutorial/introduction.html#lists",
+      "reference_section": "3.1.3",
+      "is_supplementary": false
+    },
+    "python.iterable": {
+      "chapter_id": "python_tutorial.ch09",
+      "reference_url": "https://docs.python.org/3/tutorial/classes.html#iterators",
+      "reference_section": "9.8",
+      "is_supplementary": false
+    },
+    "python.iterator": {
+      "chapter_id": "python_tutorial.ch09",
+      "reference_url": "https://docs.python.org/3/tutorial/classes.html#iterators",
+      "reference_section": "9.8",
+      "is_supplementary": false
+    },
+    "python.iterator.iter": {
+      "chapter_id": "python_tutorial.ch09",
+      "reference_url": "https://docs.python.org/3/tutorial/classes.html#iterators",
+      "reference_section": "9.8",
+      "is_supplementary": false
+    },
+    "python.iterator.next": {
+      "chapter_id": "python_tutorial.ch09",
+      "reference_url": "https://docs.python.org/3/tutorial/classes.html#iterators",
+      "reference_section": "9.8",
+      "is_supplementary": false
+    },
+    "python.iterator.state": {
+      "chapter_id": "python_tutorial.ch09",
+      "reference_url": "https://docs.python.org/3/tutorial/classes.html#iterators",
+      "reference_section": "9.8",
+      "is_supplementary": false
+    },
+    "python.iterator.exhaustion": {
+      "chapter_id": "python_tutorial.ch09",
+      "reference_url": "https://docs.python.org/3/tutorial/classes.html#iterators",
+      "reference_section": "9.8",
+      "is_supplementary": false
+    },
+    "python.stop_iteration": {
+      "chapter_id": "python_tutorial.ch09",
+      "reference_url": "https://docs.python.org/3/tutorial/classes.html#iterators",
+      "reference_section": "9.8",
+      "is_supplementary": false
+    },
+    "python.for_loop.protocol": {
+      "chapter_id": "python_tutorial.ch04",
+      "reference_url": "https://docs.python.org/3/tutorial/controlflow.html#for-statements",
+      "reference_section": "4.2",
+      "is_supplementary": false
+    },
+    "python.generator.intro": {
+      "chapter_id": "python_tutorial.ch09",
+      "reference_url": "https://docs.python.org/3/tutorial/classes.html#generators",
+      "reference_section": "9.9",
+      "is_supplementary": false
+    },
+    "python.ch3.numbers": {
+      "chapter_id": "python_tutorial.ch03",
+      "reference_url": "https://docs.python.org/3/tutorial/introduction.html#numbers",
+      "reference_section": "3.1.1",
+      "is_supplementary": false
+    },
+    "python.ch3.text": {
+      "chapter_id": "python_tutorial.ch03",
+      "reference_url": "https://docs.python.org/3/tutorial/introduction.html#text",
+      "reference_section": "3.1.2",
+      "is_supplementary": false
+    },
+    "python.ch3.sequence_indexing": {
+      "chapter_id": "python_tutorial.ch03",
+      "reference_url": "https://docs.python.org/3/tutorial/introduction.html#text",
+      "reference_section": "3.1.2",
+      "is_supplementary": false
+    },
+    "python.ch3.lists": {
+      "chapter_id": "python_tutorial.ch03",
+      "reference_url": "https://docs.python.org/3/tutorial/introduction.html#lists",
+      "reference_section": "3.1.3",
+      "is_supplementary": false
+    },
+    "python.ch3.assignment_mutability": {
+      "chapter_id": "python_tutorial.ch03",
+      "reference_url": "https://docs.python.org/3/tutorial/introduction.html#lists",
+      "reference_section": "3.1.3",
+      "is_supplementary": false
+    },
+    "python.ch4.if": {
+      "chapter_id": "python_tutorial.ch04",
+      "reference_url": "https://docs.python.org/3/tutorial/controlflow.html#if-statements",
+      "reference_section": "4.1",
+      "is_supplementary": false
+    },
+    "python.ch4.for_range": {
+      "chapter_id": "python_tutorial.ch04",
+      "reference_url": "https://docs.python.org/3/tutorial/controlflow.html#for-statements",
+      "reference_section": "4.2,4.3",
+      "is_supplementary": false
+    },
+    "python.ch4.loop_control": {
+      "chapter_id": "python_tutorial.ch04",
+      "reference_url": "https://docs.python.org/3/tutorial/controlflow.html#break-and-continue-statements",
+      "reference_section": "4.4,4.5,4.6",
+      "is_supplementary": false
+    },
+    "python.ch4.functions": {
+      "chapter_id": "python_tutorial.ch04",
+      "reference_url": "https://docs.python.org/3/tutorial/controlflow.html#defining-functions",
+      "reference_section": "4.8",
+      "is_supplementary": false
+    },
+    "python.ch4.arguments": {
+      "chapter_id": "python_tutorial.ch04",
+      "reference_url": "https://docs.python.org/3/tutorial/controlflow.html#more-on-defining-functions",
+      "reference_section": "4.9",
+      "is_supplementary": false
+    },
+    "python.ch5.list_methods": {
+      "chapter_id": "python_tutorial.ch05",
+      "reference_url": "https://docs.python.org/3/tutorial/datastructures.html#more-on-lists",
+      "reference_section": "5.1",
+      "is_supplementary": false
+    },
+    "python.ch5.comprehensions": {
+      "chapter_id": "python_tutorial.ch05",
+      "reference_url": "https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions",
+      "reference_section": "5.1.3",
+      "is_supplementary": false
+    },
+    "python.ch5.tuples_sequences": {
+      "chapter_id": "python_tutorial.ch05",
+      "reference_url": "https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences",
+      "reference_section": "5.3",
+      "is_supplementary": false
+    },
+    "python.ch5.sets_dicts": {
+      "chapter_id": "python_tutorial.ch05",
+      "reference_url": "https://docs.python.org/3/tutorial/datastructures.html#sets",
+      "reference_section": "5.4,5.5",
+      "is_supplementary": false
+    },
+    "python.ch5.looping_conditions": {
+      "chapter_id": "python_tutorial.ch05",
+      "reference_url": "https://docs.python.org/3/tutorial/datastructures.html#looping-techniques",
+      "reference_section": "5.6,5.7,5.8",
+      "is_supplementary": false
+    },
+    "python.ch6.imports": {
+      "chapter_id": "python_tutorial.ch06",
+      "reference_url": "https://docs.python.org/3/tutorial/modules.html#modules",
+      "reference_section": "6",
+      "is_supplementary": false
+    },
+    "python.ch6.module_execution": {
+      "chapter_id": "python_tutorial.ch06",
+      "reference_url": "https://docs.python.org/3/tutorial/modules.html#executing-modules-as-scripts",
+      "reference_section": "6.1.1",
+      "is_supplementary": false
+    },
+    "python.ch6.search_path": {
+      "chapter_id": "python_tutorial.ch06",
+      "reference_url": "https://docs.python.org/3/tutorial/modules.html#the-module-search-path",
+      "reference_section": "6.1.2,6.1.3",
+      "is_supplementary": false
+    },
+    "python.ch6.dir": {
+      "chapter_id": "python_tutorial.ch06",
+      "reference_url": "https://docs.python.org/3/tutorial/modules.html#the-dir-function",
+      "reference_section": "6.3",
+      "is_supplementary": false
+    },
+    "python.ch6.packages": {
+      "chapter_id": "python_tutorial.ch06",
+      "reference_url": "https://docs.python.org/3/tutorial/modules.html#packages",
+      "reference_section": "6.4",
+      "is_supplementary": false
+    },
+    "python.ch7.fstrings_format": {
+      "chapter_id": "python_tutorial.ch07",
+      "reference_url": "https://docs.python.org/3/tutorial/inputoutput.html#fancier-output-formatting",
+      "reference_section": "7.1",
+      "is_supplementary": false
+    },
+    "python.ch7.str_repr": {
+      "chapter_id": "python_tutorial.ch07",
+      "reference_url": "https://docs.python.org/3/tutorial/inputoutput.html#fancier-output-formatting",
+      "reference_section": "7.1",
+      "is_supplementary": false
+    },
+    "python.ch7.open_modes": {
+      "chapter_id": "python_tutorial.ch07",
+      "reference_url": "https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files",
+      "reference_section": "7.2",
+      "is_supplementary": false
+    },
+    "python.ch7.with_files": {
+      "chapter_id": "python_tutorial.ch07",
+      "reference_url": "https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files",
+      "reference_section": "7.2,7.2.1",
+      "is_supplementary": false
+    },
+    "python.ch7.json": {
+      "chapter_id": "python_tutorial.ch07",
+      "reference_url": "https://docs.python.org/3/tutorial/inputoutput.html#saving-structured-data-with-json",
+      "reference_section": "7.2.2",
+      "is_supplementary": false
+    },
+    "python.ch8.syntax_vs_exception": {
+      "chapter_id": "python_tutorial.ch08",
+      "reference_url": "https://docs.python.org/3/tutorial/errors.html#syntax-errors",
+      "reference_section": "8.1,8.2",
+      "is_supplementary": false
+    },
+    "python.ch8.try_except": {
+      "chapter_id": "python_tutorial.ch08",
+      "reference_url": "https://docs.python.org/3/tutorial/errors.html#handling-exceptions",
+      "reference_section": "8.3",
+      "is_supplementary": false
+    },
+    "python.ch8.raise": {
+      "chapter_id": "python_tutorial.ch08",
+      "reference_url": "https://docs.python.org/3/tutorial/errors.html#raising-exceptions",
+      "reference_section": "8.4,8.5,8.10",
+      "is_supplementary": false
+    },
+    "python.ch8.finally_cleanup": {
+      "chapter_id": "python_tutorial.ch08",
+      "reference_url": "https://docs.python.org/3/tutorial/errors.html#defining-clean-up-actions",
+      "reference_section": "8.7,8.8",
+      "is_supplementary": false
+    },
+    "python.ch8.custom_exceptions": {
+      "chapter_id": "python_tutorial.ch08",
+      "reference_url": "https://docs.python.org/3/tutorial/errors.html#user-defined-exceptions",
+      "reference_section": "8.6",
+      "is_supplementary": false
+    },
+    "python.ch9.namespaces_scopes": {
+      "chapter_id": "python_tutorial.ch09",
+      "reference_url": "https://docs.python.org/3/tutorial/classes.html#python-scopes-and-namespaces",
+      "reference_section": "9.2",
+      "is_supplementary": false
+    },
+    "python.ch9.class_definition": {
+      "chapter_id": "python_tutorial.ch09",
+      "reference_url": "https://docs.python.org/3/tutorial/classes.html#a-first-look-at-classes",
+      "reference_section": "9.3.1,9.3.2",
+      "is_supplementary": false
+    },
+    "python.ch9.instance_methods": {
+      "chapter_id": "python_tutorial.ch09",
+      "reference_url": "https://docs.python.org/3/tutorial/classes.html#instance-objects",
+      "reference_section": "9.3.3,9.3.4",
+      "is_supplementary": false
+    },
+    "python.ch9.class_instance_variables": {
+      "chapter_id": "python_tutorial.ch09",
+      "reference_url": "https://docs.python.org/3/tutorial/classes.html#class-and-instance-variables",
+      "reference_section": "9.3.5",
+      "is_supplementary": false
+    },
+    "python.ch9.inheritance": {
+      "chapter_id": "python_tutorial.ch09",
+      "reference_url": "https://docs.python.org/3/tutorial/classes.html#inheritance",
+      "reference_section": "9.5",
+      "is_supplementary": false
+    }
+  }
+}

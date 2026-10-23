@@ -204,6 +204,129 @@ describe("LearningPage integration", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("starts a reviewed paper from the exam entrance and keeps the text-only learning flow", async () => {
+    const paperId = "91111111-1111-4111-8111-111111111111";
+    const source = {
+      title: "Python 官方样题",
+      document_type: "sample_exam",
+      exam_year: null,
+      question_number: "2",
+      pdf_pages: [1],
+    };
+    const metadata = {
+      difficulty: 1,
+      knowledge_points: [{ id: "python.ch3.division", name: "真除法与整除" }],
+      source,
+    };
+    const examSession = {
+      ...initialSession,
+      messages: [{
+        ...initialSession.messages[0],
+        content_markdown: "判断除法结果。",
+        question_metadata: metadata,
+      }],
+      current_question: {
+        ...initialSession.current_question,
+        markdown: "判断除法结果。",
+        question_metadata: metadata,
+      },
+      chapter_question_set: {
+        ...initialSession.chapter_question_set,
+        chapter_id: "python_exam_practice",
+        chapter_title: "真题测试",
+        target_question_count: 3,
+      },
+    };
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith("/api/exams")) {
+        return new Response(JSON.stringify([{
+          id: paperId,
+          title: source.title,
+          document_type: source.document_type,
+          exam_year: null,
+          available_question_count: 3,
+          excluded_question_count: 1,
+          question_types: ["multiple_choice"],
+          reference_answer: "不应暴露的原题答案",
+        }]), { status: 200 });
+      }
+      if (url.endsWith("/api/sessions") && init?.method === "POST") {
+        expect(JSON.parse(String(init.body))).toEqual({
+          learner_id: "demo_user",
+          module: "python_exam_practice",
+          source_document_id: paperId,
+        });
+        return new Response(JSON.stringify(examSession), { status: 200 });
+      }
+      if (url.endsWith("/messages") && init?.method === "POST") {
+        return new Response(JSON.stringify({
+          message_id: "61111111-1111-4111-8111-111111111111",
+          status: "processing",
+          session_state: "CRITIC_PROCESSING",
+        }), { status: 202 });
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+    expect(await screen.findByRole("button", { name: "查看真题测试" })).toBeInTheDocument();
+    expect(fetchMock.mock.calls.some(([input]) => String(input).endsWith("/api/exams"))).toBe(false);
+    fireEvent.click(screen.getByRole("button", { name: "查看真题测试" }));
+    expect(await screen.findByRole("heading", { name: "真题测试" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: source.title })).toBeInTheDocument();
+    expect(screen.queryByText("不应暴露的原题答案")).not.toBeInTheDocument();
+    expect(fetchMock).not.toHaveBeenCalledWith(
+      expect.stringContaining("/api/sessions"),
+      expect.objectContaining({ method: "POST" }),
+    );
+
+    const start = screen.getByRole("button", { name: `开始 ${source.title} 真题测试` });
+    await waitFor(() => expect(start).not.toBeDisabled());
+    fireEvent.click(start);
+    expect(await screen.findByText("判断除法结果。")).toBeInTheDocument();
+    expect(screen.getByText("当前模块：真题测试")).toBeInTheDocument();
+    expect(screen.getByText(/第 1 \/ 3 题/)).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "难度 1 星，共 5 星" })).toBeInTheDocument();
+    expect(screen.getByText("知识点：真除法与整除")).toBeInTheDocument();
+    expect(screen.getByText(/来源：Python 官方样题/)).toBeInTheDocument();
+    expect(screen.queryByText("绝不能显示")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /个人知识图谱/ }));
+    fireEvent.click(screen.getByRole("button", { name: "查看真题测试" }));
+    fireEvent.click(await screen.findByRole("button", { name: "继续真题测试" }));
+    expect(await screen.findByText("判断除法结果。")).toBeInTheDocument();
+    expect(fetchMock.mock.calls.filter(([input, init]) =>
+      String(input).endsWith("/api/sessions") && init?.method === "POST",
+    )).toHaveLength(1);
+
+    const input = screen.getByLabelText("学习输入");
+    fireEvent.change(input, { target: { value: "C" } });
+    fireEvent.keyDown(input, { key: "Enter", shiftKey: false });
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining("/messages"),
+      expect.objectContaining({ method: "POST", body: expect.stringContaining('"content":"C"') }),
+    ));
+    await waitFor(() => expect(MockWebSocket.instances).toHaveLength(1));
+    act(() => {
+      MockWebSocket.instances[0].emit({
+        type: "question_ready",
+        session_id: examSession.session_id,
+        payload: {
+          question_id: "81111111-1111-4111-8111-111111111111",
+          markdown: "下一道原卷题目。",
+          input_hint: null,
+          question_metadata: { ...metadata, difficulty: 2, source: { ...source, question_number: "7" } },
+        },
+      });
+    });
+    expect(await screen.findByText("下一道原卷题目。")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "难度 2 星，共 5 星" })).toBeInTheDocument();
+    expect(screen.getByText(/第 7 题/)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /下一题|提交答案|我不会/ })).not.toBeInTheDocument();
+  });
+
   it("shows the Python foundation diagnostic intro before starting", async () => {
     const diagnosticSession = {
       ...initialSession,
@@ -680,6 +803,65 @@ describe("LearningPage integration", () => {
       .toBeInTheDocument();
     expect(screen.getByText(/我们会乐此不疲/)).toBeInTheDocument();
     expect(screen.getByText("—PyCoach Lab")).toBeInTheDocument();
+  });
+
+  it("keeps question difficulty and source visible from REST through live question delivery", async () => {
+    const initialMetadata = {
+      difficulty: 2,
+      knowledge_points: [{ id: "python.iterator.next", name: "next()" }],
+      source: null,
+    };
+    const session = {
+      ...initialSession,
+      messages: initialSession.messages.map((message) => ({
+        ...message,
+        question_metadata: initialMetadata,
+      })),
+    };
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      if (String(input).endsWith("/api/sessions") && init?.method === "POST") {
+        return new Response(JSON.stringify(session), { status: 200 });
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LearningPage />);
+    await startControlFlowChapterTest();
+    expect(await screen.findByRole("img", { name: "难度 2 星，共 5 星" })).toBeInTheDocument();
+    expect(screen.getByText("知识点：next()")).toBeInTheDocument();
+
+    const nextQuestion = {
+      type: "question_ready",
+      session_id: initialSession.session_id,
+      payload: {
+        question_id: "81111111-1111-4111-8111-111111111111",
+        markdown: "新发布的真题",
+        input_hint: null,
+        question_metadata: {
+          difficulty: 1,
+          knowledge_points: [{ id: "python.iterator", name: "迭代器" }],
+          source: {
+            title: "Python 样题",
+            document_type: "sample_exam",
+            exam_year: null,
+            question_number: "12",
+            pdf_pages: [3],
+          },
+        },
+      },
+    };
+    const socket = MockWebSocket.instances[0];
+    act(() => {
+      socket.emit(nextQuestion);
+      socket.emit(nextQuestion);
+    });
+
+    expect(await screen.findByText("新发布的真题")).toBeInTheDocument();
+    expect(screen.getAllByRole("img", { name: "难度 1 星，共 5 星" })).toHaveLength(1);
+    expect(screen.queryByRole("img", { name: "难度 2 星，共 5 星" })).not.toBeInTheDocument();
+    expect(screen.getByText(/来源：Python 样题.*第 12 题/)).toBeInTheDocument();
+    expect(screen.queryByText(/reference_answer|绝不能显示/)).not.toBeInTheDocument();
   });
 
   it("connects REST and WebSocket without exposing internal JSON", async () => {

@@ -5,6 +5,7 @@ from uuid import UUID
 from pydantic import Field
 
 from app.schemas.base import StrictModel
+from app.schemas.public_question import PublicQuestionMetadata
 from app.schemas.session import SessionState
 
 
@@ -18,6 +19,7 @@ class StudentVisibleMessage(StrictModel):
     role: Literal["questioner", "student", "critic", "system"]
     content_markdown: str
     created_at: datetime
+    question_metadata: Optional[PublicQuestionMetadata] = None
 
 
 class MessageAcceptedResponse(StrictModel):
@@ -35,6 +37,7 @@ class QuestionReadyPayload(StrictModel):
     question_id: UUID
     markdown: str
     input_hint: Optional[str] = None
+    question_metadata: Optional[PublicQuestionMetadata] = None
 
 
 class QuestionReadyEvent(StrictModel):

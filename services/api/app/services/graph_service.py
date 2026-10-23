@@ -6,12 +6,11 @@ from sqlalchemy.orm import Session
 from app.models.entities import (
     ErrorType,
     GraphUpdateEvent,
-    KnowledgeNode,
     LearnerErrorNode,
-    LearnerKnowledgeNode,
 )
 from app.repositories.graph_repository import GraphRepository
 from app.schemas.critic import ErrorGraphUpdate, KnowledgeGraphUpdate
+from app.schemas.assessment import assessment_metrics
 from app.schemas.graph import (
     ErrorGraphResponse,
     ErrorNodeSummary,
@@ -23,7 +22,7 @@ KNOWLEDGE_STATUS_LABELS = {
     "mastered": "基本掌握",
     "learning": "正在学习",
     "weak": "需要巩固",
-    "not_started": "尚未学习",
+    "not_started": "尚未测评",
     "needs_review": "需要复习",
 }
 
@@ -34,16 +33,6 @@ ERROR_STATUS_LABELS = {
     "resolved": "已解决",
     "relapsed": "再次出现",
 }
-
-
-def apply_mastery_update(current: float, evidence: str, strength: float) -> float:
-    delta = {
-        "positive": 0.12,
-        "partial": 0.03,
-        "negative": -0.10,
-        "none": 0.0,
-    }[evidence]
-    return max(0.0, min(1.0, current + delta * strength))
 
 
 def apply_error_update(current: float, action: str, strength: float) -> float:
@@ -74,11 +63,17 @@ class GraphService:
         nodes = []
         for node, learner_node in self.repository.list_knowledge_nodes(learner_id):
             status = learner_node.status if learner_node else "not_started"
+            metrics = assessment_metrics(
+                (learner_node.evaluated_question_count or 0) if learner_node else 0,
+                (learner_node.correct_question_count or 0) if learner_node else 0,
+            )
             nodes.append(
                 KnowledgeNodeSummary(
                     node_id=node.id,
                     name=node.name,
+                    chapter_id=node.chapter_id,
                     display_status=KNOWLEDGE_STATUS_LABELS[status],
+                    **metrics.model_dump(),
                 )
             )
         return KnowledgeGraphResponse(learner_id=learner_id, nodes=nodes)
@@ -101,66 +96,10 @@ class GraphService:
         round_id: str,
         update: KnowledgeGraphUpdate,
     ) -> Optional[GraphUpdateEvent]:
-        if update.evidence == "none":
-            return None
-        self._require_learner(learner_id)
-        if self.database.get(KnowledgeNode, update.node_id) is None:
-            raise GraphNodeNotFoundError(update.node_id)
-        learner_node = self.repository.get_learner_knowledge_node(
-            learner_id,
-            update.node_id,
+        raise ValueError(
+            "KnowledgeGraphUpdate is not a question result; "
+            "use AssessmentService.commit_assessment with finalized per-node evidence"
         )
-        if learner_node is None:
-            learner_node = LearnerKnowledgeNode(
-                learner_id=learner_id,
-                knowledge_node_id=update.node_id,
-                mastery=0.0,
-                status="not_started",
-                attempt_count=0,
-                positive_evidence_count=0,
-                negative_evidence_count=0,
-            )
-            self.repository.add(learner_node)
-
-        before = learner_node.mastery or 0.0
-        learner_node.mastery = apply_mastery_update(
-            before,
-            update.evidence,
-            update.strength,
-        )
-        learner_node.attempt_count = (learner_node.attempt_count or 0) + 1
-        learner_node.last_practiced_at = datetime.utcnow()
-        learner_node.updated_at = datetime.utcnow()
-
-        if update.evidence == "positive":
-            learner_node.positive_evidence_count = (
-                learner_node.positive_evidence_count or 0
-            ) + 1
-            learner_node.status = (
-                "mastered" if learner_node.mastery >= 0.8 else "learning"
-            )
-        elif update.evidence == "partial":
-            learner_node.status = "learning"
-        else:
-            learner_node.negative_evidence_count = (
-                learner_node.negative_evidence_count or 0
-            ) + 1
-            learner_node.status = (
-                "needs_review" if before >= 0.8 else "weak"
-            )
-
-        event = GraphUpdateEvent(
-            learner_id=learner_id,
-            round_id=round_id,
-            graph_type="knowledge",
-            node_id=update.node_id,
-            before_value=before,
-            after_value=learner_node.mastery,
-            reason=update.reason,
-        )
-        self.repository.add_graph_update_event(event)
-        self.database.flush()
-        return event
 
     def commit_error_update(
         self,

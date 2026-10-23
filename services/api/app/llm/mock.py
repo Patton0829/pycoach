@@ -609,6 +609,10 @@ class DemoMockLLMProvider(LLMProvider):
             if result["verdict"]
             not in {"not_applicable", "critic_uncertain"}
         ]
+        if any(result["intent"] in {"answer_attempt", "answer_and_question"}
+               for result in evaluative):
+            evaluative = [result for result in evaluative
+                          if result["verdict"] != "student_uncertain"]
         original = evaluative[0]["verdict"] if evaluative else "not_applicable"
         final = evaluative[-1]["verdict"] if evaluative else original
         final_result = evaluative[-1] if evaluative else None
@@ -645,6 +649,36 @@ class DemoMockLLMProvider(LLMProvider):
                         "reason": "Final discussion resolved the targeted confusion.",
                     }
                 ]
+        first_answer = next(
+            (result for result in results
+             if result["intent"] in {"answer_attempt", "answer_and_question"}),
+            None,
+        )
+        # A challenge may correct our grading of the first answer. A later new
+        # answer, however, must not overwrite the original independent result.
+        basis_result = first_answer
+        if first_answer and final_result and final_result["intent"] == "challenge_evaluation":
+            basis_result = final_result
+        outcomes = {
+            "correct": "correct", "incorrect": "incorrect", "partially_correct": "partial",
+        }
+        assessments = []
+        targets = context["question_packet"]["knowledge_node_ids"]
+        for node_id in targets:
+            outcome = "unassessable"
+            if reliable and basis_result:
+                verdict = basis_result["verdict"]
+                explicit_nodes = {
+                    update["node_id"]
+                    for update in basis_result["provisional_knowledge_updates"]
+                }
+                if verdict == "correct" or len(targets) == 1 or node_id in explicit_nodes:
+                    outcome = outcomes.get(verdict, "unassessable")
+            assessments.append({
+                "node_id": node_id,
+                "outcome": outcome,
+                "reason": "Final review of the first answer for this knowledge node.",
+            })
         return {
             "question_id": context["question_packet"]["question_id"],
             "original_verdict": original,
@@ -673,6 +707,7 @@ class DemoMockLLMProvider(LLMProvider):
             ),
             "final_knowledge_updates": knowledge_updates,
             "final_error_updates": error_updates,
+            "knowledge_assessments": assessments,
             "next_question_guidance": {
                 "strategy": "variation_practice",
                 "final_verdict": final,

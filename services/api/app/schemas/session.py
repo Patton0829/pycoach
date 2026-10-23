@@ -36,6 +36,7 @@ class CandidateQuestionState(str, Enum):
 class CreateSessionRequest(StrictModel):
     learner_id: str
     module: str
+    source_document_id: Optional[UUID] = None
 
 
 class SessionResponse(StrictModel):

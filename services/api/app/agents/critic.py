@@ -1,5 +1,8 @@
-from typing import Dict, List, Optional, Type, TypeVar
+from typing import Optional, Type, TypeVar
 
+from langchain_core.messages import HumanMessage
+
+from app.agents.structured_chain import build_structured_chain
 from app.llm.base import LLMProvider, TextDeltaCallback, schema_output_contract
 from app.schemas.critic import CriticTurnResult, DiscussionSummary, QuestionReview
 
@@ -33,28 +36,21 @@ class Critic:
         prompt = system_prompt
         if on_delta is not None and schema is CriticTurnResult:
             prompt += STREAMING_VISIBLE_REPLY_CONTRACT
-        messages: List[Dict[str, str]] = [
-            {
-                "role": "system",
-                "content": prompt + schema_output_contract(schema),
-            },
-            {"role": "user", "content": context_json},
-        ]
+        feedback_messages = []
         if validation_feedback:
-            messages.append(
-                {
-                    "role": "user",
-                    "content": (
+            feedback_messages.append(
+                HumanMessage(
+                    content=(
                         "上一次输出未通过 Schema 校验。只修正下列问题并重新输出"
                         f"完整 JSON：\n{validation_feedback}"
                     ),
-                }
+                )
             )
-        if on_delta is not None:
-            return await self.provider.generate_structured_stream(
-                messages,
-                schema,
-                ("student_visible_reply_markdown",),
-                on_delta,
-            )
-        return await self.provider.generate_structured(messages, schema)
+        chain = build_structured_chain(self.provider, schema, on_delta)
+        return await chain.ainvoke(
+            {
+                "system_prompt": prompt + schema_output_contract(schema),
+                "context_json": context_json,
+                "validation_feedback_messages": feedback_messages,
+            }
+        )

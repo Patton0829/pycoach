@@ -14,6 +14,7 @@ from pydantic import TypeAdapter, ValidationError
 from sqlalchemy.orm import Session
 
 from app.agents.questioner import Questioner
+from app.agents.workflow import StructuredAgentWorkflow
 from app.core.config import settings
 from app.llm.base import LLMProvider, LLMProviderError
 from app.repositories.question_repository import QuestionRepository
@@ -93,6 +94,7 @@ class QuestionContextBuilder:
                     {
                         "id": node.id,
                         "name": node.name,
+                        "chapter_id": node.chapter_id,
                         "description": node.description,
                         "difficulty": node.difficulty,
                         "learning_objective": node.learning_objective,
@@ -132,6 +134,24 @@ class QuestionContextBuilder:
                         if node.id in personal_by_node
                         else "not_started"
                     ),
+                    "evaluated_question_count": (
+                        personal_by_node[node.id].evaluated_question_count
+                        if node.id in personal_by_node else 0
+                    ),
+                    "correct_question_count": (
+                        personal_by_node[node.id].correct_question_count
+                        if node.id in personal_by_node else 0
+                    ),
+                    "accuracy": (
+                        personal_by_node[node.id].correct_question_count
+                        / personal_by_node[node.id].evaluated_question_count
+                        if node.id in personal_by_node
+                        and personal_by_node[node.id].evaluated_question_count else None
+                    ),
+                    "sample_coverage": (
+                        min(personal_by_node[node.id].evaluated_question_count / 20, 1.0)
+                        if node.id in personal_by_node else 0.0
+                    ),
                 }
                 for node in nodes
             ],
@@ -168,47 +188,45 @@ class QuestionService:
         context: QuestionerContext,
     ) -> QuestionGenerationResult:
         prepared_context = self.prepare_context(context)
-        validation_feedback: Optional[str] = None
 
-        for attempt in range(2):
-            try:
-                packet = await self.questioner.generate(
-                    prepared_context,
-                    validation_feedback=validation_feedback,
-                )
-                self.validate_candidate(packet, prepared_context.candidate_constraints)
-                packet = packet.model_copy(
-                    update={"question_id": uuid4()},
-                    deep=True,
-                )
-                return QuestionGenerationResult(
-                    packet=packet,
-                    source="model",
-                    retry_count=attempt,
-                )
-            except (
+        async def invoke(validation_feedback: Optional[str]) -> QuestionPacket:
+            return await self.questioner.generate(
+                prepared_context,
+                validation_feedback=validation_feedback,
+            )
+
+        async def rejected(error: str, attempt: int) -> None:
+            logger.warning("Questioner output rejected on attempt %s: %s", attempt, error)
+
+        workflow = StructuredAgentWorkflow(
+            role="questioner",
+            schema=QuestionPacket,
+            invoke=invoke,
+            retry_exceptions=(
                 ValidationError,
                 JSONDecodeError,
                 QuestionConstraintError,
                 LLMProviderError,
-            ) as error:
-                validation_feedback = str(error)
-                logger.warning(
-                    "Questioner output rejected on attempt %s: %s",
-                    attempt + 1,
-                    error,
-                )
-
-        fallback = self.select_seed_fallback(prepared_context.candidate_constraints)
-        fallback = fallback.model_copy(update={"question_id": uuid4()}, deep=True)
-        logger.error(
-            "Questioner output failed validation twice; using seed fallback %s",
-            fallback.question_id,
+            ),
+            validate=lambda packet: self.validate_candidate(
+                packet, prepared_context.candidate_constraints,
+            ),
+            fallback=lambda: self.select_seed_fallback(prepared_context.candidate_constraints),
+            on_rejected=rejected,
         )
+        execution = await workflow.run()
+        packet = QuestionPacket.model_validate(execution.value).model_copy(
+            update={"question_id": uuid4()}, deep=True,
+        )
+        if execution.used_fallback:
+            logger.error(
+                "Questioner output failed validation twice; using seed fallback %s",
+                packet.question_id,
+            )
         return QuestionGenerationResult(
-            packet=fallback,
-            source="seed_fallback",
-            retry_count=1,
+            packet=packet,
+            source="seed_fallback" if execution.used_fallback else "model",
+            retry_count=execution.retry_count,
         )
 
     def prepare_context(self, context: QuestionerContext) -> QuestionerContext:

@@ -3,17 +3,19 @@ import logging
 from typing import Optional
 from uuid import UUID, uuid4
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.database import SessionLocal
 from app.llm.base import LLMProvider
-from app.models.entities import LearningRound, LearningSession, Question
+from app.models.entities import BankQuestionRevision, LearningRound, LearningSession, Question, QuestionReviewRecord
 from app.repositories.session_repository import SessionRepository
 from app.schemas.critic import (
     CriticTurnContext,
     CriticTurnResult,
     DiscussionSummary,
     DiscussionSummaryContext,
+    KnowledgeAssessment,
     QuestionReview,
     QuestionReviewContext,
 )
@@ -50,7 +52,11 @@ from app.services.critic_service import (
     CriticQuestionReviewService,
 )
 from app.services.graph_service import GraphService
+from app.services.assessment_service import AssessmentService
 from app.services.question_service import QuestionContextBuilder, QuestionService
+from app.services.question_metadata_service import question_metadata, question_metadata_batch
+from app.services.exam_session_plan import create_exam_session_plan, is_exam_session
+from app.services.chapter_questioning_service import EXAM_ASSESSMENT_ID
 from app.services.websocket_manager import SessionWebSocketManager
 
 logger = logging.getLogger(__name__)
@@ -71,6 +77,7 @@ ALLOWED_TRANSITIONS = {
     SessionState.QUESTION_GENERATING: {
         SessionState.QUESTION_ACTIVE,
         SessionState.QUESTION_GENERATION_FAILED,
+        SessionState.SESSION_ENDED,
     },
     SessionState.QUESTION_ACTIVE: {
         SessionState.USER_MESSAGE_RECEIVED,
@@ -96,6 +103,7 @@ ALLOWED_TRANSITIONS = {
         SessionState.NEXT_QUESTION_READY,
         SessionState.QUESTION_GENERATION_FAILED,
         SessionState.FEEDBACK_DISCUSSION,
+        SessionState.SESSION_ENDED,
     },
     SessionState.NEXT_QUESTION_READY: {SessionState.QUESTION_ACTIVE},
     SessionState.QUESTION_INVALID: {
@@ -181,6 +189,8 @@ class LearningSessionOrchestrator:
         self,
         request: CreateSessionRequest,
     ) -> SessionResponse:
+        if request.module == EXAM_ASSESSMENT_ID:
+            return self._create_exam_session(request)
         with self.session_factory() as database:
             repository = SessionRepository(database)
             if not repository.learner_exists(request.learner_id):
@@ -247,6 +257,43 @@ class LearningSessionOrchestrator:
         )
         return self.get_session_response(session_id)
 
+    def _create_exam_session(self, request: CreateSessionRequest) -> SessionResponse:
+        from app.services.exam_practice_service import ExamPracticeService
+
+        with self.session_factory() as database:
+            repository = SessionRepository(database)
+            if not repository.learner_exists(request.learner_id):
+                raise SessionNotFoundError(f"Learner not found: {request.learner_id}")
+            session = LearningSession(
+                learner_id=request.learner_id, status=SessionState.SESSION_CREATED.value,
+            )
+            database.add(session)
+            database.flush()
+            create_exam_session_plan(
+                database, session,
+                str(request.source_document_id) if request.source_document_id else None,
+            )
+            transition_session(session, SessionState.QUESTION_GENERATING)
+            learning_round = LearningRound(
+                session_id=session.id, state=SessionState.QUESTION_GENERATING.value,
+            )
+            database.add(learning_round)
+            database.flush()
+            question = ExamPracticeService(database).create_question(session.id, learning_round.id)
+            if question is None:
+                raise ValueError("当前试卷暂无可用真题，请稍后再试。")
+            learning_round.question_id = question.id
+            learning_round.state = SessionState.QUESTION_ACTIVE.value
+            session.current_question_id = question.id
+            transition_session(session, SessionState.QUESTION_ACTIVE)
+            database.add(create_message(
+                session.id, learning_round.id, "questioner",
+                question.student_content_json["markdown"],
+            ))
+            database.commit()
+            session_id = session.id
+        return self.get_session_response(session_id)
+
     def get_session_response(self, session_id: str) -> SessionResponse:
         with self.session_factory() as database:
             repository = SessionRepository(database)
@@ -259,10 +306,22 @@ class LearningSessionOrchestrator:
                 session,
             )
             question = repository.get_current_question(session)
-            messages = [
-                to_student_visible_message(message).model_dump(mode="json")
-                for message in repository.list_messages(session.id)
-            ]
+            session_questions = database.scalars(
+                select(Question).where(Question.session_id == session.id)
+            ).all()
+            metadata = question_metadata_batch(database, session_questions)
+            question_by_message = {
+                (item.round_id, item.student_content_json["markdown"]): item
+                for item in session_questions
+            }
+            messages = []
+            for message in repository.list_messages(session.id):
+                visible = to_student_visible_message(message)
+                if message.role == "questioner":
+                    item = question_by_message.get((message.round_id, message.content_markdown))
+                    if item is not None:
+                        visible.question_metadata = metadata[item.id]
+                messages.append(visible.model_dump(mode="json"))
             graph_service = GraphService(database)
             knowledge = graph_service.get_knowledge_graph(session.learner_id)
             errors = graph_service.get_error_graph(session.learner_id)
@@ -281,6 +340,7 @@ class LearningSessionOrchestrator:
                         "question_id": question.id,
                         "markdown": question.student_content_json["markdown"],
                         "input_hint": question.student_content_json.get("input_hint"),
+                        "question_metadata": metadata[question.id].model_dump(mode="json"),
                     }
                     if question
                     else None
@@ -442,6 +502,11 @@ class LearningSessionOrchestrator:
             question = repository.get_current_question(session)
             if question is None:
                 return
+            if question.bank_question_revision_id and is_exam_session(database, session.id):
+                revision = database.get(BankQuestionRevision, question.bank_question_revision_id)
+                if revision is None or revision.review_status != "approved":
+                    await self._replace_invalid_exam_question(session_id, student_has_answered=True)
+                    return
 
             review_record = repository.get_latest_question_review(question.id)
             if review_record is None:
@@ -561,6 +626,11 @@ class LearningSessionOrchestrator:
         if result.round_action == "replace_question":
             await self.replace_invalid_question(session_id, student_has_answered=True)
             return
+        if result.round_action == "end_session":
+            await self.complete_round_summary(
+                session_id, learning_round.id, question.id, learning_round.id,
+            )
+            return
         if result.should_prepare_next_question or result.should_invalidate_candidate_question:
             self._schedule(
                 self.prepare_candidate(
@@ -580,6 +650,8 @@ class LearningSessionOrchestrator:
             question = repository.get_question(question_id)
             session = repository.get_session(session_id)
             if question is None or session is None:
+                return
+            if question.bank_question_revision_id and repository.get_latest_question_review(question.id):
                 return
             execution = await self._review_question_in_database(database, question)
             if execution.status == "failed":
@@ -613,6 +685,8 @@ class LearningSessionOrchestrator:
                 else repository.get_current_round(session_id)
             )
             if not session or not learning_round:
+                return None
+            if session.status == SessionState.SESSION_ENDED.value or is_exam_session(database, session.id):
                 return None
             if learning_round.finalized_at is not None:
                 return None
@@ -693,6 +767,11 @@ class LearningSessionOrchestrator:
             )
 
     async def finalize_round(self, session_id: str) -> None:
+        with self.session_factory() as database:
+            exam_mode = is_exam_session(database, session_id)
+        if exam_mode:
+            await self._finalize_exam_round(session_id)
+            return
         import asyncio
 
         deadline = asyncio.get_running_loop().time() + NEXT_QUESTION_WAIT_TIMEOUT_SECONDS
@@ -713,6 +792,7 @@ class LearningSessionOrchestrator:
                 question_id=published["next_question_id"],
                 markdown=published["next_markdown"],
                 input_hint=published["next_input_hint"],
+                question_metadata=published["next_question_metadata"],
             ),
         )
         await self.websocket_manager.broadcast(session_id, question_event)
@@ -730,6 +810,78 @@ class LearningSessionOrchestrator:
                 next_round_id=published["next_round_id"],
             )
         )
+
+    async def _finalize_exam_round(self, session_id: str) -> None:
+        """Finalize assessment before selecting another source item from the bank."""
+        from app.services.exam_practice_service import ExamPracticeService
+
+        with self.session_factory() as database:
+            repository = SessionRepository(database)
+            session = repository.get_session(session_id)
+            question = repository.get_current_question(session) if session else None
+            if session is None or question is None or session.status != SessionState.ROUND_FINALIZING.value:
+                return
+            completed_round_id, completed_question_id = question.round_id, question.id
+        await self.complete_round_summary(
+            session_id, completed_round_id, completed_question_id, completed_round_id,
+        )
+        with self.session_factory() as database:
+            repository = SessionRepository(database)
+            session = database.scalar(select(LearningSession).where(
+                LearningSession.id == session_id,
+            ).with_for_update())
+            if session is None or session.current_question_id != completed_question_id:
+                return
+            if session.status != SessionState.ROUND_FINALIZING.value:
+                return
+            old_round = repository.get_round(completed_round_id)
+            if old_round is None or old_round.discussion_summary_json is None:
+                return
+            old_round.finalized_at = old_round.finalized_at or datetime.utcnow()
+            new_round = LearningRound(session_id=session.id, state=SessionState.QUESTION_ACTIVE.value)
+            database.add(new_round)
+            database.flush()
+            question = ExamPracticeService(database).create_question(session.id, new_round.id)
+            if question is None:
+                database.delete(new_round)
+                transition_session(session, SessionState.SESSION_ENDED)
+                session.ended_at = datetime.utcnow()
+                old_round.state = SessionState.SESSION_ENDED.value
+                count = repository.count_completed_rounds(session.id)
+                message = create_message(
+                    session.id, old_round.id, "critic",
+                    f"本次真题测试已完成，共练习 {count} 题。你可以在个人知识图谱中查看学习进展。",
+                    critic_intent="end_session",
+                )
+                database.add(message)
+                database.commit()
+                event = CriticReplyReadyEvent(
+                    session_id=session.id,
+                    payload=CriticReplyReadyPayload(
+                        message=to_student_visible_message(message),
+                        session_state=SessionState.SESSION_ENDED,
+                    ),
+                )
+            else:
+                new_round.question_id = question.id
+                session.current_question_id = question.id
+                old_round.state = SessionState.NEXT_QUESTION_READY.value
+                transition_session(session, SessionState.NEXT_QUESTION_READY)
+                transition_session(session, SessionState.QUESTION_ACTIVE)
+                database.add(create_message(
+                    session.id, new_round.id, "questioner", question.student_content_json["markdown"],
+                ))
+                metadata = question_metadata(database, question)
+                database.commit()
+                event = QuestionReadyEvent(
+                    session_id=session.id,
+                    payload=QuestionReadyPayload(
+                        question_id=question.id, markdown=question.student_content_json["markdown"],
+                        input_hint=question.student_content_json.get("input_hint"),
+                        question_metadata=metadata,
+                    ),
+                )
+        await self.websocket_manager.broadcast(session_id, event)
 
     async def _publish_prepared_question(self, session_id: str) -> Optional[dict]:
         with self.session_factory() as database:
@@ -797,6 +949,7 @@ class LearningSessionOrchestrator:
             next_question_id = candidate.id
             next_markdown = candidate.student_content_json["markdown"]
             next_input_hint = candidate.student_content_json.get("input_hint")
+            next_metadata = question_metadata(database, candidate)
             completed_round_id = learning_round.id
             completed_question_id = question.id
             next_round_id = new_round.id
@@ -806,6 +959,7 @@ class LearningSessionOrchestrator:
             "next_question_id": next_question_id,
             "next_markdown": next_markdown,
             "next_input_hint": next_input_hint,
+            "next_question_metadata": next_metadata,
             "completed_round_id": completed_round_id,
             "completed_question_id": completed_question_id,
             "next_round_id": next_round_id,
@@ -945,6 +1099,9 @@ class LearningSessionOrchestrator:
             question = repository.get_question(completed_question_id)
             if not session or not learning_round or not question:
                 return
+            exam_mode = is_exam_session(database, session.id)
+            if learning_round.discussion_summary_json is not None:
+                return
             packet = repository.packet_from_question(question)
             review_record = repository.get_latest_question_review(question.id)
             review = (
@@ -960,10 +1117,26 @@ class LearningSessionOrchestrator:
                 to_critic_context_message(message)
                 for message in repository.list_messages(session.id, learning_round.id)
             ]
+            turn_records = repository.list_turn_results(learning_round.id)
             turn_results = [
                 repository.turn_result_from_record(record)
-                for record in repository.list_turn_results(learning_round.id)
+                for record in turn_records
             ]
+            basis_record = next(
+                (record for record in turn_records
+                 if record.intent in {"answer_attempt", "answer_and_question"}),
+                None,
+            )
+            assistance = "none"
+            for record in turn_records:
+                if basis_record is not None and record.id == basis_record.id:
+                    break
+                if record.intent in {
+                    "student_uncertain", "clarification_question", "request_example",
+                    "concept_extension", "request_summary",
+                }:
+                    assistance = "hint"
+            basis_message_id = basis_record.message_id if basis_record else None
             candidate = repository.get_candidate_question(
                 session.id,
                 next_round_id,
@@ -974,6 +1147,8 @@ class LearningSessionOrchestrator:
                     question_review=review,
                     conversation_history=history,
                     turn_results=turn_results,
+                    assessment_basis_message_id=basis_message_id,
+                    assessment_assistance=assistance,
                     provisional_candidate_question=(
                         repository.packet_from_question(candidate) if candidate else None
                     ),
@@ -985,36 +1160,46 @@ class LearningSessionOrchestrator:
                 else self._safe_summary(packet, learning_round)
             )
 
+            # Serialize finalization after the model call. Evidence, counters,
+            # audit events and the finalized marker belong to one transaction.
+            learning_round = database.scalar(
+                select(LearningRound)
+                .where(LearningRound.id == completed_round_id)
+                .with_for_update()
+                .execution_options(populate_existing=True)
+            )
+            if learning_round.discussion_summary_json is not None:
+                return
             graphs_changed = False
+            assessments = {item.node_id: item for item in summary.knowledge_assessments}
+            assessment_service = AssessmentService(database)
+            for node_id in packet.knowledge_node_ids:
+                assessment = assessments.get(node_id) or KnowledgeAssessment(
+                    node_id=node_id,
+                    outcome="unassessable",
+                    reason="No reliable explicit assessment was produced for this node.",
+                )
+                evidence = assessment_service.commit_assessment(
+                    session.learner_id,
+                    learning_round.id,
+                    assessment,
+                    basis_message_id=basis_message_id,
+                    assistance=assistance,
+                    question_valid=(review.status != "invalid"),
+                )
+                graphs_changed = evidence.counted or graphs_changed
             if review.status != "invalid":
-                try:
-                    with database.begin_nested():
-                        graph_service = GraphService(database)
-                        for update in summary.final_knowledge_updates:
-                            graphs_changed = (
-                                graph_service.commit_knowledge_update(
-                                    session.learner_id,
-                                    learning_round.id,
-                                    update,
-                                )
-                                is not None
-                            ) or graphs_changed
-                        for update in summary.final_error_updates:
-                            graphs_changed = (
-                                graph_service.commit_error_update(
-                                    session.learner_id,
-                                    learning_round.id,
-                                    update,
-                                )
-                                is not None
-                            ) or graphs_changed
-                except Exception:
-                    logger.exception("Graph update transaction rolled back")
-                    graphs_changed = False
+                graph_service = GraphService(database)
+                for update in summary.final_error_updates:
+                    graphs_changed = (
+                        graph_service.commit_error_update(
+                            session.learner_id, learning_round.id, update,
+                        ) is not None
+                    ) or graphs_changed
 
             challenge_complete = ChapterQuestioningService(database).is_single_challenge_complete(
                 session.id
-            )
+            ) or session.status == SessionState.SESSION_ENDED.value
             learning_round.final_verdict = summary.final_verdict
             learning_round.discussion_summary_json = summary.model_dump(mode="json")
             if learning_round.finalized_at is None:
@@ -1033,7 +1218,7 @@ class LearningSessionOrchestrator:
                 ),
             ),
         )
-        if challenge_complete:
+        if challenge_complete or exam_mode:
             return
         await self.prepare_candidate(
             session_id,
@@ -1047,6 +1232,11 @@ class LearningSessionOrchestrator:
         session_id: str,
         student_has_answered: bool,
     ) -> None:
+        with self.session_factory() as database:
+            exam_mode = is_exam_session(database, session_id)
+        if exam_mode:
+            await self._replace_invalid_exam_question(session_id, student_has_answered)
+            return
         with self.session_factory() as database:
             repository = SessionRepository(database)
             session = repository.get_session(session_id)
@@ -1149,11 +1339,88 @@ class LearningSessionOrchestrator:
                     question_id=replacement.id,
                     markdown=replacement.student_content_json["markdown"],
                     input_hint=replacement.student_content_json.get("input_hint"),
+                    question_metadata=question_metadata(database, replacement),
                 ),
             )
             replacement_id = replacement.id
         await self.websocket_manager.broadcast(session_id, event)
         self._schedule(self.review_current_question(session_id, replacement_id))
+
+    async def _replace_invalid_exam_question(
+        self, session_id: str, student_has_answered: bool,
+    ) -> None:
+        from app.services.exam_practice_service import ExamPracticeService
+
+        with self.session_factory() as database:
+            repository = SessionRepository(database)
+            session = repository.get_session(session_id)
+            old_round = repository.get_current_round(session_id)
+            old_question = repository.get_current_question(session) if session else None
+            if session is None or old_round is None or old_question is None:
+                return
+            old_question.status = "invalid"
+            if session.status != SessionState.QUESTION_INVALID.value:
+                transition_session(session, SessionState.QUESTION_INVALID)
+            old_round.state = SessionState.SESSION_ENDED.value
+            old_round.finalized_at = datetime.utcnow()
+            database.add(QuestionReviewRecord(
+                question_id=old_question.id, status="invalid", quality_score=0.0,
+                issues_json=["本回合题目已被撤销或判定无效，不计入掌握度。"],
+            ))
+            database.flush()
+            for node_id in old_question.knowledge_node_ids:
+                AssessmentService(database).commit_assessment(
+                    session.learner_id, old_round.id,
+                    KnowledgeAssessment(
+                        node_id=node_id, outcome="unassessable",
+                        reason="题目无效，保留评估记录但不计入有效题数。",
+                    ),
+                    question_valid=False,
+                )
+            summary = self._safe_summary(repository.packet_from_question(old_question), old_round)
+            old_round.discussion_summary_json = summary.model_dump(mode="json")
+            old_round.final_verdict = "invalid_question"
+            transition_session(session, SessionState.QUESTION_GENERATING)
+            new_round = LearningRound(session_id=session.id, state=SessionState.QUESTION_ACTIVE.value)
+            database.add(new_round)
+            database.flush()
+            replacement = ExamPracticeService(database).create_question(session.id, new_round.id)
+            reason = "这道题当前无法用于评估，不会影响你的掌握记录。"
+            if replacement is None:
+                database.delete(new_round)
+                transition_session(session, SessionState.SESSION_ENDED)
+                session.ended_at = datetime.utcnow()
+                text = reason + "当前试卷没有更多可用真题，本次测试已结束。"
+            else:
+                new_round.question_id = replacement.id
+                session.current_question_id = replacement.id
+                transition_session(session, SessionState.QUESTION_ACTIVE)
+                text = reason + "已为你换一道真题。"
+                database.add(create_message(
+                    session.id, new_round.id, "questioner",
+                    replacement.student_content_json["markdown"],
+                ))
+            message = create_message(session.id, old_round.id, "critic", text)
+            database.add(message)
+            metadata = question_metadata(database, replacement) if replacement else None
+            database.commit()
+            reply = CriticReplyReadyEvent(
+                session_id=session.id,
+                payload=CriticReplyReadyPayload(
+                    message=to_student_visible_message(message), session_state=SessionState(session.status),
+                ),
+            )
+            ready = QuestionReadyEvent(
+                session_id=session.id,
+                payload=QuestionReadyPayload(
+                    question_id=replacement.id, markdown=replacement.student_content_json["markdown"],
+                    input_hint=replacement.student_content_json.get("input_hint"),
+                    question_metadata=metadata,
+                ),
+            ) if replacement else None
+        await self.websocket_manager.broadcast(session_id, reply)
+        if ready is not None:
+            await self.websocket_manager.broadcast(session_id, ready)
 
     async def _review_question_in_database(
         self,

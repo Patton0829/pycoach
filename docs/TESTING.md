@@ -4,6 +4,9 @@
 - 状态机：合法转换、非法转换和异常状态。
 - GraphService：掌握度、错误严重度边界及审计记录。
 - LLM：Schema 失败重试一次、再次失败后安全回退。
+- LangChain：真实 LCEL 调用链、JSON 花括号安全、并发上下文隔离、Pydantic 边界复验、流式可见字段隔离。
+- LangGraph：实际节点路径、两次尝试上限、业务校验修复、取消传播、异常分类、流式失败 reset 和并发状态隔离。
+- ChatOpenAI 适配器：使用 HTTPX MockTransport 验证 JSON mode、厂商配置、无 SDK 隐式重试、SSE 可见字段提取、严格完整 JSON、超时及 HTTP 错误，以及回调失败和取消时立即关闭 HTTP 流；不访问真实模型 API。
 - E2E：全部使用 MockLLMProvider，覆盖答错、追问、下一题和最终提交。
 - 前端：Markdown、Python 代码块、键盘发送、时间线、图谱刷新、WebSocket 和内部 JSON 防泄露。
 
@@ -12,6 +15,12 @@
 ```bash
 conda activate langchain
 PYTHONPATH=services/api python -m unittest discover -s services/api/tests -v
+```
+
+本次双 Agent 重构的独立回归测试：
+
+```bash
+PYTHONPATH=services/api python -m unittest services.api.tests.test_langchain_agents services.api.tests.test_agent_workflows services.api.tests.test_langchain_provider services.api.tests.test_langchain_stream_lifecycle -v
 ```
 
 前端测试与生产构建：

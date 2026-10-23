@@ -1,0 +1,555 @@
+{
+  "source_sha256": "a0f6a19967464aba6bbb5150d4311311672179c963f631eeed6745e7f4956fd8",
+  "annotation_origin": "project_annotation",
+  "visual_review_pages": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "review_note": "阻断项包括已确认冲突和保守隔离的语境歧义；不代表所有待复核题都已证实错误。答案仅取自原PDF，不生成新答案。难度为项目启发式标注，不是考试官方难度或校准结果。",
+  "questions": {
+    "1": {
+      "topic_tags": [
+        "IPO 模式",
+        "输入处理输出"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "识别一个基础概念。"
+    },
+    "2": {
+      "topic_tags": [
+        "Python 3",
+        "真除法 /",
+        "整除 //",
+        "交互式输出"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "比较两个基础运算符与显示形式。",
+      "quality_issues": [
+        {
+          "code": "display_form_matters",
+          "severity": "advisory",
+          "description": "A项1.50与1.5数值相等，本题按交互式解释器默认显示区分；不改原选项。"
+        }
+      ]
+    },
+    "3": {
+      "topic_tags": [
+        "字符串切片",
+        "负索引",
+        "eval()"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "先进行切片，再判断表达式求值。"
+    },
+    "4": {
+      "topic_tags": [
+        "整数进制",
+        "二进制",
+        "八进制",
+        "字面量前缀"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "识别整数进制前缀；源卷存在冲突。",
+      "quality_issues": [
+        {
+          "code": "stem_option_radix_conflict",
+          "severity": "blocking",
+          "description": "题干问八进制，但选项都使用0b/0B前缀；原卷答案为B。保留冲突，不将题干静默改成二进制。"
+        }
+      ]
+    },
+    "5": {
+      "topic_tags": [
+        "科学计数法",
+        "复数",
+        "real 属性",
+        "浮点数显示"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "结合复数实部、运算优先级与默认显示。",
+      "quality_issues": [
+        {
+          "code": "display_form_matters",
+          "severity": "advisory",
+          "description": "A项0.000123与D项1.23e-4数值相等；原卷按默认输出形式给A。"
+        }
+      ]
+    },
+    "6": {
+      "topic_tags": [
+        "浮点数",
+        "小数部分",
+        "科学计数法",
+        "有限精度"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "基础类型概念；源卷表述需要复核。",
+      "quality_issues": [
+        {
+          "code": "float_description_ambiguity",
+          "severity": "blocking",
+          "description": "A把有限精度浮点数与数学实数概念等同，C声称所有浮点数必须带小数部分；按严格语义可能不止一项有问题，原卷仅给D。"
+        }
+      ]
+    },
+    "7": {
+      "topic_tags": [
+        "算术运算符",
+        "真除法 /",
+        "整除 //",
+        "取模 %"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "区分基础算术运算。"
+    },
+    "8": {
+      "topic_tags": [
+        "一元运算符",
+        "正号",
+        "数值表达式"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "判断一元正号的结果。"
+    },
+    "9": {
+      "topic_tags": [
+        "复数",
+        "abs()",
+        "模长",
+        "浮点数显示"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "由复数实部与虚部判断模长及显示。",
+      "quality_issues": [
+        {
+          "code": "display_form_matters",
+          "severity": "advisory",
+          "description": "选项5与5.0数值相等，原卷按返回类型及显示形式给D。"
+        }
+      ]
+    },
+    "10": {
+      "topic_tags": [
+        "增强赋值",
+        "运算优先级",
+        "幂运算 **"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "先计算幂与加法，再应用增强赋值。"
+    },
+    "11": {
+      "topic_tags": [
+        "字符串索引",
+        "负索引",
+        "字符串切片",
+        "print()"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "核对中文、空格与英文混合字符串的位置。",
+      "quality_issues": [
+        {
+          "code": "whitespace_layout",
+          "severity": "advisory",
+          "description": "A项原图确实缺少最后一个n，原卷答案A有依据；C/D中的首尾空格在PDF排版中不清晰，保留文本层及物理页定位。"
+        }
+      ]
+    },
+    "12": {
+      "topic_tags": [
+        "字符串比较",
+        "字典序",
+        "大小写",
+        "引号"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "涉及比较语义及源卷引号缺损。",
+      "quality_issues": [
+        {
+          "code": "damaged_quote_not_repaired",
+          "severity": "blocking",
+          "description": "C项原图为“<’a’，引号缺损或混排，无法确认是否为空字符串比较；不补造缺失引号。"
+        }
+      ]
+    },
+    "13": {
+      "topic_tags": [
+        "字符串格式化",
+        "format()",
+        "最小字段宽度"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "区分最小宽度与截断长度。",
+      "quality_issues": [
+        {
+          "code": "option_spacing_layout",
+          "severity": "advisory",
+          "description": "D项引号内的排版空格按文本层保留，原卷答案为C；可回查第4页原图。"
+        }
+      ]
+    },
+    "14": {
+      "topic_tags": [
+        "程序基本结构",
+        "顺序结构",
+        "分支结构",
+        "循环结构"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "基础结构识别；单选题意存在歧义。",
+      "quality_issues": [
+        {
+          "code": "multiple_valid_options",
+          "severity": "blocking",
+          "description": "题干问基本结构“包括”，A顺序、B分支、C循环均符合，而题型为单选且原卷仅给C。"
+        }
+      ]
+    },
+    "15": {
+      "topic_tags": [
+        "循环控制",
+        "break",
+        "continue",
+        "保留字"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "区分终止循环与开始下一次迭代。",
+      "quality_issues": [
+        {
+          "code": "reference_answer_conflict",
+          "severity": "blocking",
+          "description": "题干问结束一个循环，原卷给B continue；continue通常进入下一次迭代，结束整个循环的是C break。原卷答案仍保留B，不当作可直接使用的正确答案。"
+        }
+      ]
+    },
+    "16": {
+      "topic_tags": [
+        "分支结构",
+        "if",
+        "elif",
+        "else",
+        "条件表达式"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "比较分支结构相关描述的准确性。",
+      "quality_issues": [
+        {
+          "code": "conditional_wording_ambiguity",
+          "severity": "blocking",
+          "description": "B以“语句和函数”描述条件，C遗漏elif，D以“同一个判断条件”描述多分支；存在多种解读，原卷给C，需复核单选唯一性。"
+        }
+      ]
+    },
+    "17": {
+      "topic_tags": [
+        "函数",
+        "代码复用",
+        "参数",
+        "函数调用"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "识别函数定义与调用的基本概念。"
+    },
+    "18": {
+      "topic_tags": [
+        "函数定义",
+        "def",
+        "关键字"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "识别函数定义关键字。"
+    },
+    "19": {
+      "topic_tags": [
+        "递归",
+        "基例",
+        "递归深度",
+        "异常"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "辨别递归的基例与实现边界。",
+      "quality_issues": [
+        {
+          "code": "implementation_specific_claim",
+          "severity": "advisory",
+          "description": "C关于1000层及解释器终止的表述依赖实现和运行设置；原卷答案B有依据，不能把C原文当作跨实现的精确定律。"
+        }
+      ]
+    },
+    "20": {
+      "topic_tags": [
+        "组合数据类型",
+        "序列",
+        "集合",
+        "映射",
+        "字典"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "涉及类型分类层级。",
+      "quality_issues": [
+        {
+          "code": "taxonomy_ambiguity",
+          "severity": "blocking",
+          "description": "原卷给C字典类型，但字典本身属于组合数据类型并实现映射；题目可能混用分类层级，需复核。"
+        }
+      ]
+    },
+    "21": {
+      "topic_tags": [
+        "元组",
+        "序列",
+        "不可变性",
+        "嵌套容器"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "识别元组的基本性质。"
+    },
+    "22": {
+      "topic_tags": [
+        "列表",
+        "嵌套列表",
+        "len()",
+        "顶层元素"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "统计嵌套列表的顶层元素。"
+    },
+    "23": {
+      "topic_tags": [
+        "字典",
+        "键",
+        "可哈希性",
+        "列表",
+        "元组"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "比较不同类型作为字典键的可行性。"
+    },
+    "24": {
+      "topic_tags": [
+        "文件读取",
+        "read()",
+        "readline()",
+        "readall()",
+        "文件对象类型"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "文件方法识别依赖具体对象类型。",
+      "quality_issues": [
+        {
+          "code": "file_object_context_missing",
+          "severity": "blocking",
+          "description": "原卷给D readtext。readall在原始二进制文件对象上可以存在，常见文本/缓冲文件对象的方法又不同；题目未限定文件对象，保守隔离待复核，不能直接宣称readall不存在。"
+        }
+      ]
+    },
+    "25": {
+      "topic_tags": [
+        "文件",
+        "文本模式",
+        "二进制模式",
+        "数据存储"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "区分文件内容与读入方式。"
+    },
+    "26": {
+      "topic_tags": [
+        "嵌套索引",
+        "列表",
+        "字符串",
+        "负索引"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "依次完成三层索引。"
+    },
+    "27": {
+      "topic_tags": [
+        "turtle",
+        "fd()",
+        "seth()",
+        "right()",
+        "circle()",
+        "方向"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "区分移动命令与方向变化。",
+      "quality_issues": [
+        {
+          "code": "heading_timeframe_ambiguity",
+          "severity": "blocking",
+          "description": "原卷给A。circle绘制过程中改变方向，完整圆结束后可恢复方向；“不改变绘制方向”未区分过程与最终状态。"
+        }
+      ]
+    },
+    "28": {
+      "topic_tags": [
+        "turtle",
+        "颜色",
+        "colormode",
+        "RGB",
+        "十六进制颜色"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "颜色表示依赖颜色模式与字符串表示。",
+      "quality_issues": [
+        {
+          "code": "color_mode_context_missing",
+          "severity": "blocking",
+          "description": "原卷给C；RGB值(190,190,190)依赖colormode(255)，十六进制颜色作为代码字符串还涉及引号，原题缺少上下文。"
+        }
+      ]
+    },
+    "29": {
+      "topic_tags": [
+        "random",
+        "随机种子",
+        "随机序列",
+        "import"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "区分序列重现和连续随机调用。",
+      "quality_issues": [
+        {
+          "code": "seed_sequence_wording_ambiguity",
+          "severity": "blocking",
+          "description": "原卷给A；B的“每次调用随机函数生成的随机数相同”可能混淆重设同一种子后复现序列与同一序列内每次结果相同。"
+        }
+      ]
+    },
+    "30": {
+      "topic_tags": [
+        "标准库",
+        "第三方库",
+        "图形用户界面",
+        "turtle",
+        "PyQt"
+      ],
+      "difficulty": 1,
+      "difficulty_reason": "辨别标准库与第三方界面库。"
+    },
+    "31": {
+      "topic_tags": [
+        "斐波那契数列",
+        "while",
+        "多重赋值",
+        "循环边界"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "根据递推关系填补初始化与更新代码。",
+      "display_code": "a, b = ____(1)____\nwhile ____(2)____:\n    print(a, end=' , ')\n    a, b = ____(3)____, ____(4)____",
+      "display_code_reason": "按第7页代码框恢复循环体缩进；移除行号和交互提示符，统一占位空白，规范排版引号；没有填写答案。",
+      "assets": [
+        {
+          "pdf_page": 7,
+          "role": "code_layout",
+          "description": "第31题代码框原始缩进和四个填空位置，见整页渲染图。"
+        }
+      ]
+    },
+    "32": {
+      "topic_tags": [
+        "数学表达式",
+        "幂运算",
+        "运算优先级",
+        "Python 表达式"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "将视觉公式准确转写为程序表达式。",
+      "formula_latex": "x = \\frac{(3^{4} + 5 - 6 \\times 7)}{8}",
+      "formula_plaintext": "公式文字转写：x = (3的4次方 + 5 - 6乘7) / 8。",
+      "assets": [
+        {
+          "pdf_page": 7,
+          "role": "formula",
+          "description": "第32题公式原图：分子为(3的4次方+5-6乘7)，分母为8。"
+        }
+      ]
+    },
+    "33": {
+      "topic_tags": [
+        "随机密码",
+        "random.choice()",
+        "字符串",
+        "循环",
+        "字符集合"
+      ],
+      "difficulty": 3,
+      "difficulty_reason": "在给定字符集合中逐次选择并构造密码。",
+      "quality_issues": [
+        {
+          "code": "digit_count_conflict",
+          "severity": "blocking",
+          "description": "题干写9个数字，给定字符表却包含0到9共10个数字；保留两处原文，不静默修改数量。"
+        }
+      ],
+      "assets": [
+        {
+          "pdf_page": 7,
+          "role": "code_layout",
+          "description": "第33题字符表和题干。"
+        },
+        {
+          "pdf_page": 8,
+          "role": "code_layout",
+          "description": "第33题续页：from random import choice及两个填空。"
+        }
+      ]
+    },
+    "34": {
+      "topic_tags": [
+        "turtle",
+        "fd()",
+        "seth()",
+        "等边三角形",
+        "绘图"
+      ],
+      "difficulty": 3,
+      "difficulty_reason": "结合边长与方向控制完成指定图形。",
+      "assets": [
+        {
+          "pdf_page": 8,
+          "role": "figure",
+          "description": "边长200的等边三角形，水平底边，顶点向上；绘制终点/海龟标记位于左下顶点。该文字描述为对原图的项目转述。"
+        }
+      ]
+    },
+    "35": {
+      "topic_tags": [
+        "字典",
+        "创建",
+        "添加键值对",
+        "修改",
+        "删除"
+      ],
+      "difficulty": 2,
+      "difficulty_reason": "顺序完成四种字典基本操作。",
+      "display_stem": "写出下列操作的代码：\n(1) 建立字典 D={\"数学\":101, \"语文\":202, \"英语\":203, \"物理\":204, \"生物\":206}。\n(2) 向字典中添加键值对 \"化学\":205。\n(3) 修改 \"数学\" 对应的值为201。\n(4) 删除 \"生物\" 对应的键值对。",
+      "display_stem_reason": "按第8页四个操作要求规范混乱的排版引号，保留各科目和数字；原始混排题干保存在original_content和raw_extracted_text。"
+    },
+    "36": {
+      "topic_tags": [
+        "循环",
+        "重量计算",
+        "百分比",
+        "年增长",
+        "输入参数"
+      ],
+      "difficulty": 3,
+      "difficulty_reason": "结合逐年增长与比例计算未来十年的数据。",
+      "quality_issues": [
+        {
+          "code": "initial_weight_unspecified",
+          "severity": "blocking",
+          "description": "题目未给当前地球体重或输入约定；任何补充解答都需要显式说明初始体重的取得方式。原卷没有提供答案。"
+        }
+      ]
+    }
+  }
+}
